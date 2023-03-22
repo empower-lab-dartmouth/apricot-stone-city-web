@@ -1,0 +1,15 @@
+/* App.css */
+
+.page-container {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  align-items: top;
+  justify-content: center;
+}
+
+.page {
+    background-color: gray;
+    min-width: 75%;
+  }
+  
