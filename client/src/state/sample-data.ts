@@ -4,8 +4,8 @@ import {Action} from './action';
 import {OptionData} from '../components/option/option-model';
 
 export const sampleAction: Action = {
-  type: 'append-to-page',
-  url: 'test',
+  type: 'click-option',
+  option: 'test',
 };
 
 export const sampleNewCard: CardData = {

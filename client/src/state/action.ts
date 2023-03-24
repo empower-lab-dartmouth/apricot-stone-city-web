@@ -1,6 +1,6 @@
 export type AppendToPage = {
-    type: 'append-to-page'
-    url: string
+    type: 'click-option'
+    option: string
 }
 
 export type Action = AppendToPage

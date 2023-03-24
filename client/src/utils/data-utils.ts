@@ -1,5 +1,6 @@
 import {CardData} from '../components/card/card-model';
 import {OptionData} from '../components/option/option-model';
+import {Action} from '../state/action';
 
 export const IS_DEV = true;
 export const BASE_DEV_URL = 'http://localhost:8000/';
@@ -7,9 +8,13 @@ export const BASE_PROD_URL = '?';
 export const BASE_URL = IS_DEV ? BASE_DEV_URL : BASE_PROD_URL;
 export const CONTINUE_CONVERSATION_PATH = 'continue-conversation/';
 
+export type ClientSideUserContext = {
+  username: string,
+}
 
 export type ContinueConversationRequest = {
-  url: string,
+  context: ClientSideUserContext,
+  action: Action
 }
 
 export type ErrorReponse = {

@@ -19,13 +19,17 @@ export const handleAction: (
     setCurrentPage: SetterOrUpdater<PageData>,
 ) => Promise<void> = async (action, currentPage, setCurrentPage) => {
   switch (action.type) {
-    case 'append-to-page': {
+    case 'click-option': {
       // TODO: update to real implementation
 
       try {
         // make the API call
         const updates = await fetchContinueConversationData(
-            {url: `${BASE_URL}${CONTINUE_CONVERSATION_PATH}`});
+            {url: `${BASE_URL}${CONTINUE_CONVERSATION_PATH}`,
+              context: {
+                username: 'SAMPLE',
+              },
+            });
         if (updates.type === 'continuation-data') {
           const newPage = appendToPage(currentPage,
               updates.cards, updates.options);
