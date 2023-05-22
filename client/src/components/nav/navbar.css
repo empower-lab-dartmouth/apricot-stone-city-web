@@ -1,0 +1,28 @@
+.navbar {
+    background-color: #282c34;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+.inner-navbar {
+    display: flex;
+    gap: 0.5em;
+    padding: 0.5em;
+    font-size: 32px;
+}
+
+
+.active, .active:visited {
+    color: #46c6ea;
+    text-decoration: none;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: white;
+}
+
+li {
+    list-style: none;
+}

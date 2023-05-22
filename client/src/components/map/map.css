@@ -1,0 +1,60 @@
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    color: white;
+}
+
+label {
+    margin: 1em;
+    font-size: 20px;
+}
+
+.display {
+    display: flex;
+}
+
+.graph {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.card {
+    flex-shrink: 0;
+    margin-left: 16px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+}
+
+input, textarea {
+    min-width: 100%;
+    margin: 1em;
+    padding: 1em;
+    border: none;
+    border-radius: 10px;
+}
+
+button {
+    cursor: pointer;
+    margin: 1em;
+    padding: 1em;
+    border: none;
+    min-width: 95%;
+}
+
+button:hover {
+    filter: brightness(80%);
+}
+
+.map-container {
+    background-color: #282c34;
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,11 @@
+.page-container {
+    background-color: #282c34;
+    min-height: 100vh;
+    padding: 1em;
+    color:  black;
+}
+
+.login-container {
+    color: white;
+    background-color: #282c34;
+}

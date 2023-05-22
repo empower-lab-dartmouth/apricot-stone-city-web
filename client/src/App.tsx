@@ -1,40 +1,42 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import * as React from 'react';
 import {useRecoilState} from 'recoil';
-// import {getData} from './utils/data-utils';
-// import FormInput from './components/form-input/form-input';
-
+import {
+  BrowserRouter, Routes, Route,
+} from 'react-router-dom';
 import './App.css';
-import Page from './components/page/Page';
 import {currentPageState} from './state/recoil';
+import Landing from './components/landing/landing';
+import Page from './components/page/Page';
+import Main from './components/map/Main';
+import Form from './components/create/Form';
 
 const App = () => {
   // eslint-disable-next-line no-unused-vars
   const [page, _setPage] = useRecoilState(currentPageState);
 
-  // const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-
-  //   try {
-  //     // make the API call
-  //     const res:User = await getData(
-  //         'http://localhost:8000/respond', email, password,
-  //     );
-  //     setUser(res);
-  //     resetFormFields();
-  //   } catch (error) {
-  //     alert('User Sign In Failed');
-  //   }
-  // };
-
-  // const reload = () => {
-  //   setUser(null);
-  //   resetFormFields();
-  // };
-
   return (
-    <Page pageData={page}></Page>
+    <BrowserRouter>
+      <div>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/:id/adventure" element={<Page pageData={page}/>} />
+          <Route path="/:id/map" element={<Main />} />
+          <Route path="/:id/form" element={<Form />} />
+          <Route path="*" element={<FallBack />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+
   );
 };
+
+
+const FallBack = () => {
+  return <div>Not Found</div>;
+};
+
 
 export default App;
