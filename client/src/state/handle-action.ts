@@ -3,8 +3,7 @@ import {PageData} from '../components/page/page-model';
 import {CardData} from '../components/card/card-model';
 import {Action} from './action';
 import {OptionData} from '../components/option/option-model';
-import {BASE_URL, CONTINUE_CONVERSATION_PATH,
-  fetchContinueConversationData} from '../utils/data-utils';
+import {fetchContinueConversationData} from '../utils/data-utils';
 
 const appendToPage: (pageData: PageData,
     newCards: CardData[],
@@ -25,10 +24,11 @@ export const handleAction: (
       try {
         // make the API call
         const updates = await fetchContinueConversationData(
-            {url: `${BASE_URL}${CONTINUE_CONVERSATION_PATH}`,
+            {
               context: {
                 username: 'SAMPLE',
               },
+              action: action,
             });
         if (updates.type === 'continuation-data') {
           const newPage = appendToPage(currentPage,

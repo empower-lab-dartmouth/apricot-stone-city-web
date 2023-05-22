@@ -33,12 +33,13 @@ export const fetchContinueConversationData: (req: ContinueConversationRequest)
     request: ContinueConversationRequest,
 ) => {
   console.log('pre fetch');
-  const res = await fetch(request.url, {
+  const url = `${BASE_URL}${CONTINUE_CONVERSATION_PATH}`;
+  const res = await fetch(url, {
     method: 'Post',
     headers: {
       'Content-type': 'application/json',
     },
-    body: JSON.stringify({}),
+    body: JSON.stringify(request),
   });
   const result = await res.json();
   console.log('logging result');
