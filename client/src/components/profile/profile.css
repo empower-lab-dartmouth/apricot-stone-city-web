@@ -1,0 +1,24 @@
+.container {
+    color: white;
+    min-height: 100vh;
+}
+
+.profile-content {
+    margin: 2em;
+}
+
+.profile-title {
+    margin-left: 3em;
+}
+
+.profile-items {
+    display: flex;
+    flex-direction: column;
+    margin-left: 50vh;
+    align-items: flex-start;
+}
+
+.quest-n-progress {
+    display: flex;
+    gap: 4em;
+}

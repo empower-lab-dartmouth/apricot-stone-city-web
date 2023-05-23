@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function Selections() {
   return (
-    <div className="navbar">
+    <div className="bar">
       <label>
         <input type="radio" id="highlights" name="view"
           value="No Highlights" className='radio'/>

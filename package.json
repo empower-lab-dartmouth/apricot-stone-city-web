@@ -22,6 +22,7 @@
     "firestore": "^1.1.6",
     "fp-ts": "^2.13.1",
     "lodash": "^4.17.21",
+    "react-router-dom": "^6.11.2",
     "telegraf": "^4.11.2",
     "tslog": "^4.7.1",
     "watch": "^1.0.2"

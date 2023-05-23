@@ -12,24 +12,21 @@ import Landing from './components/landing/landing';
 import Page from './components/page/Page';
 import Main from './components/map/Main';
 import Form from './components/create/Form';
+import Profile from './components/profile/Profile';
 
 const App = () => {
   // eslint-disable-next-line no-unused-vars
   const [page, _setPage] = useRecoilState(currentPageState);
 
   return (
-    <BrowserRouter>
-      <div>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/:id/adventure" element={<Page pageData={page}/>} />
-          <Route path="/:id/map" element={<Main />} />
-          <Route path="/:id/form" element={<Form />} />
-          <Route path="*" element={<FallBack />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
-
+    <Routes>
+      <Route path="/" element={<Landing />} />
+      <Route path="/:id/adventure" element={<Page pageData={page}/>} />
+      <Route path="/:id/map" element={<Main />} />
+      <Route path="/:id/profile" element={<Profile />} />
+      <Route path="/:id/form" element={<Form />} />
+      <Route path="*" element={<FallBack />} />
+    </Routes>
   );
 };
 
