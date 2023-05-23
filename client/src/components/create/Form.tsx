@@ -2,7 +2,7 @@
 import React from 'react';
 import {useState} from 'react';
 import type {StoryEvent} from './types';
-import {db} from '../services/firebase-config';
+import {db} from '../firebase/firebase-config';
 import {collection, addDoc} from 'firebase/firestore';
 import './form.css';
 import Nav from '../nav/NavBar';
