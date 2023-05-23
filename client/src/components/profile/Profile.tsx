@@ -17,8 +17,8 @@ export default function Profile() {
         <h1>Welcome! {currentUser?.email}</h1>
         <Challenges />
         <Quests />
-        <button onClick={signOut}>Sign Out</button>
       </div>
+      <button onClick={signOut} className='sign-out'>Sign Out</button>
     </div>
 
   );

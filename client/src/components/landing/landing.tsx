@@ -45,8 +45,7 @@ function Home() {
 
   return (
     <div className="App-header">
-      <div>
-        <h1>Welcome!</h1>
+      <div className='card'>
         <form onSubmit={handleSubmit}
           className='group'
         >
@@ -71,7 +70,7 @@ function Home() {
             />
           </div>
           <div>
-            <input id='recaptcha' type="submit" />
+            <input id='login' type="submit" />
           </div>
         </form>
       </div>

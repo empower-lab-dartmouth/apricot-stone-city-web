@@ -28,7 +28,7 @@ const App = () => {
   // Check if the current user exists on the initial render.
   useEffect(() => {
     if (currentUser) {
-      navigate('/profile');
+      navigate('/map');
     }
   }, [currentUser]);
   const [page, _setPage] = useRecoilState(currentPageState);

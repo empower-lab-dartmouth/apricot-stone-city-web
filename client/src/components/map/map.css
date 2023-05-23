@@ -4,10 +4,10 @@
     color: white;
 }
 
-label {
+/* label {
     margin: 1em;
     font-size: 20px;
-}
+} */
 
 .display {
     display: flex;
@@ -33,7 +33,7 @@ label {
     color: white;
 }
 
-input, textarea {
+/* input, textarea {
     min-width: 100%;
     margin: 1em;
     padding: 1em;
@@ -51,7 +51,7 @@ button {
 
 button:hover {
     filter: brightness(80%);
-}
+} */
 
 .map-container {
     background-color: #282c34;

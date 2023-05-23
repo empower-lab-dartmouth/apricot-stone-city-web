@@ -22,3 +22,10 @@
     display: flex;
     gap: 4em;
 }
+
+.sign-out {
+    align-self: center;
+    width: 90vw;
+    padding: 1em;
+    margin: 1em;
+}

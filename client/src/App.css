@@ -14,7 +14,7 @@
 .card {
   border: solid 1px #6b6b6b;
   border-radius: 5px;
-  padding: 4rem;
+  padding: 2rem;
 }
 
 .button-group {
@@ -22,12 +22,15 @@
   margin-left: 30px;
 }
 
+.logo {
+  float: right;
+  width: 50px;
+}
 h2 {
   margin-top: 2rem;
 }
 
 button {
- margin-right: 10px;
  border: 1px solid #46c6ea;
  border-radius: 5px;
  background: #46c6ea;
@@ -37,6 +40,7 @@ button {
  padding-left: 12px;
  font-size: 17px;
  font-weight: bold;
+ cursor: pointer;
 }
 
 button:hover {
@@ -70,11 +74,34 @@ input, textarea {
  font-size: 1rem;
  color: #f5f5f5;
  transition: border 150ms cubic-bezier(0.4,0,0.2,1);
+ margin: 1em;
 }
 
-input[type='password'] {
-  letter-spacing: 0.3em;
+/* input, textarea {
+    min-width: 100%;
+    margin: 1em;
+    padding: 1em;
+    border: none;
+    border-radius: 10px;
 }
+
+button {
+    cursor: pointer;
+    margin: 1em;
+    padding: 1em;
+    border: none;
+    min-width: 95%;
+}
+
+button:hover {
+    filter: brightness(80%);
+} */
+
+
+/* label {
+    margin: 1em;
+    font-size: 20px;
+} */
 
 input:focus, input:valid, textarea:focus, textarea:valid {
  outline: none;
@@ -86,4 +113,8 @@ input:focus ~ .form-input-label, input:valid ~ .form-input-label {
  background-color: #282c34;
  padding: 0 .2em;
  color: #46c6ea;
+}
+
+#login {
+  cursor: pointer;
 }
