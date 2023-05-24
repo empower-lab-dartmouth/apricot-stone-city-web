@@ -5,22 +5,23 @@ import React from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
 import * as THREE from 'three';
 import {mockData} from '../create/types';
-import {atom, useRecoilState} from 'recoil';
+import {useRecoilState} from 'recoil';
+import {userContextState} from './graph-recoil';
 
-
-export const selectionNode = atom({
-  key: 'nodeHover',
-  default: {id: 'Hover Over Node for Info'},
-});
 
 export default function Graph() {
   const imgs = ['https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/June_odd-eyed-cat.jpg/1106px-June_odd-eyed-cat.jpg', 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/June_odd-eyed-cat.jpg/1106px-June_odd-eyed-cat.jpg'];
-  const [selectNode, setSelect] = useRecoilState(selectionNode);
+  // const [_, setSelectedStorySceneId] = useRecoilState(
+  //     selectedStorySceneIDSelector);
+  const [context, setContext] = useRecoilState(userContextState);
 
-  const handleNodeHover = (node) => {
+  const handleNodeClick = (node) => {
     console.log(node);
     if (node) {
-      setSelect(node);
+      setContext({
+        ...context,
+        selectedStorySceneID: node.id,
+      });
     }
   };
 
@@ -50,7 +51,7 @@ export default function Graph() {
 
           return sprite;
         }}
-        onNodeHover={handleNodeHover}
+        onNodeClick={handleNodeClick}
       />
     </div>
 

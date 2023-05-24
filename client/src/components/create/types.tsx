@@ -7,10 +7,13 @@ export type EventUUID = string // Unique universal IDentifier.
 export type Url = string
 export type UserUUID = string
 
+export type AIConcept = 'Learning-1-A' | 'Learning-1-B'; // ...
+
 export type StoryEvent = {
   title: EventUUID,
   description: string,
   eventType: EventType,
+  AIConcept?: AIConcept,
   parent: EventUUID | null, // Title of the parent node.
   image: Url
   creator: UserUUID
