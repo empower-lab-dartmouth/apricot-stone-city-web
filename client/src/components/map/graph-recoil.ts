@@ -1,4 +1,4 @@
-import {selector, atom, DefaultValue} from 'recoil';
+import {atom} from 'recoil';
 import {StoryEvent, mockData} from '../create/types';
 
 export const storyEventsState = atom<Record<string, StoryEvent>>({
@@ -6,46 +6,24 @@ export const storyEventsState = atom<Record<string, StoryEvent>>({
   default: mockData,
 });
 
-export const vistedStoryEvents = atom<Set<string>>({
-  key: 'all-story-events',
-  default: new Set(['root']), // initally it's just whatever
-  // the id of the root node is, but this should all be pulled from firebase.
-});
+// export const vistedStoryEvents = atom<Set<string>>({ // Persist this in fb
+//   key: 'all-story-events',
+//   default: new Set(['root']), // initally it's just whatever
+//   // the id of the root node is, but this should all be pulled from firebase.
+// });
 
 type UserContext = {
   selectedStorySceneID: string,
   // TODO: Add things here as needed
 }
 
+// Tracks stuff that you don't need to store in fb
 export const userContextState = atom<UserContext>({
   key: 'user-context',
   default: {
     selectedStorySceneID: 'title1', // TODO: update this value to be the root.
   },
 });
-
-const isDefaultValue = <T>(
-  valueOrDefaultValue: T | DefaultValue):
-  valueOrDefaultValue is DefaultValue => {
-  return valueOrDefaultValue !== DefaultValue;
-};
-
-export const selectedStorySceneSelector = selector<StoryEvent>({
-  key: 'selected-story-scene',
-  get: ({get}) => get(storyEventsState)[
-      get(userContextState).selectedStorySceneID],
-  set: ({set, get}, newStoryScene) => {
-    if (isDefaultValue(newStoryScene)) {
-      return;
-    }
-    const newContext: UserContext = {
-      ...get(userContextState),
-      selectedStorySceneID: newStoryScene.title,
-    };
-    set(userContextState, newContext);
-  },
-});
-
 
 // const getNodeInfo = selector({
 //   key: 'filterNodeInfo',

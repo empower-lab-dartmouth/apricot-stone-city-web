@@ -4,7 +4,8 @@ import React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import {useRecoilValue} from 'recoil';
-import {selectedStorySceneSelector, userContextState} from './graph-recoil';
+import {storyEventsState,
+  userContextState} from './graph-recoil';
 
 // const displayChoices = (choice) => {
 //   const id = 'id' + Math.random().toString(16).slice(2);
@@ -28,13 +29,13 @@ import {selectedStorySceneSelector, userContextState} from './graph-recoil';
 // };
 
 export default function BasicCard() {
-  const selectedScene = useRecoilValue(selectedStorySceneSelector);
   const context = useRecoilValue(userContextState);
+  const allStoryEvents = useRecoilValue(storyEventsState);
+  const selectedScene = allStoryEvents[context.selectedStorySceneID];
   console.log('got to card display');
   return (
     <Card>
       <CardContent>
-        <h2>{selectedScene.title}</h2>
         <h2>{context.selectedStorySceneID}</h2>
         <h2>{selectedScene.description}</h2>
         <h2>{selectedScene.parent !== null ?
