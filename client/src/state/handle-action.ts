@@ -31,6 +31,7 @@ export const handleAction: (
               action: action,
             });
         if (updates.type === 'continuation-data') {
+          console.log(updates);
           const newPage = appendToPage(currentPage,
               updates.cards, updates.options);
           setCurrentPage(newPage);

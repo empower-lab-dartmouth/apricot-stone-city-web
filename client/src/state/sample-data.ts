@@ -9,29 +9,32 @@ export const sampleAction: Action = {
 };
 
 export const sampleNewCard: CardData = {
+  id: 'id',
   type: 'text',
   text: 'new data!',
 };
 
 export const sampleNewOption: OptionData = {
-  text: 'new option!', action: sampleAction,
+  id: 'id', text: 'new option!', action: sampleAction,
 };
 
 export const sampleData: PageData = {
   cards: [
     {
+      id: '0',
       type: 'image',
       src: 'abc.xyz',
     },
     {
+      id: '1',
       type: 'text',
       text: 'this is a text message',
     },
   ],
   options: [
-    {text: 'optiofdgdsfgfdgn1', action: sampleAction},
-    {text: 'dgdsfgfdgn1', action: sampleAction},
-    {text: 'option 2', action: sampleAction},
+    {id: '0', text: 'optiofdgdsfgfdgn1', action: sampleAction},
+    {id: '1', text: 'dgdsfgfdgn1', action: sampleAction},
+    {id: '2', text: 'option 2', action: sampleAction},
   ],
 };
 

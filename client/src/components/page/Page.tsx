@@ -15,9 +15,10 @@ const Page: React.FC<PageParams> = ({pageData}) => (
     <Nav />
     <div className="page-container">
       <div className="page">
-        { pageData.cards.map((cardData) => <Card cardData={cardData} />)}
+        { pageData.cards.map((cardData) =>
+          <Card cardData={cardData} key={cardData.id}/>)}
         { pageData.options.map((optionData) =>
-          <Option optionData={optionData} />) }
+          <Option optionData={optionData} key={optionData.id} />) }
       </div>
     </div>
   </div>
