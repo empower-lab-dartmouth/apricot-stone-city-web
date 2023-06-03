@@ -18,12 +18,13 @@ type CardDataParams = {
 
 const CardFC: React.FC<CardDataParams> = ({cardData}) => (
   <>
-    <Box sx={{minWidth: 275}}>
-      <Card variant="outlined">
+    <Box sx={{width: '50%', marginBottom: '3px'}}>
+      <Card variant="outlined" sx={{backgroundColor: 'rgba(1,0,0,. 5)'}}>
         <CardContent>
           <Typewriter
             options={{
               cursor: '',
+              delay: 1,
               strings: cardData.type === 'image' ? cardData.src : cardData.text,
               autoStart: true,
               loop: false,

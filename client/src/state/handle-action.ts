@@ -1,23 +1,24 @@
 import {SetterOrUpdater} from 'recoil';
 import {PageData} from '../components/page/page-model';
 import {CardData} from '../components/card/card-model';
-import {Action} from './action';
 import {OptionData} from '../components/option/option-model';
 import {fetchContinueConversationData} from '../utils/data-utils';
 
 const appendToPage: (pageData: PageData,
+    selectedOption: OptionData,
     newCards: CardData[],
-    newOptions: OptionData[]) => PageData = (page, newCards, newOptions) => ({
-      cards: [...page.cards, ...newCards],
+    newOptions: OptionData[]) => PageData = (page,
+        selectedOption, newCards, newOptions) => ({
+      chatHistory: [...page.chatHistory, selectedOption, ...newCards],
       options: newOptions,
     });
 
 export const handleAction: (
-    action: Action,
+    option: OptionData,
     currentPage: PageData,
     setCurrentPage: SetterOrUpdater<PageData>,
-) => Promise<void> = async (action, currentPage, setCurrentPage) => {
-  switch (action.type) {
+) => Promise<void> = async (optionData, currentPage, setCurrentPage) => {
+  switch (optionData.action.type) {
     case 'click-option': {
       // TODO: update to real implementation
 
@@ -28,11 +29,12 @@ export const handleAction: (
               context: {
                 username: 'SAMPLE',
               },
-              action: action,
+              action: optionData.action,
             });
         if (updates.type === 'continuation-data') {
           console.log(updates);
           const newPage = appendToPage(currentPage,
+              optionData,
               updates.cards, updates.options);
           setCurrentPage(newPage);
         } else {

@@ -15,11 +15,11 @@ export const sampleNewCard: CardData = {
 };
 
 export const sampleNewOption: OptionData = {
-  id: 'id', text: 'new option!', action: sampleAction,
+  id: 'id', text: 'new option!', type: 'option', action: sampleAction,
 };
 
 export const sampleData: PageData = {
-  cards: [
+  chatHistory: [
     {
       id: '0',
       type: 'image',
@@ -32,9 +32,9 @@ export const sampleData: PageData = {
     },
   ],
   options: [
-    {id: '0', text: 'optiofdgdsfgfdgn1', action: sampleAction},
-    {id: '1', text: 'dgdsfgfdgn1', action: sampleAction},
-    {id: '2', text: 'option 2', action: sampleAction},
+    {id: '0', type: 'option', text: 'optiofdgdsfgfdgn1', action: sampleAction},
+    {id: '1', type: 'option', text: 'dgdsfgfdgn1', action: sampleAction},
+    {id: '2', type: 'option', text: 'option 2', action: sampleAction},
   ],
 };
 

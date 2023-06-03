@@ -1,11 +1,26 @@
 /* App.css */
 
 .page-container {
-  background-color: #282c34;
-  min-height: 100vh;
+  background-image: url("../../assets/adventure-view-background.png");
+  min-height: 85vh;
   display: flex;
   align-items: top;
   justify-content: center;
+}
+
+fixed {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  height: fit-content;
+}
+
+.scrollable-container {
+  display: flex;
+  flex-direction: column;
+  width:100%;
+  height:80vh;
+  overflow:auto;
 }
 
 .page {
