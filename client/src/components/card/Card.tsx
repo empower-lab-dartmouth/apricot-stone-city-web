@@ -12,6 +12,7 @@ import Typewriter from 'typewriter-effect';
 //   </Typography>
 // );
 
+
 type CardDataParams = {
   cardData: CardData
 }
@@ -19,19 +20,32 @@ type CardDataParams = {
 const CardFC: React.FC<CardDataParams> = ({cardData}) => (
   <>
     <Box sx={{width: '50%', marginBottom: '3px'}}>
+      {cardData.type === 'image' ?
+      <div style={{
+        backgroundColor: 'white',
+        borderRadius: '100px',
+        padding: '20px'}}>
+        <img
+          className='center'
+          src={`${cardData.src}?w=164&h=164&fit=crop&auto=format`}
+          srcSet={`${cardData.src}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+          alt={cardData.id}
+          loading="lazy"
+        />
+      </div> :
       <Card variant="outlined" sx={{backgroundColor: 'rgba(1,0,0,. 5)'}}>
         <CardContent>
           <Typewriter
             options={{
               cursor: '',
               delay: 1,
-              strings: cardData.type === 'image' ? cardData.src : cardData.text,
+              strings: cardData.text,
               autoStart: true,
               loop: false,
             }}
           />
         </CardContent>
-      </Card>
+      </Card>}
     </Box>
   </>
 );

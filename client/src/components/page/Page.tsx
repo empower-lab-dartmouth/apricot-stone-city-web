@@ -12,6 +12,10 @@ import {currentPageState} from '../../state/recoil';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 
+const radialGradient =
+// eslint-disable-next-line max-len
+`background: rgb(4,0,79); background: linear-gradient(90deg, rgba(4,0,79,1) 0%, rgba(255,255,255,1) 8%, rgba(255,184,0,1) 17%, rgba(242,175,0,1) 85%, rgba(255,255,255,1) 95%, rgba(4,0,79,1) 100%);`;
+
 type PageParams = {
   pageData: PageData
 }
@@ -37,19 +41,33 @@ const Page: React.FC<PageParams> = ({pageData}) => {
               alignItems="center"
               spacing={2}
             >
-              <Chip label={cardOrOptionData.text} color="primary" />
+              <Chip label={cardOrOptionData.text} sx={{
+                'height': 'auto',
+                '& .MuiChip-label': {
+                  display: 'block',
+                  borderRadius: '25px',
+                  padding: '20px',
+                  whiteSpace: 'normal',
+                  backgroundColor: '#ffb800',
+                  color: 'black',
+                },
+              }}
+              />
             </Stack> :
             <Card cardData={cardOrOptionData} key={cardOrOptionData.id}/>)}
           <div ref={messagesEndRef} />
         </div>
       </div>
       <div className='fixed'>
-        <BottomNavigation showLabels>
+        <BottomNavigation showLabels sx={{
+          backgroundImage: radialGradient,
+        }}>
           { pageData.options.map((optionData) =>
-            <BottomNavigationAction label={optionData.text} onClick={() =>
-              handleAction({
-                ...optionData,
-                type: 'option'}, currentPage, setCurrentPage)} />,
+            <BottomNavigationAction key={optionData.id}
+              label={optionData.text} onClick={() =>
+                handleAction({
+                  ...optionData,
+                  type: 'option'}, currentPage, setCurrentPage)} />,
           )}
         </BottomNavigation>
       </div>
