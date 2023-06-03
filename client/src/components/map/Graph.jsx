@@ -5,6 +5,7 @@ import React from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
 import * as THREE from 'three';
 import {mockData} from '../create/types';
+import './graph.css';
 import {useRecoilState} from 'recoil';
 import {userContextState} from './graph-recoil';
 
@@ -38,10 +39,11 @@ export default function Graph() {
   };
 
   return (
-    <div className='graph'>
+    <div className='graph background-img'>
       <ForceGraph3D
         graphData={gData}
         linkWidth={5}
+        backgroundColor='rgba(255, 255, 255, 0)'
         nodeLabel={'title'}
         nodeThreeObject={({img}) => {
           const imgTexture = new THREE.TextureLoader().load(img);

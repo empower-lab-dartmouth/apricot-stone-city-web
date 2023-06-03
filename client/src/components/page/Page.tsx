@@ -11,6 +11,7 @@ import {useRecoilState} from 'recoil';
 import {currentPageState} from '../../state/recoil';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
+// import optionsBackgroundImg from '../../assets/golden-paper-tex.jpeg';
 
 const radialGradient =
 // eslint-disable-next-line max-len

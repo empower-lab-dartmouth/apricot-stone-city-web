@@ -1,9 +1,17 @@
-.navbar {
-    background-color: #282c34;
+/* .navbar {
+    background-image: url('../../assets/orange\ background.png');
     color: white;
     display: flex;
     justify-content: space-between;
+    background-size: auto 100%;
     padding: 1em;
+} */
+
+.sticky {
+    display: flex;
+    position: fixed;
+    top: 0;
+    width: 100%;
 }
 
 .inner-navbar {
@@ -16,6 +24,8 @@
 
 .active, .active:visited {
     color: #46c6ea;
+    background-color: rgb(254,189,11);
+    color: white;
     text-decoration: none;
 }
 

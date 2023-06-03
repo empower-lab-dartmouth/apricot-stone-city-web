@@ -5,6 +5,7 @@ import {ChangeEvent, FormEvent, useState} from 'react';
 import {signInUser} from '../firebase/firebase';
 import {useNavigate} from 'react-router-dom';
 import '../../App.css';
+import './landing.css';
 
 const defaultFormFields = {
   email: '',
@@ -44,35 +45,47 @@ function Home() {
   };
 
   return (
-    <div className="App-header">
-      <div className='card'>
-        <form onSubmit={handleSubmit}
-          className='group'
-        >
-          <div>
-            <input
-              type="email"
-              name="email"
-              value={email}
-              onChange={handleChange}
-              placeholder="Email"
-              required
-            />
-          </div>
-          <div>
-            <input
-              type='password'
-              name='password'
-              value={password}
-              onChange={handleChange}
-              placeholder="Password"
-              required
-            />
-          </div>
-          <div>
-            <input id='login' type="submit" />
-          </div>
-        </form>
+    <div className='login-container'>
+      <div className="App-header">
+        <div className='login-header-img'
+          style={{marginTop: '-200px', marginBottom: '5px',
+            height: '150px', width: '600px'}}
+        />
+        <div className='card'>
+          <form onSubmit={handleSubmit}
+            className='group'
+          >
+            <div>
+              <input
+                style={{backgroundColor: 'white',
+                  color: 'black'}}
+                type="email"
+                name="email"
+                value={email}
+                onChange={handleChange}
+                placeholder="Email"
+                required
+              />
+            </div>
+            <div>
+              <input
+                style={{backgroundColor: 'white',
+                  color: 'black'}}
+                type='password'
+                name='password'
+                value={password}
+                onChange={handleChange}
+                placeholder="Password"
+                required
+              />
+            </div>
+            <div>
+              <input id='login'
+                style={{backgroundColor: 'white', color: 'black'}}
+                type="submit" />
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

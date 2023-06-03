@@ -2,7 +2,8 @@
 
 .page-container {
   background-image: url("../../assets/adventure-view-background.png");
-  min-height: 85vh;
+  /* max-height: 100vh; */
+  padding-top: 150px;
   display: flex;
   align-items: top;
   justify-content: center;
@@ -26,7 +27,7 @@ fixed {
   display: flex;
   flex-direction: column;
   width:100%;
-  height:80vh;
+  height:90vh;
   overflow:auto;
 }
 

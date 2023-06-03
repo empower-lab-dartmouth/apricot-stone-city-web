@@ -6,6 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import {useRecoilValue} from 'recoil';
 import {storyEventsState,
   userContextState} from './graph-recoil';
+import metalTex from '../../assets/metal-tex.webp';
 
 // const displayChoices = (choice) => {
 //   const id = 'id' + Math.random().toString(16).slice(2);
@@ -32,10 +33,12 @@ export default function BasicCard() {
   const context = useRecoilValue(userContextState);
   const allStoryEvents = useRecoilValue(storyEventsState);
   const selectedScene = allStoryEvents[context.selectedStorySceneID];
-  console.log('got to card display');
   return (
-    <Card>
-      <CardContent>
+    <Card sx={{paddingTop: '150px', paddingLeft: '40px',
+      paddingRight: '40px', backgroundImage: `url(${metalTex})`}}>
+      <CardContent sx={{backgroundColor: 'white',
+        border: '5px solid #46c6ea',
+        borderRadius: '7px'}}>
         <h2>{context.selectedStorySceneID}</h2>
         <h2>{selectedScene.description}</h2>
         <h2>{selectedScene.parent !== null ?

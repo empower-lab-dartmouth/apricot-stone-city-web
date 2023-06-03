@@ -7,5 +7,16 @@
 
 .login-container {
     color: white;
-    background-color: #282c34;
+    background-image: url("../../assets/landing-page-background.png");
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #09223d;
+}
+
+.login-header-img {
+    background-repeat: no-repeat;
+    /* background-attachment: fixed; */
+    background-position: center;
+    background-image: url("../../assets/landing-page-asc-name.png");
 }
