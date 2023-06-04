@@ -14,9 +14,13 @@ export default function Profile() {
     <div className='container'>
       <Nav/>
       <div className='profile-content'>
-        <h1>Welcome! {currentUser?.email}</h1>
-        <Challenges />
-        <Quests />
+        <div className='challenges-container'>
+          <div className='full-opacity'>
+            <h1 className='full-opacity'>Welcome, {currentUser?.email}</h1>
+            <Challenges />
+            <Quests />
+          </div>
+        </div>
       </div>
       <button onClick={signOut} className='sign-out'>Sign Out</button>
     </div>

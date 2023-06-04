@@ -15,7 +15,7 @@ export type Challenge = {
 export const mockChallenges: Challenge[] = [
   {
     id: 'challenge1',
-    title: 'Create a Profile Page',
+    title: 'Complete scenes for all AI  in adventure mode',
     complete: true,
   },
   {

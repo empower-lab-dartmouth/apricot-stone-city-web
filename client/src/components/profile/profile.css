@@ -8,6 +8,21 @@
     min-height: 100vh;
 }
 
+.challenge-header {
+    color: blueviolet
+}
+
+.challenges-container {
+    /* background: rgba(255, 122, 89, .5); */
+    background: rgba(146, 202, 199, .9);
+    /* opacity: .5; */
+    padding-left: 15%;
+    color: whitesmoke;
+    border-radius: 20px;
+    padding-top: 10px;
+    padding-right: 15%;
+}
+
 .profile-content {
     padding-top: 150px;
     margin: 2em;
@@ -19,8 +34,9 @@
 
 .profile-items {
     display: flex;
+    color: white;
     flex-direction: column;
-    margin-left: 50vh;
+    /* margin-left: 50vh; */
     align-items: flex-start;
 }
 
