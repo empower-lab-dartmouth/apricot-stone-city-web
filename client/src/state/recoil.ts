@@ -36,29 +36,35 @@ type Quest = {
 
 
 export type EventType = string // Will further specify this later.
-export type EventUUID = string // Unique universal IDentifier.
+export type SceneUUID = string // Unique universal IDentifier.
 export type Url = string
 export type UserUUID = string
 
-export type StoryEvent = {
-  title: EventUUID,
+export type StoryScene = {
+  id: SceneUUID,
+  title: string,
   description: string,
   eventType: EventType,
   AIConcept?: string,
-  parent: EventUUID | null, // Title of the parent node.
+  parent: SceneUUID | null, // Title of the parent node.
   image: Url
   creator: UserUUID
 }
 
-export const competedScenesState = atom<Record<EventUUID, Date>>({
+export const competedScenesState = atom<Record<SceneUUID, Date>>({
   key: 'scenes-completed',
   default: {},
 });
 
-export const competedQuestsState = atom<Record<QuestID, EventUUID[]>>({
-  key: 'quests-completed',
+export const allScenesState =atom<Record<SceneUUID, StoryScene>>({
+  key: 'all-scenes',
   default: {},
 });
+
+// export const competedQuestsState = atom<Record<QuestID, SceneUUID[]>>({
+//   key: 'quests-completed',
+//   default: {},
+// });
 
 export const allQuests: Record<QuestID, Quest> = {
   '3-A-i': {

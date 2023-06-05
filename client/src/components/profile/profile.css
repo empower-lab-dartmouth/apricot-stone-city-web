@@ -8,6 +8,14 @@
     min-height: 100vh;
 }
 
+.quest-sub-container {
+    background: rgba(255,250,250, .9);
+    border-radius: 20px;
+    padding: 10px;
+    padding-top: 0;
+    color: black;
+}
+
 .challenge-header {
     color: blueviolet
 }
