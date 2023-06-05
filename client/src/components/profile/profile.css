@@ -33,11 +33,14 @@
 }
 
 .profile-items {
-    display: flex;
-    color: white;
-    flex-direction: column;
-    /* margin-left: 50vh; */
-    align-items: flex-start;
+    width: 100%;
+}
+
+.quest-container {
+    border-radius: 20px;
+    width: 60%;
+    color: black;
+    background-color: white;
 }
 
 .quest-n-progress {
