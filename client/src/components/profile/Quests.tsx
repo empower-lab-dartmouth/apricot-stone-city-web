@@ -28,7 +28,6 @@ const data = [
   },
 ];
 
-
 export default function Quests() {
   const {currentUser} = useContext(AuthContext);
   const completedScenes = useRecoilValue(competedScenesState);
@@ -101,10 +100,17 @@ export default function Quests() {
             alignItems="flex-end"
             spacing={2}
             key={quest.id}>
-            <div className='quest-sub-container'>
-              <h3 className='challenge-header'>{quest.title}</h3>
-              <b>{quest.learningObjectives}</b>
-            </div>
+            <Stack
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
+              spacing={1}>
+              <img src={quest.img} style={{width: '62px'}}/>
+              <div className='quest-sub-container'>
+                <h3 className='challenge-header'>{quest.title}</h3>
+                <b>{quest.learningObjectives}</b>
+              </div>
+            </Stack>
 
             <BarChart width={730} height={250} data={chartData[idx]}>
               <CartesianGrid strokeDasharray="3 3" />
