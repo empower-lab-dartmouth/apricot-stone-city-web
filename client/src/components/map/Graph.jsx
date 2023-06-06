@@ -11,7 +11,6 @@ import {userContextState} from './graph-recoil';
 
 
 export default function Graph() {
-  const imgs = ['https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/June_odd-eyed-cat.jpg/1106px-June_odd-eyed-cat.jpg', 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/June_odd-eyed-cat.jpg/1106px-June_odd-eyed-cat.jpg'];
   // const [_, setSelectedStorySceneId] = useRecoilState(
   //     selectedStorySceneIDSelector);
   const [context, setContext] = useRecoilState(userContextState);
