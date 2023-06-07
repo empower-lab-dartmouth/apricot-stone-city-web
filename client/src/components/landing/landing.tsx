@@ -6,6 +6,7 @@ import {signInUser} from '../firebase/firebase';
 import {useNavigate} from 'react-router-dom';
 import '../../App.css';
 import './landing.css';
+import SignUp from './signup';
 
 const defaultFormFields = {
   email: '',
@@ -13,6 +14,15 @@ const defaultFormFields = {
 };
 
 function Home() {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
   const [formFields, setFormFields] = useState(defaultFormFields);
   const {email, password} = formFields;
   const navigate = useNavigate();
@@ -44,10 +54,6 @@ function Home() {
     setFormFields({...formFields, [name]: value});
   };
 
-  const handleSignUp = (event: any) => {
-    navigate('/signup');
-  };
-
   return (
     <div className='login-container'>
       <div className="App-header">
@@ -55,7 +61,7 @@ function Home() {
           style={{marginTop: '-200px', marginBottom: '5px',
             height: '150px', width: '600px'}}
         />
-        <button className='sign-up' onClick={handleSignUp}>
+        <button className='sign-up' onClick={() => handleOpen()}>
           Join
         </button>
         <div className='card'>
@@ -86,6 +92,11 @@ function Home() {
                 required
               />
             </div>
+            {open && (
+              <SignUp
+                closeModal={() => handleClose()}
+              />
+            )}
             <div>
               <input id='login'
                 style={{backgroundColor: 'white', color: 'black'}}
