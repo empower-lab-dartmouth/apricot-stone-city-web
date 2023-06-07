@@ -18,6 +18,12 @@ button.sign-up {
     right: 2em;
 }
 
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .login-container {
     color: white;
     background-image: url("../../assets/landing-page-background.png");

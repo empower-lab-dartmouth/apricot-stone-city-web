@@ -44,6 +44,10 @@ function Home() {
     setFormFields({...formFields, [name]: value});
   };
 
+  const handleSignUp = (event: any) => {
+    navigate('/signup');
+  };
+
   return (
     <div className='login-container'>
       <div className="App-header">
@@ -51,8 +55,8 @@ function Home() {
           style={{marginTop: '-200px', marginBottom: '5px',
             height: '150px', width: '600px'}}
         />
-        <button className='sign-up'>
-          Sign Up
+        <button className='sign-up' onClick={handleSignUp}>
+          Join
         </button>
         <div className='card'>
           <form onSubmit={handleSubmit}

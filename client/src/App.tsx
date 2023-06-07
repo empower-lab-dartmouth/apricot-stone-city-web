@@ -13,6 +13,7 @@ import Page from './components/page/Page';
 import Main from './components/map/Main';
 import Form from './components/create/Form';
 import Profile from './components/profile/Profile';
+import SignUp from './components/landing/signup';
 import {useContext, useEffect} from 'react';
 import {AuthContext} from './context/auth-context';
 import RequireAuth from './components/require-auth';
@@ -37,6 +38,7 @@ const App = () => {
     <Routes>
       <Route index element={<Landing />} />
       <Route path="/" element={<Landing />} />
+      <Route path="/signup" element={<SignUp />} />
 
       <Route path="/profile" element={<RequireAuth>
         <Profile />
