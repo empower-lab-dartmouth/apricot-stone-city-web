@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 .page-container {
     background-color: #282c34;
     min-height: 100vh;
@@ -5,10 +7,21 @@
     color:  black;
 }
 
+button.sign-up {
+    position: absolute;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    background-color: #FDCD47;
+    color: white;
+    padding: 1em;
+    top: 2em;
+    right: 2em;
+}
+
 .login-container {
     color: white;
     background-image: url("../../assets/landing-page-background.png");
-    background-size: auto 100%;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     background-color: #09223d;

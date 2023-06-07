@@ -51,6 +51,9 @@ function Home() {
           style={{marginTop: '-200px', marginBottom: '5px',
             height: '150px', width: '600px'}}
         />
+        <button className='sign-up'>
+          Sign Up
+        </button>
         <div className='card'>
           <form onSubmit={handleSubmit}
             className='group'
