@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable require-jsdoc */
 import React, {useState} from 'react';
+import {handleSignUp} from '../firebase/firebase';
 import './modal.css';
 
 export default function SignUp(props: any) {
@@ -9,7 +10,7 @@ export default function SignUp(props: any) {
   } = props;
 
   const [event, setEvent] = useState({
-    username: '', email: '', password: ''});
+    email: '', password: '', confirm: ''});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement> |
     React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -22,16 +23,15 @@ export default function SignUp(props: any) {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    const username = event.target[0].value;
-    const email = event.target[1].value;
+    const email = event.target[0].value;
+    const password = event.target[1].value;
     const confirm = event.target[2].value;
 
-    if (email !== confirm) {
-      // error
+    if (password === confirm) {
+      handleSignUp(email, password);
+    } else {
+      console.log('passwords do not match');
     }
-
-    // do firebase stuff to write
-    console.log(event);
   };
 
 
@@ -43,12 +43,6 @@ export default function SignUp(props: any) {
           className='group'
         >
           <div>
-            <input placeholder='Username' type="text" name="username"
-              onChange={handleChange}
-              style={{backgroundColor: 'white', color: 'black'}}/>
-          </div>
-
-          <div>
             <input placeholder='Email' type="text" name="email"
               onChange={handleChange}
               style={{backgroundColor: 'white', color: 'black'}}/>
@@ -56,6 +50,12 @@ export default function SignUp(props: any) {
 
           <div>
             <input placeholder='Password' type="text" name="password"
+              onChange={handleChange}
+              style={{backgroundColor: 'white', color: 'black'}}/>
+          </div>
+
+          <div>
+            <input placeholder='Confirm Password' type="text" name="confirm"
               onChange={handleChange}
               style={{backgroundColor: 'white', color: 'black'}}/>
           </div>
