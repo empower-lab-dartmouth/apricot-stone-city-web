@@ -17,6 +17,7 @@
   border: solid 1px #6b6b6b;
   border-radius: 50px;
   padding: 2rem;
+  position: relative;
 }
 
 .button-group {

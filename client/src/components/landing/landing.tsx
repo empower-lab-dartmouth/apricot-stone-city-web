@@ -6,6 +6,7 @@ import {signInUser} from '../firebase/firebase';
 import {useNavigate} from 'react-router-dom';
 import '../../App.css';
 import './landing.css';
+import SignUp from './signup';
 
 const defaultFormFields = {
   email: '',
@@ -13,6 +14,15 @@ const defaultFormFields = {
 };
 
 function Home() {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
   const [formFields, setFormFields] = useState(defaultFormFields);
   const {email, password} = formFields;
   const navigate = useNavigate();
@@ -51,6 +61,9 @@ function Home() {
           style={{marginTop: '-200px', marginBottom: '5px',
             height: '150px', width: '600px'}}
         />
+        <button className='sign-up' onClick={() => handleOpen()}>
+          Join
+        </button>
         <div className='card'>
           <form onSubmit={handleSubmit}
             className='group'
@@ -85,6 +98,11 @@ function Home() {
                 type="submit" />
             </div>
           </form>
+          {open && (
+            <SignUp
+              closeModal={() => handleClose()}
+            />
+          )}
         </div>
       </div>
     </div>
