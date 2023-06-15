@@ -21,6 +21,7 @@ import questFeatureSetImg
   from '../assets/quest-features.png';
 import questLargeDataImg
   from '../assets/quest-large-data-sets.webp';
+import {mockData} from '../components/create/types';
 
 
 export const currentPageState = atom<PageData>({
@@ -80,7 +81,7 @@ export const competedScenesState = atom<Record<SceneUUID, Date>>({
 
 export const allScenesState =atom<Record<SceneUUID, StoryScene>>({
   key: 'all-scenes',
-  default: {},
+  default: mockData,
 });
 
 // export const competedQuestsState = atom<Record<QuestID, SceneUUID[]>>({
