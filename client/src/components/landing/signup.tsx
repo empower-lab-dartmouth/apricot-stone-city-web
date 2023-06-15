@@ -3,20 +3,13 @@
 import React, {useState} from 'react';
 import {handleSignUp} from '../firebase/firebase';
 import './modal.css';
-import Error from './error';
 
 export default function SignUp(props: any) {
-  const [open, setOpen] = React.useState(false);
+  const [appear, setAppear] = React.useState(false);
   const [message, setMessage] = React.useState('');
-  console.log(open);
 
-  const handleClose = () => {
-    setOpen(false);
-    console.log('closing');
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
+  const handleAppear = () => {
+    setAppear(true);
   };
 
   const {
@@ -46,7 +39,7 @@ export default function SignUp(props: any) {
 
       if (typeof(res) === 'string') {
         setMessage(res);
-        handleOpen();
+        handleAppear();
       }
     } else {
       console.log('passwords do not match');
@@ -56,10 +49,7 @@ export default function SignUp(props: any) {
 
   return (
     <div className="modal">
-      {open && (
-        <Error msg={message} close={() => handleClose()}/>
-      )}
-      <div className="card">
+      <div className="landing-card">
         <span className="close" onClick={closeModal}>back</span>
         <form onSubmit={handleSubmit}
           className='group'
@@ -81,6 +71,10 @@ export default function SignUp(props: any) {
               onChange={handleChange}
               style={{backgroundColor: 'white', color: 'black'}}/>
           </div>
+
+          {appear && (
+            <span className='error-msg'>{message}</span>
+          )}
 
           <div>
             <input id='signup'

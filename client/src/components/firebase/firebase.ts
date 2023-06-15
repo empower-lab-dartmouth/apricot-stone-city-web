@@ -36,6 +36,17 @@ export const handleSignUp = async (email: string, password: string) => {
       .catch(async (error) => {
         const errorCode = await error.code;
         const errorMessage = await error.message;
+        console.log(errorCode);
+        console.log(errorMessage);
+
+        // customizable error messages
+        if (errorCode === 'auth/invalid-email') {
+          return 'Please choose a valid email address.';
+        } else if (errorCode === 'auth/weak-password') {
+          return 'Password should be at least 6 characters.';
+        } else if (errorCode === 'auth/email-already-in-use') {
+          return 'This email is already in use. Please log in.';
+        }
         return errorMessage;
       });
 };

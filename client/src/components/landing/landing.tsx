@@ -64,7 +64,7 @@ function Home() {
         <button className='sign-up' onClick={() => handleOpen()}>
           Join
         </button>
-        <div className='card'>
+        <div className='landing-card'>
           <form onSubmit={handleSubmit}
             className='group'
           >

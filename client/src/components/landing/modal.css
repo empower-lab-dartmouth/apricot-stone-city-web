@@ -21,3 +21,9 @@
     color: white;
     cursor: pointer;
   }
+
+  span.error-msg {
+    color: rgba(211, 42, 42, 0.892);
+    flex-shrink: inherit;
+    font-size: 15px;
+}
