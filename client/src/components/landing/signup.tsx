@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable require-jsdoc */
 import React, {useState} from 'react';
 import './modal.css';
@@ -19,7 +20,16 @@ export default function SignUp(props: any) {
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    const username = event.target[0].value;
+    const email = event.target[1].value;
+    const confirm = event.target[2].value;
+
+    if (email !== confirm) {
+      // error
+    }
+
     // do firebase stuff to write
     console.log(event);
   };

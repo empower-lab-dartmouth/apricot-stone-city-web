@@ -92,17 +92,17 @@ function Home() {
                 required
               />
             </div>
-            {open && (
-              <SignUp
-                closeModal={() => handleClose()}
-              />
-            )}
             <div>
               <input id='login'
                 style={{backgroundColor: 'white', color: 'black'}}
                 type="submit" />
             </div>
           </form>
+          {open && (
+            <SignUp
+              closeModal={() => handleClose()}
+            />
+          )}
         </div>
       </div>
     </div>
