@@ -3,8 +3,22 @@
 import React, {useState} from 'react';
 import {handleSignUp} from '../firebase/firebase';
 import './modal.css';
+import Error from './error';
 
 export default function SignUp(props: any) {
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = React.useState('');
+  console.log(open);
+
+  const handleClose = () => {
+    setOpen(false);
+    console.log('closing');
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   const {
     closeModal,
   } = props;
@@ -28,7 +42,12 @@ export default function SignUp(props: any) {
     const confirm = event.target[2].value;
 
     if (password === confirm) {
-      handleSignUp(email, password);
+      const res = await handleSignUp(email, password);
+
+      if (typeof(res) === 'string') {
+        setMessage(res);
+        handleOpen();
+      }
     } else {
       console.log('passwords do not match');
     }
@@ -37,6 +56,9 @@ export default function SignUp(props: any) {
 
   return (
     <div className="modal">
+      {open && (
+        <Error msg={message} close={() => handleClose()}/>
+      )}
       <div className="card">
         <span className="close" onClick={closeModal}>back</span>
         <form onSubmit={handleSubmit}
