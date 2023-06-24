@@ -10,7 +10,7 @@
     "DEPRECATED-dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc && babel src -d dist",
-    "prod": "node dist/server.js"
+    "prod": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
