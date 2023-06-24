@@ -12,7 +12,7 @@ export default function Challenges() {
 
   return (
     <div>
-      <h1 className='profile-title challenge-header'>Challenges</h1>
+      <h1 className='profile-title challenge-header'>Progress</h1>
       <div className='profile-items'>
         <Stack
           direction="row"
@@ -34,7 +34,7 @@ export default function Challenges() {
           }
           <div>
             <h2 className='challenge-header'>
-              Challenge 1: Know and Understand AI</h2>
+              Level 1: Know and Understand AI</h2>
             <h3>Complete all AI learning quests in adventure mode.</h3>
             <p>More info</p>
           </div>
@@ -58,7 +58,7 @@ export default function Challenges() {
           Completed
           </Stack> }
           <div>
-            <h2 className='challenge-header'> Challenge 2: Use AI </h2>
+            <h2 className='challenge-header'> Level 2: Use AI </h2>
             <h3>Design, create, and
               code your own AI teaching quest within the story.
             </h3>
@@ -85,7 +85,7 @@ export default function Challenges() {
           Completed
           </Stack> }
           <div>
-            <h2 className='challenge-header'> Challenge 3: Evaluate
+            <h2 className='challenge-header'> Level 3: Evaluate
              and Create </h2>
             <h3>Create or extend a teaching scene
               to both &quot;shows and tell,&quot;
@@ -113,7 +113,7 @@ export default function Challenges() {
           Completed
           </Stack> }
           <div>
-            <h2 className='challenge-header'> Challenge 4: AI Ethics</h2>
+            <h2 className='challenge-header'> Level 4: AI Ethics</h2>
             <h3>Create a scene that explores the impact of AI
               on an ethical, social,
               political, or economic issue.
