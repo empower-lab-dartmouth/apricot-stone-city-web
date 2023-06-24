@@ -53,21 +53,24 @@ export default function SignUp(props: any) {
         <span className="close" onClick={closeModal}>back</span>
         <form onSubmit={handleSubmit}
           className='group'
+          autoComplete='off'
         >
           <div>
             <input placeholder='Email' type="text" name="email"
               onChange={handleChange}
-              style={{backgroundColor: 'white', color: 'black'}}/>
+              style={{backgroundColor: 'white', color: 'black'}}
+              autoComplete="off"/>
           </div>
 
           <div>
-            <input placeholder='Password' type="text" name="password"
+            <input placeholder='Password' type="password" name="password"
               onChange={handleChange}
-              style={{backgroundColor: 'white', color: 'black'}}/>
+              style={{backgroundColor: 'white', color: 'black'}}
+              autoComplete="off"/>
           </div>
 
           <div>
-            <input placeholder='Confirm Password' type="text" name="confirm"
+            <input placeholder='Confirm Password' type="password" name="confirm"
               onChange={handleChange}
               style={{backgroundColor: 'white', color: 'black'}}/>
           </div>
