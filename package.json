@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx tsc",
     "start:dev": "nodemon --inspect src/index.ts",
     "reset-port": "kill -9 $(lsof -t -i:8000)",
     "start": "node dist/index.js",
     "DEPRECATED-dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc && babel src -d dist",
+    "prod": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -42,6 +43,7 @@
     "@types/express": "^4.17.16",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.18",
+    "babel-cli": "^6.26.0",
     "concurrently": "^7.6.0",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
