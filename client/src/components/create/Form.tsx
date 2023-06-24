@@ -1,15 +1,16 @@
 /* eslint-disable require-jsdoc */
 import React from 'react';
 import {useState} from 'react';
-import type {StoryEvent} from './types';
 import {db} from '../firebase/firebase-config';
 import {collection, addDoc} from 'firebase/firestore';
 import './form.css';
 import Nav from '../nav/NavBar';
+import {StoryScene} from '../../state/recoil';
 
 export default function Form() {
-  const [event, setEvent] = useState<StoryEvent>({title: '',
-    description: '', eventType: '', parent: null, image: '', creator: ''});
+  const [event, setEvent] = useState<StoryScene>({title: '',
+    description: '', id: '',
+    eventType: '', parent: null, image: '', creator: ''});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement> |
     React.ChangeEvent<HTMLTextAreaElement>) => {

@@ -6,14 +6,17 @@ import ForceGraph3D from 'react-force-graph-3d';
 import * as THREE from 'three';
 import {mockData} from '../create/types';
 import './graph.css';
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {userContextState} from './graph-recoil';
+import {allScenesState} from '../../state/recoil';
 
 
 export default function Graph() {
   // const [_, setSelectedStorySceneId] = useRecoilState(
   //     selectedStorySceneIDSelector);
   const [context, setContext] = useRecoilState(userContextState);
+  const allScenes = useRecoilValue(allScenesState);
+
 
   const handleNodeClick = (node) => {
     console.log(node);
@@ -27,7 +30,7 @@ export default function Graph() {
 
   // Random connected graph
   const gData = {
-    nodes: Object.values(mockData).map((event) => ({
+    nodes: Object.values(allScenes).map((event) => ({
       id: event.title,
       img: event.image,
     })),

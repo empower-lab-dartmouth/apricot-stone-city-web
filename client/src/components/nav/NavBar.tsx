@@ -56,7 +56,7 @@ export default function Nav() {
             <Stack direction="column" justifyContent="flex-start"
               alignItems="center">
               <img src={shieldIcon} style={{width: '62px'}}/>
-            Challenges
+            Progress
             </Stack>
           </NavLink>
 

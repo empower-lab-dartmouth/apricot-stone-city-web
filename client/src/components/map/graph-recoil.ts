@@ -1,10 +1,9 @@
 import {atom} from 'recoil';
-import {StoryEvent, mockData} from '../create/types';
 
-export const storyEventsState = atom<Record<string, StoryEvent>>({
-  key: 'all-story-events',
-  default: mockData,
-});
+// export const storyEventsState = atom<Record<string, StoryScene>>({
+//   key: 'all-story-events',
+//   default: mockData,
+// });
 
 type UserContext = {
   selectedStorySceneID: string,
