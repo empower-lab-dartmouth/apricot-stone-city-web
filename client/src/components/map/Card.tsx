@@ -3,10 +3,10 @@
 import React, {FC, useState} from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import {atom, useRecoilValue} from 'recoil';
+import {atom, useRecoilState, useRecoilValue} from 'recoil';
 import {userContextState} from './graph-recoil';
 import metalTex from '../../assets/metal-tex.webp';
-import {Quest, allScenesState} from '../../state/recoil';
+import {EditHistory, allScenesState} from '../../state/recoil';
 import Button from '@mui/material/Button';
 import {Autocomplete, Box,
   Dialog,
@@ -27,13 +27,14 @@ type CreateOrEditFormStartingState = {
   isNewScene: boolean,
   title: string,
   id: string,
-  quests: Quest[],
+  quests: string[],
   children: string[],
   parents: string[],
-  summary: string[],
+  summary: string,
   imgUrl: string,
   wikiUrl: string,
-  backendPath: string,
+  backendPath: string[],
+  editHistory: EditHistory[]
 }
 
 const createOrEditFormSceneStartingState = atom<CreateOrEditFormStartingState
@@ -45,7 +46,7 @@ const createOrEditFormSceneStartingState = atom<CreateOrEditFormStartingState
 const CreateOrEditStorySceneForm: FC = () => {
   const [image, setImage] = useState<string>(imgNotFound);
   const allStoryScenes = useRecoilValue(allScenesState);
-  const useRecoilValue(createOrEditFormSceneStartingState);
+  const startingFormState = useRecoilValue(createOrEditFormSceneStartingState);
   const [sceneTitle, setSceneTitle] = useState<string>();
 
   const questsWithAutocompleteFormatting = Object
@@ -184,10 +185,37 @@ export default function BasicCard() {
   const context = useRecoilValue(userContextState);
   const allStoryEvents = useRecoilValue(allScenesState);
   const selectedScene = allStoryEvents[context.selectedStorySceneID];
+  const [formInit, setFormInit] = useRecoilState(
+      createOrEditFormSceneStartingState);
 
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpenEdit = () => {
+    setFormInit({
+      isNewScene: false,
+      ...selectedScene,
+    });
+    setOpen(true);
+  };
+  const handleOpenCreateNew = () => {
+    setFormInit({
+      isNewScene: true,
+      id: ((new Date).getMilliseconds.toString()),
+      title: '',
+      summary: '',
+      quests: [],
+      parents: [selectedScene.id],
+      children: [],
+      imgUrl: imgNotFound,
+      editHistory: [],
+      wikiUrl: 'Create a new Google Doc and update this value with that url',
+      backendPath: ['NOT_YET_IMPLEMENTED'],
+    });
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setFormInit(undefined);
+  };
   const descriptionElementRef = React.useRef<HTMLElement>(null);
   React.useEffect(() => {
     if (open) {
@@ -205,10 +233,12 @@ export default function BasicCard() {
         border: '5px solid #46c6ea',
         borderRadius: '7px'}}>
         <h2>{context.selectedStorySceneID}</h2>
-        <h2>{selectedScene.description}</h2>
-        <h2>{selectedScene.parent !== null ?
-        selectedScene.parent : 'no parent'}</h2>
-        <Button onClick={handleOpen}
+        <h2>{selectedScene.summary}</h2>
+        <h2>{selectedScene.parents.length !== 0 ?
+        selectedScene.parents : 'no parent'}</h2>
+        <Button onClick={handleOpenCreateNew}
+          variant="contained">Create new scene</Button>
+        <Button onClick={handleOpenEdit}
           variant="contained">Create new scene</Button>
       </CardContent>
       <Dialog
@@ -219,10 +249,14 @@ export default function BasicCard() {
         aria-describedby="modal-modal-description"
       >
         <DialogTitle id="scroll-dialog-title">
-          Create or edit a story scene</DialogTitle>
+          { formInit === undefined || formInit.isNewScene ?
+          'Create a new story scene' :
+          ' Edit story scene' } </DialogTitle>
         <DialogContent
           dividers>
+          { formInit === undefined ? <></> :
           <CreateOrEditStorySceneForm />
+          }
         </DialogContent>
       </Dialog>
     </Card>

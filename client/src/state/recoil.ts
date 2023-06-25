@@ -67,16 +67,23 @@ export type EventType = string // Will further specify this later.
 export type SceneUUID = string // Unique universal IDentifier.
 export type Url = string
 export type UserUUID = string
+export type EditHistory = {
+  username: string,
+  date: Date
+}
+
 
 export type StoryScene = {
   id: SceneUUID,
   title: string,
-  description: string,
-  eventType: EventType,
-  AIConcept?: string,
-  parent: SceneUUID | null, // Title of the parent node.
-  image: Url
-  creator: UserUUID
+  summary: string,
+  quests: string[],
+  parents: string[],
+  children: string[],
+  imgUrl: string,
+  editHistory: EditHistory[]
+  wikiUrl: string,
+  backendPath: string[]
 }
 
 export const competedScenesState = atom<Record<SceneUUID, Date>>({
