@@ -28,7 +28,7 @@ export const mockData: Record<SceneUUID, StoryScene> = {
     summary: 'desc',
     parents: [],
     children: [],
-    quests: [],
+    quests: ['3-A-iii', '3-A-ii'],
     editHistory: [],
     imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/June_odd-eyed-cat.jpg/1106px-June_odd-eyed-cat.jpg',
     wikiUrl: '',

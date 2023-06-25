@@ -6,14 +6,17 @@ import CardContent from '@mui/material/CardContent';
 import {atom, useRecoilState, useRecoilValue} from 'recoil';
 import {userContextState} from './graph-recoil';
 import metalTex from '../../assets/metal-tex.webp';
-import {EditHistory, allScenesState} from '../../state/recoil';
+import {EditHistory, allScenesState, currentPageState} from '../../state/recoil';
 import Button from '@mui/material/Button';
 import {Autocomplete, Box,
+  Chip,
   Dialog,
   DialogContent,
   DialogTitle,
   TextField, Typography} from '@mui/material';
 import {allQuests} from '../../state/recoil';
+import {NavLink} from 'react-router-dom';
+import {ConvoSegmentId, ModulePath, Stores} from '../../utils/stores';
 
 
 const imgNotFound = 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png';
@@ -59,12 +62,23 @@ const createOrEditFormSceneStartingState = atom<CreateOrEditFormStartingState
 });
 
 const CreateOrEditStorySceneForm: FC = () => {
-  const [image, setImage] = useState<string>(imgNotFound);
   const allStoryScenes = useRecoilValue(allScenesState);
   const possiblyUndefined = useRecoilValue(createOrEditFormSceneStartingState);
   const startingFormState = possiblyUndefined === undefined ?
     defaultVal : possiblyUndefined;
   const [sceneTitle, setSceneTitle] = useState<string>(startingFormState.title);
+  const [summary, setSummary] = useState<string>(startingFormState.summary);
+  const [quests, setQuests] = useState<string[]>(startingFormState.quests);
+  const [children, setChildren] = useState<string[]>(
+      startingFormState.children);
+  const [parents, setParents] = useState<string[]>(
+      startingFormState.parents);
+  const [imgUrl, setImgUrl] = useState<string>(
+      startingFormState.imgUrl);
+  const [wikiUrl, setWikiUrl] = useState<string>(
+      startingFormState.wikiUrl);
+  const [backendPath, setBackendPath] = useState<string[]>(
+      startingFormState.backendPath);
 
   const questsWithAutocompleteFormatting = Object
       .values(allQuests)
@@ -82,10 +96,10 @@ const CreateOrEditStorySceneForm: FC = () => {
       const status = request.status;
       if (status == 200) {
         console.log('imageLoads!');
-        setImage(url);
+        setImgUrl(url);
       } else {
         console.log('image does not load');
-        setImage(imgNotFound);
+        setImgUrl(imgNotFound);
       }
     };
   };
@@ -114,6 +128,12 @@ const CreateOrEditStorySceneForm: FC = () => {
       <Autocomplete
         multiple
         sx={inputFieldStyles}
+        value={parents.map((p) => ({
+          item: p,
+          label: allStoryScenes[p].title,
+        }))}
+        onChange={(_event, val, _reason, _details) => setParents(
+            val.map((p) => p.item))}
         // value={.value}
         // onChange={(_event, val, _reason, _details) => props.onChange(val)}
         disableListWrap
@@ -122,7 +142,6 @@ const CreateOrEditStorySceneForm: FC = () => {
         // ListboxComponent={ListboxComponent}
         options={storyScenesWithAutocompleteFormatting}
         isOptionEqualToValue={(option, value) => option.item === value.item}
-        groupBy={(option) => option.group}
         renderInput={(params) => <TextField {...params}
           label={'Parent scene(s)'} />}
         // renderOption={renderOption}
@@ -131,6 +150,12 @@ const CreateOrEditStorySceneForm: FC = () => {
       <Autocomplete
         multiple
         sx={inputFieldStyles}
+        value={children.map((c) => ({
+          item: c,
+          label: allStoryScenes[c].title,
+        }))}
+        onChange={(_event, val, _reason, _details) => setChildren(
+            val.map((c) => c.item))}
         // value={.value}
         // onChange={(_event, val, _reason, _details) => props.onChange(val)}
         disableListWrap
@@ -139,7 +164,7 @@ const CreateOrEditStorySceneForm: FC = () => {
         // ListboxComponent={ListboxComponent}
         options={storyScenesWithAutocompleteFormatting}
         isOptionEqualToValue={(option, value) => option.item === value.item}
-        groupBy={(option) => option.group}
+        // groupBy={(option) => option.group}
         renderInput={(params) => <TextField {...params}
           label={'Child scene(s)'} />}
         // renderOption={renderOption}
@@ -148,8 +173,12 @@ const CreateOrEditStorySceneForm: FC = () => {
       <Autocomplete
         multiple
         sx={inputFieldStyles}
-        // value={.value}
-        // onChange={(_event, val, _reason, _details) => props.onChange(val)}
+        value={quests.map((q) => ({
+          item: q,
+          label: allQuests[q].title,
+        }))}
+        onChange={(_event, val, _reason, _details) => setQuests(
+            val.map((v) => v.item))}
         disableListWrap
         getOptionLabel={(option) => option.label}
         // PopperComponent={StyledPopper}
@@ -164,6 +193,8 @@ const CreateOrEditStorySceneForm: FC = () => {
       <TextField
         id="scene-description"
         style={inputFieldStyles}
+        value={summary}
+        onChange={(e) => setSummary(e.target.value)}
         label="Brief summary of key story events in this scene"
         multiline
       />
@@ -171,6 +202,7 @@ const CreateOrEditStorySceneForm: FC = () => {
         id="scene-description"
         style={inputFieldStyles}
         label="image url (must be publicly available)"
+        value={imgUrl}
         onChange={(e) => {
           const v = e.target.value;
           if (v !== null) {
@@ -179,18 +211,22 @@ const CreateOrEditStorySceneForm: FC = () => {
         }}
       />
       <img alt="preview image" height="50"
-        src={image}/>
+        src={imgUrl}/>
       <br />
       <TextField style={inputFieldStyles}
         id="scene-wiki-url"
+        value={wikiUrl}
+        onChange={(e) => setWikiUrl(e.target.value)}
         label="Public Wiki url (Google Doc url)" variant="outlined" />
       <Typography sx={{mt: 2}}>
-        Absolute path for backend node comma separated
+        Absolute path for the backend node, list MUST be separated by spaces
       </Typography>
       <TextField style={inputFieldStyles}
         id="backend-path"
+        value={backendPath.join(' ')}
+        onChange={(e) => setBackendPath(e.target.value.split(' '))}
         // eslint-disable-next-line max-len
-        label="For example: root,having-dinner,arrive-to-the-house"
+        label="For example: root having-dinner arrive-to-the-house"
         variant="outlined" />
       <Button
         variant="contained">Save changes</Button>
@@ -206,6 +242,7 @@ export default function BasicCard() {
   const selectedScene = allStoryEvents[context.selectedStorySceneID];
   const [formInit, setFormInit] = useRecoilState(
       createOrEditFormSceneStartingState);
+  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
   const [open, setOpen] = React.useState(false);
   const handleOpenEdit = () => {
@@ -245,6 +282,23 @@ export default function BasicCard() {
     }
   }, [open]);
 
+  const returnToScene = () => {
+    if (selectedScene.backendPath.length < 2) {
+      return;
+    }
+    setCurrentPage({
+      ...currentPage,
+      currentStores: {
+        ...(currentPage.currentStores as any as Stores),
+        currentConvoSegmentPath: {
+          id: selectedScene.backendPath[
+              selectedScene.backendPath.length - 1] as ConvoSegmentId,
+          parentModules: selectedScene.backendPath.slice(0, -1) as ModulePath,
+        },
+      }},
+    );
+  };
+
   return (
     <Card sx={{paddingTop: '150px', paddingLeft: '40px',
       paddingRight: '40px', backgroundImage: `url(${metalTex})`}}>
@@ -252,9 +306,51 @@ export default function BasicCard() {
         border: '5px solid #46c6ea',
         borderRadius: '7px'}}>
         <h2>{context.selectedStorySceneID}</h2>
-        <h2>{selectedScene.summary}</h2>
-        <h2>{selectedScene.parents.length !== 0 ?
-        selectedScene.parents : 'no parent'}</h2>
+        <img alt="preview image" width="200"
+          src={selectedScene.imgUrl}/>
+        <p>{selectedScene.summary}</p>
+        <h4>{selectedScene.parents.length !== 0 ?
+        'parents:' : 'no parent'}</h4>
+        {
+          selectedScene.parents.map((p) =>
+            <Chip label={allStoryEvents[p].title} sx={{
+              'height': 'auto',
+              '& .MuiChip-label': {
+                borderRadius: '25px',
+                whiteSpace: 'normal',
+                backgroundColor: '#ffb800',
+                color: 'black',
+              },
+            }}
+            key={p}
+            />,
+          )
+        }
+        <h4>{selectedScene.children.length !== 0 ?
+        'children:' : 'no children'}</h4>
+        {
+          selectedScene.parents.map((p) =>
+            <Chip label={allStoryEvents[p].title} sx={{
+              'height': 'auto',
+              '& .MuiChip-label': {
+                borderRadius: '25px',
+                whiteSpace: 'normal',
+                backgroundColor: 'lightBlue',
+                color: 'black',
+              },
+            }}
+            key={p}
+            />,
+          )
+        }
+        <br />
+        <br />
+        <NavLink to="/adventure" className="nav-item">
+          <Button onClick={returnToScene}
+            variant="contained" color='success'>Return to this scene</Button>
+        </NavLink>
+        <br />
+        <br />
         <Button onClick={handleOpenEdit}
           variant="contained">Edit this scene</Button>
         <br />

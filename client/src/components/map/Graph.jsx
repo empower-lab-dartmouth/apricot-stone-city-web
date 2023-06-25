@@ -31,13 +31,15 @@ export default function Graph() {
   // Random connected graph
   const gData = {
     nodes: Object.values(allScenes).map((event) => ({
-      id: event.title,
-      img: event.image,
+      id: event.id,
+      img: event.imgUrl,
     })),
-    links: Object.values(mockData).
-        filter((event) => event.parent !== null).map((event) => (
-          {source: event.parent, target: event.title}
-        )),
+    links: [...Object.values(allScenes)
+        .flatMap((s) => s.parents.map(
+            (p) => ({source: p, target: s.id}))),
+    ...Object.values(allScenes)
+        .flatMap((s) => s.children.map(
+            (c) => ({source: s.id, target: c})))],
   };
 
   return (
