@@ -209,24 +209,24 @@ function convoNode(content: _ConvoNode): ConvoNode {
     }
 }
 
-const defaultChoice: _Choice = {
-    text: '⟳',
-    logic: [
-        {
-            do: [
-                {
-                    type: 'goto',
-                    path: ['root', '/start'],
-                },
-            ],
-        },
-    ],
-}
+// const defaultChoice: _Choice = {
+//     text: '⟳',
+//     logic: [
+//         {
+//             do: [
+//                 {
+//                     type: 'goto',
+//                     path: ['root', '/start'],
+//                 },
+//             ],
+//         },
+//     ],
+// }
 
 function convoSegment(content: _ConvoSegment): ConvoSegment {
     return {
         id: convoSegmentId(content.id),
-        choices: [...content.choices, defaultChoice].map(unvalidated =>
+        choices: [...content.choices].map(unvalidated =>
             choice(unvalidated)
         ),
         convoNodes: content.convo.map(unvalidated => convoNode(unvalidated)),

@@ -11,6 +11,7 @@ import storytellerConfig from "./storyteller-config";
 import { State } from "./state/state-config";
 import ConvoManager from "./core/models/convo-engine/managers/convo-manager";
 import { ContinueConversationRequest } from "./core/models/api/client-side-types";
+import { AbsoluteConvoSegmentPath } from "./core/models/convo-engine/convo-graph/convo-path";
 
 dotenv.config();
 
@@ -52,12 +53,12 @@ const sampleResponse = {
 // route continue conversation
 app.post('/continue-conversation/', (req: Request, res: Response) => {
  const {context, action}: ContinueConversationRequest = req.body;
-  const initStateStores: Stores = {
+ const initStateStores: Stores = context.stores === undefined 
+  ? {
       variables: storytellerConfig.initialState as State,
-      currentConvoSegmentPath:
-          storytellerConfig.startingConvoSegmentPath,
-  }
-
+      currentConvoSegmentPath: storytellerConfig.startingConvoSegmentPath,
+  } : context.stores;
+  console.log(initStateStores);
   const convoManager: ConvoManager = convoManagerConstructor(
       storytellerConfig.rootModule,
       initStateStores

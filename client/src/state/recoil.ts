@@ -29,6 +29,11 @@ export const currentPageState = atom<PageData>({
   default: sampleData,
 });
 
+export const typewriterEffectState = atom<boolean>({
+  key: 'typewriter-effect',
+  default: true,
+});
+
 type ChallengeName = 'challenge_1'
 | 'challenge_2'
 | 'challenge_3'
@@ -50,7 +55,7 @@ export const competedChallengesState = atom<CompletedChallenges>({
 
 type QuestID = string
 
-type Quest = {
+export type Quest = {
   id: QuestID,
   title: string,
   learningObjectives: string,
@@ -62,16 +67,23 @@ export type EventType = string // Will further specify this later.
 export type SceneUUID = string // Unique universal IDentifier.
 export type Url = string
 export type UserUUID = string
+export type EditHistory = {
+  username: string,
+  date: Date
+}
+
 
 export type StoryScene = {
   id: SceneUUID,
   title: string,
-  description: string,
-  eventType: EventType,
-  AIConcept?: string,
-  parent: SceneUUID | null, // Title of the parent node.
-  image: Url
-  creator: UserUUID
+  summary: string,
+  quests: string[],
+  parents: string[],
+  children: string[],
+  imgUrl: string,
+  editHistory: EditHistory[]
+  wikiUrl: string,
+  backendPath: string[]
 }
 
 export const competedScenesState = atom<Record<SceneUUID, Date>>({

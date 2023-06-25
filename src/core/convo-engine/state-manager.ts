@@ -213,10 +213,15 @@ export const stateManagerConstructor: StateManagerConstructor = {
             rootModule,
             stateNavigationStoreFunctions
         )
+        const getStores: () => Stores = () => ({
+            variables: stateVariableStoreFunctions.getState() as any,
+            currentConvoSegmentPath: stateNavigationStoreFunctions.getCurrentConvoSegmentPath(),
+        });
         return {
             ...stateNavigationStoreFunctions,
             ...stateVariableStoreFunctions,
             ...stateNavigationFunctions,
+            getStores,
         }
     },
 }

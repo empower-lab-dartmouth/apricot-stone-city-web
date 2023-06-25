@@ -34,13 +34,18 @@ export interface StateNavigationFunctions {
     getAbsolutePath: (path: ConvoSegmentPath) => AbsoluteConvoSegmentPath
 }
 
+export interface GetStores {
+    getStores: () => Stores
+}
+
 // export type StateDependant<T> = (stateVariableFunctions: StateVariableStoreFunctions) => T
 
 // export type StateDependantNominal<K, T> = Nominal<K, StateDependant<T>>
 
 export type StateManager = StateVariableStoreFunctions &
     StateNavigationFunctions &
-    StateNavigationStoreFunctions
+    StateNavigationStoreFunctions &
+    GetStores
 
 export type StateManagerConstructor = {
     getOrInitStateManager: (

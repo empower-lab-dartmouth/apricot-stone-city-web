@@ -3,12 +3,15 @@ import {PageData} from '../components/page/page-model';
 import {CardData} from '../components/card/card-model';
 import {OptionData} from '../components/option/option-model';
 import {fetchContinueConversationData} from '../utils/data-utils';
+import {Stores} from '../utils/stores';
 
 const appendToPage: (pageData: PageData,
     selectedOption: OptionData,
     newCards: CardData[],
-    newOptions: OptionData[]) => PageData = (page,
-        selectedOption, newCards, newOptions) => ({
+    newOptions: OptionData[],
+    newStores: Stores) => PageData = (page,
+        selectedOption, newCards, newOptions, newStores) => ({
+      currentStores: newStores,
       chatHistory: [...page.chatHistory, selectedOption, ...newCards],
       options: newOptions,
     });
@@ -28,6 +31,7 @@ export const handleAction: (
             {
               context: {
                 username: 'SAMPLE',
+                stores: currentPage.currentStores,
               },
               action: optionData.action,
             });
@@ -35,7 +39,7 @@ export const handleAction: (
           console.log(updates);
           const newPage = appendToPage(currentPage,
               optionData,
-              updates.cards, updates.options);
+              updates.cards, updates.options, updates.context);
           setCurrentPage(newPage);
         } else {
           console.log(
