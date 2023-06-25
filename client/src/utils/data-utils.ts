@@ -11,7 +11,7 @@ export const CONTINUE_CONVERSATION_PATH = 'continue-conversation/';
 
 export type ClientSideUserContext = {
   username: string,
-  context?: Stores,
+  stores?: Stores,
 }
 
 export type ContinueConversationRequest = {

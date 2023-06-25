@@ -31,7 +31,7 @@ export const handleAction: (
             {
               context: {
                 username: 'SAMPLE',
-                context: currentPage.currentStores,
+                stores: currentPage.currentStores,
               },
               action: optionData.action,
             });

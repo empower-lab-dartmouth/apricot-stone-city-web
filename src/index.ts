@@ -58,7 +58,7 @@ app.post('/continue-conversation/', (req: Request, res: Response) => {
       variables: storytellerConfig.initialState as State,
       currentConvoSegmentPath: storytellerConfig.startingConvoSegmentPath,
   } : context.stores;
-
+  console.log(initStateStores);
   const convoManager: ConvoManager = convoManagerConstructor(
       storytellerConfig.rootModule,
       initStateStores
