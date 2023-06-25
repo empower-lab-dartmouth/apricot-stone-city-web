@@ -4,6 +4,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
 import Typewriter from 'typewriter-effect';
+import {typewriterEffectState} from '../../state/recoil';
+import {useRecoilValue} from 'recoil';
+import Typography from '@mui/material/Typography';
 
 
 // const TextCard: React.FC<TextCardData> = ({text}) => (
@@ -17,10 +20,14 @@ type CardDataParams = {
   cardData: CardData
 }
 
-const CardFC: React.FC<CardDataParams> = ({cardData}) => (
-  <>
-    <Box sx={{width: '50%', marginBottom: '3px'}}>
-      {cardData.type === 'image' ?
+const CardFC: React.FC<CardDataParams> = ({cardData}) => {
+  const typewriterEffectOn = useRecoilValue(
+      typewriterEffectState);
+
+  return (
+    <>
+      <Box sx={{width: '50%', marginBottom: '3px'}}>
+        {cardData.type === 'image' ?
       <div style={{
         backgroundColor: 'white',
         borderRadius: '100px',
@@ -35,6 +42,7 @@ const CardFC: React.FC<CardDataParams> = ({cardData}) => (
       </div> :
       <Card variant="outlined" sx={{backgroundColor: 'rgba(1,0,0,. 5)'}}>
         <CardContent>
+          { typewriterEffectOn ?
           <Typewriter
             options={{
               cursor: '',
@@ -43,11 +51,16 @@ const CardFC: React.FC<CardDataParams> = ({cardData}) => (
               autoStart: true,
               loop: false,
             }}
-          />
+          /> :
+          <Typography sx={{fontSize: 16}} color="black" gutterBottom>
+            {cardData.text}
+          </Typography>
+          }
         </CardContent>
       </Card>}
-    </Box>
-  </>
-);
+      </Box>
+    </>
+  );
+};
 
 export default CardFC;

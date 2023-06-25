@@ -1,5 +1,5 @@
 export type AppendToPage = {
-    type: 'click-option'
+    type: 'click-option' | 'free-response'
     option: string
 }
 

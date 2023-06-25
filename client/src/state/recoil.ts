@@ -29,6 +29,11 @@ export const currentPageState = atom<PageData>({
   default: sampleData,
 });
 
+export const typewriterEffectState = atom<boolean>({
+  key: 'typewriter-effect',
+  default: true,
+});
+
 type ChallengeName = 'challenge_1'
 | 'challenge_2'
 | 'challenge_3'
