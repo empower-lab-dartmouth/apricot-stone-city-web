@@ -37,6 +37,21 @@ type CreateOrEditFormStartingState = {
   editHistory: EditHistory[]
 }
 
+// Just for typechecking
+const defaultVal: CreateOrEditFormStartingState = {
+  isNewScene: true,
+  title: '',
+  id: '',
+  quests: [],
+  children: [],
+  parents: [],
+  summary: '',
+  imgUrl: '',
+  wikiUrl: '',
+  backendPath: [],
+  editHistory: [],
+};
+
 const createOrEditFormSceneStartingState = atom<CreateOrEditFormStartingState
 | undefined>({
   key: 'CreateOrEditFormStartingState',
@@ -46,8 +61,10 @@ const createOrEditFormSceneStartingState = atom<CreateOrEditFormStartingState
 const CreateOrEditStorySceneForm: FC = () => {
   const [image, setImage] = useState<string>(imgNotFound);
   const allStoryScenes = useRecoilValue(allScenesState);
-  const startingFormState = useRecoilValue(createOrEditFormSceneStartingState);
-  const [sceneTitle, setSceneTitle] = useState<string>();
+  const possiblyUndefined = useRecoilValue(createOrEditFormSceneStartingState);
+  const startingFormState = possiblyUndefined === undefined ?
+    defaultVal : possiblyUndefined;
+  const [sceneTitle, setSceneTitle] = useState<string>(startingFormState.title);
 
   const questsWithAutocompleteFormatting = Object
       .values(allQuests)
@@ -91,6 +108,8 @@ const CreateOrEditStorySceneForm: FC = () => {
       </Typography>
       <TextField style={inputFieldStyles}
         id="scene-title"
+        value={sceneTitle}
+        onChange={(e) => setSceneTitle(e.target.value)}
         label="Scene title (must be unique)" variant="outlined" />
       <Autocomplete
         multiple
@@ -236,10 +255,13 @@ export default function BasicCard() {
         <h2>{selectedScene.summary}</h2>
         <h2>{selectedScene.parents.length !== 0 ?
         selectedScene.parents : 'no parent'}</h2>
-        <Button onClick={handleOpenCreateNew}
-          variant="contained">Create new scene</Button>
         <Button onClick={handleOpenEdit}
-          variant="contained">Create new scene</Button>
+          variant="contained">Edit this scene</Button>
+        <br />
+        <br />
+        <Button onClick={handleOpenCreateNew}
+          variant="contained">Create new scene <br />
+          (as a child of this scene)</Button>
       </CardContent>
       <Dialog
         open={open}

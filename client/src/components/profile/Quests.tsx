@@ -18,6 +18,7 @@ import {Bar,
   XAxis,
   YAxis} from 'recharts';
 import {Stack} from '@mui/material';
+import {User} from 'firebase/auth';
 
 const data = [
   {
@@ -34,7 +35,7 @@ export default function Quests() {
   const allScenes = useRecoilValue(allScenesState);
   const scenesPerQuest = Object.values(allQuests)
       .map((quest) => Object.values(allScenes)
-          .filter((scene) => scene.AIConcept === quest.id));
+          .filter((scene) => quest.id in scene.quests ));
   const completedScenesPerQuest = Object.values(scenesPerQuest)
       .map((scenesForQuest_i) => scenesForQuest_i
           .filter((scene) => completedScenes[scene.id] === undefined));
@@ -43,7 +44,15 @@ export default function Quests() {
           .filter((scene) => completedScenes[scene.id] !== undefined));
   const createdScenesPerQuest = Object.values(scenesPerQuest)
       .map((scenesForQuest_i) => scenesForQuest_i
-          .filter((scene) => scene.creator === currentUser?.email));
+          .filter((scene) => {
+            if (currentUser === undefined) {
+              return true;
+            } else {
+              return (((currentUser?.email) as any as string) in
+               scene.editHistory
+                   .map((v) => v.username));
+            }
+          }));
 
   const chartData = Object.values(allQuests).map((val, idx) => ([{
     'name': val.title,
