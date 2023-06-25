@@ -55,7 +55,7 @@ export const competedChallengesState = atom<CompletedChallenges>({
 
 type QuestID = string
 
-type Quest = {
+export type Quest = {
   id: QuestID,
   title: string,
   learningObjectives: string,

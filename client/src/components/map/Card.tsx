@@ -3,39 +3,51 @@
 import React, {FC, useState} from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import {useRecoilValue} from 'recoil';
+import {atom, useRecoilValue} from 'recoil';
 import {userContextState} from './graph-recoil';
 import metalTex from '../../assets/metal-tex.webp';
-import {allScenesState} from '../../state/recoil';
+import {Quest, allScenesState} from '../../state/recoil';
 import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
 import {Autocomplete, Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   TextField, Typography} from '@mui/material';
 import {allQuests} from '../../state/recoil';
 
 
 const imgNotFound = 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png';
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  bgcolor: 'background.paper',
-
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
 const inputFieldStyles = {
   width: '100%',
   paddingBottom: '10px',
 };
 
-const CreateNewStorySceneForm: FC = () => {
+type CreateOrEditFormStartingState = {
+  isNewScene: boolean,
+  title: string,
+  id: string,
+  quests: Quest[],
+  children: string[],
+  parents: string[],
+  summary: string[],
+  imgUrl: string,
+  wikiUrl: string,
+  backendPath: string,
+}
+
+const createOrEditFormSceneStartingState = atom<CreateOrEditFormStartingState
+| undefined>({
+  key: 'CreateOrEditFormStartingState',
+  default: undefined,
+});
+
+const CreateOrEditStorySceneForm: FC = () => {
   const [image, setImage] = useState<string>(imgNotFound);
   const allStoryScenes = useRecoilValue(allScenesState);
+  const useRecoilValue(createOrEditFormSceneStartingState);
+  const [sceneTitle, setSceneTitle] = useState<string>();
+
   const questsWithAutocompleteFormatting = Object
       .values(allQuests)
       .map((q) => ({
@@ -68,10 +80,7 @@ const CreateNewStorySceneForm: FC = () => {
       }));
 
   return (
-    <Box sx={style}>
-      <Typography variant="h6" component="h2">
-            Create or edit a story scene
-      </Typography>
+    <Box>
       <Typography sx={{mt: 2}}>
             Please provide summary information below about
              the scene you are editing.
@@ -152,9 +161,21 @@ const CreateNewStorySceneForm: FC = () => {
       <img alt="preview image" height="50"
         src={image}/>
       <br />
+      <TextField style={inputFieldStyles}
+        id="scene-wiki-url"
+        label="Public Wiki url (Google Doc url)" variant="outlined" />
+      <Typography sx={{mt: 2}}>
+        Absolute path for backend node comma separated
+      </Typography>
+      <TextField style={inputFieldStyles}
+        id="backend-path"
+        // eslint-disable-next-line max-len
+        label="For example: root,having-dinner,arrive-to-the-house"
+        variant="outlined" />
       <Button
         variant="contained">Save changes</Button>
-      <h4>To disregard changes, click outside this pop-up</h4>
+      <h4>To disregard changes, click outside this pop-up.</h4>
+      <h4>After saving a change, refresh the page to see your updates.</h4>
     </Box>
   );
 };
@@ -163,9 +184,20 @@ export default function BasicCard() {
   const context = useRecoilValue(userContextState);
   const allStoryEvents = useRecoilValue(allScenesState);
   const selectedScene = allStoryEvents[context.selectedStorySceneID];
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const descriptionElementRef = React.useRef<HTMLElement>(null);
+  React.useEffect(() => {
+    if (open) {
+      const {current: descriptionElement} = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [open]);
+
   return (
     <Card sx={{paddingTop: '150px', paddingLeft: '40px',
       paddingRight: '40px', backgroundImage: `url(${metalTex})`}}>
@@ -179,14 +211,20 @@ export default function BasicCard() {
         <Button onClick={handleOpen}
           variant="contained">Create new scene</Button>
       </CardContent>
-      <Modal
+      <Dialog
         open={open}
+        scroll={'body'}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <CreateNewStorySceneForm />
-      </Modal>
+        <DialogTitle id="scroll-dialog-title">
+          Create or edit a story scene</DialogTitle>
+        <DialogContent
+          dividers>
+          <CreateOrEditStorySceneForm />
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
