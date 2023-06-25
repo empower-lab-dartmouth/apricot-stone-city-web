@@ -45,8 +45,11 @@ export default function Graph() {
   return (
     <div className='graph background-img'>
       <ForceGraph3D
+        linkOpacity={1}
         graphData={gData}
-        linkWidth={5}
+        linkDirectionalArrowLength={10}
+        linkDirectionalArrowRelPos={1}
+        linkWidth={1}
         backgroundColor='rgba(255, 255, 255, 0)'
         nodeLabel={'title'}
         nodeThreeObject={({img}) => {

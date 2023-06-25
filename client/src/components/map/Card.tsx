@@ -342,7 +342,7 @@ export default function BasicCard() {
         <p>{selectedScene.children.length !== 0 ?
         'children:' : 'no children'}</p>
         {
-          selectedScene.parents.map((p) =>
+          selectedScene.children.map((p) =>
             <Chip label={allStoryEvents[p].title} sx={{
               'height': 'auto',
               '& .MuiChip-label': {

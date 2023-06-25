@@ -88,6 +88,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
               text: inputtedFreeResponseText,
               type: 'option'}, currentPage, setCurrentPage);
             setInputtedFreeResponseText('');
+            setFreeResponseModalOpen(false);
           }}>Submit</Button>
         </Box>
       </Modal>
