@@ -1,6 +1,7 @@
 import {CardData} from '../components/card/card-model';
 import {OptionData} from '../components/option/option-model';
 import {Action} from '../state/action';
+import {Stores} from './stores';
 
 export const IS_DEV = true;
 export const BASE_DEV_URL = 'http://localhost:8000/';
@@ -10,6 +11,7 @@ export const CONTINUE_CONVERSATION_PATH = 'continue-conversation/';
 
 export type ClientSideUserContext = {
   username: string,
+  context?: Stores,
 }
 
 export type ContinueConversationRequest = {
@@ -26,6 +28,7 @@ export type ContinueConversationResponse = {
   type: 'continuation-data'
   cards: CardData[]
   options: OptionData[]
+  context: Stores
 }
 
 export const fetchContinueConversationData: (req: ContinueConversationRequest)

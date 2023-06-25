@@ -31,6 +31,7 @@ export const sampleData: PageData = {
       text: 'this is a text message',
     },
   ],
+  currentStores: undefined,
   options: [
     {id: '0', type: 'option', text: 'optiofdgdsfgfdgn1', action: sampleAction},
     {id: '1', type: 'option', text: 'dgdsfgfdgn1', action: sampleAction},

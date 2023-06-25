@@ -76,7 +76,9 @@ const CreateNewStorySceneForm: FC = () => {
             Please provide summary information below about
              the scene you are editing.
       </Typography>
-      <br />
+      <Typography color="gray" sx={{mt: 2}}>
+            Last updated by: <i>username</i>
+      </Typography>
       <TextField style={inputFieldStyles}
         id="scene-title"
         label="Scene title (must be unique)" variant="outlined" />
@@ -149,6 +151,10 @@ const CreateNewStorySceneForm: FC = () => {
       />
       <img alt="preview image" height="50"
         src={image}/>
+      <br />
+      <Button
+        variant="contained">Save changes</Button>
+      <h4>To disregard changes, click outside this pop-up</h4>
     </Box>
   );
 };

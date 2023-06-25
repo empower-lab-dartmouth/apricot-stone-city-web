@@ -251,6 +251,7 @@ const executeConvoLogic: (logic: ExecuteConvoLogicParams) => ContinueConversatio
         type: 'continuation-data',
         cards: cards,
         options: [...freeResponseOption, ...keyboardOptions],
+        context: stateManager.getStores()
     })
 }
 
@@ -372,6 +373,7 @@ export const convoManagerConstructor: ConvoManagerConstructor = (
                             type: 'text',
                             text: defaultResponse,
                         }],
+                        context: stateManager.getStores(),
                         options: keyboardButtons.map((c) => ({
                             text: c,
                             action: {

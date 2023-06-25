@@ -1,3 +1,6 @@
+import { AbsoluteConvoSegmentPath } from "../convo-engine/convo-graph/convo-path"
+import { Stores } from "../state/state"
+
 export type ImageCardData = {
     type: 'image'
     src: string
@@ -34,11 +37,13 @@ export type ContinueConversationResponse = {
   type: 'continuation-data'
   cards: CardData[]
   options: OptionData[]
+  context: Stores
 }
 
 
 export type ClientSideUserContext = {
   username: string,
+  stores?: Stores
 }
 
 export type ContinueConversationRequest = {
