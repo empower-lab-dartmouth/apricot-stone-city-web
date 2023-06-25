@@ -6,17 +6,20 @@ import CardContent from '@mui/material/CardContent';
 import {atom, useRecoilState, useRecoilValue} from 'recoil';
 import {userContextState} from './graph-recoil';
 import metalTex from '../../assets/metal-tex.webp';
-import {EditHistory, allScenesState, currentPageState} from '../../state/recoil';
+import {EditHistory, allScenesState,
+  currentPageState} from '../../state/recoil';
 import Button from '@mui/material/Button';
 import {Autocomplete, Box,
   Chip,
   Dialog,
   DialogContent,
   DialogTitle,
+  Stack,
   TextField, Typography} from '@mui/material';
 import {allQuests} from '../../state/recoil';
 import {NavLink} from 'react-router-dom';
 import {ConvoSegmentId, ModulePath, Stores} from '../../utils/stores';
+import {handleAction} from '../../state/handle-action';
 
 
 const imgNotFound = 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png';
@@ -286,17 +289,27 @@ export default function BasicCard() {
     if (selectedScene.backendPath.length < 2) {
       return;
     }
+    const stores: Stores = {
+      ...(currentPage.currentStores as any as Stores),
+      currentConvoSegmentPath: {
+        id: selectedScene.backendPath[
+            selectedScene.backendPath.length - 1] as ConvoSegmentId,
+        parentModules: selectedScene.backendPath.slice(0, -1) as ModulePath,
+      },
+    };
     setCurrentPage({
       ...currentPage,
-      currentStores: {
-        ...(currentPage.currentStores as any as Stores),
-        currentConvoSegmentPath: {
-          id: selectedScene.backendPath[
-              selectedScene.backendPath.length - 1] as ConvoSegmentId,
-          parentModules: selectedScene.backendPath.slice(0, -1) as ModulePath,
-        },
-      }},
-    );
+      currentStores: stores});
+    handleAction({
+      action: {
+        type: 'click-option',
+        option: 'Returning to a scene!',
+      },
+      id: 'free-response',
+      text: 'Returning to a scene!',
+      type: 'option'}, {
+      ...currentPage,
+      currentStores: stores}, setCurrentPage);
   };
 
   return (
@@ -309,8 +322,8 @@ export default function BasicCard() {
         <img alt="preview image" width="200"
           src={selectedScene.imgUrl}/>
         <p>{selectedScene.summary}</p>
-        <h4>{selectedScene.parents.length !== 0 ?
-        'parents:' : 'no parent'}</h4>
+        <p>{selectedScene.parents.length !== 0 ?
+        'parents:' : 'no parents'}</p>
         {
           selectedScene.parents.map((p) =>
             <Chip label={allStoryEvents[p].title} sx={{
@@ -326,8 +339,8 @@ export default function BasicCard() {
             />,
           )
         }
-        <h4>{selectedScene.children.length !== 0 ?
-        'children:' : 'no children'}</h4>
+        <p>{selectedScene.children.length !== 0 ?
+        'children:' : 'no children'}</p>
         {
           selectedScene.parents.map((p) =>
             <Chip label={allStoryEvents[p].title} sx={{
@@ -350,7 +363,40 @@ export default function BasicCard() {
             variant="contained" color='success'>Return to this scene</Button>
         </NavLink>
         <br />
-        <br />
+        {
+          !selectedScene.wikiUrl.includes('docs.google.com') ?
+          <p>Wiki not yet implemented.</p> :
+          // eslint-disable-next-line react/jsx-no-target-blank
+          <a target="_blank" href={selectedScene.wikiUrl}><p>Wiki link</p></a>
+        }
+        {
+          selectedScene.backendPath.length === 0 ?
+          <p>Backend not yet implemented.</p> :
+          <>
+            <p>backend path:</p>
+            <Stack direction="column" spacing={0}>
+              {
+                selectedScene.backendPath.map((p) =>
+                  <Chip label={p} sx={{
+                    'height': 'auto',
+                    '& .MuiChip-label': {
+                      borderRadius: '25px',
+                      whiteSpace: 'normal',
+                      backgroundColor: 'white',
+                      border: 'black',
+                      borderStyle: 'solid',
+                      borderWidth: '3px',
+                      color: 'black',
+                    },
+                  }}
+                  key={p}
+                  />,
+                )
+              }
+            </Stack>
+            <br />
+          </>
+        }
         <Button onClick={handleOpenEdit}
           variant="contained">Edit this scene</Button>
         <br />
