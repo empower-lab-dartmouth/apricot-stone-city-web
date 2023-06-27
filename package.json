@@ -19,7 +19,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.13.5",
+    "@mui/material": "^5.13.6",
     "@types/autosuggest-highlight": "^3.2.0",
     "@types/react-window": "^1.8.5",
     "autosuggest-highlight": "^3.3.4",

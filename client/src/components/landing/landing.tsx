@@ -39,9 +39,10 @@ function Home() {
     try {
       // Send the email and password to firebase
       const userCredential = await signInUser(email, password);
-
+      // TODO load content from fb
       if (userCredential) {
         resetFormFields();
+
         navigate('/profile');
       }
     } catch (error:any) {

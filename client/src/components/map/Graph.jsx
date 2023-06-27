@@ -45,7 +45,7 @@ export default function Graph() {
   return (
     <div className='graph background-img'>
       <ForceGraph3D
-        linkOpacity={1}
+        linkOpacity={.85}
         graphData={gData}
         linkDirectionalArrowLength={10}
         linkDirectionalArrowRelPos={1}

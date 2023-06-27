@@ -1,16 +1,20 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable require-jsdoc */
-import React, {FC, useState} from 'react';
+import React, {FC, useContext, useState} from 'react';
+import {db} from '../firebase/firebase-config';
+import {doc, setDoc} from 'firebase/firestore';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import {atom, useRecoilState, useRecoilValue} from 'recoil';
 import {userContextState} from './graph-recoil';
 import metalTex from '../../assets/metal-tex.webp';
-import {EditHistory, allScenesState,
+import {EditHistory, StoryScene, allScenesState,
   currentPageState} from '../../state/recoil';
 import Button from '@mui/material/Button';
+// import CloseIcon from '@mui/icons-material/Close';
 import {Autocomplete, Box,
   Chip,
+  // Collapse,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -20,9 +24,13 @@ import {allQuests} from '../../state/recoil';
 import {NavLink} from 'react-router-dom';
 import {ConvoSegmentId, ModulePath, Stores} from '../../utils/stores';
 import {handleAction} from '../../state/handle-action';
+import {AuthContext} from '../../context/auth-context';
+import Alert from '@mui/material/Alert';
+// import IconButton from '@mui/material/IconButton';
 
 
 const imgNotFound = 'https://www.salonlfc.com/wp-content/uploads/2018/01/image-not-found-scaled-1150x647.png';
+const signpostImgUrl = 'https://1.bp.blogspot.com/-SZH-Z1gknUY/YQBYZZgY3DI/AAAAAAAAqv8/QvQ7ZufrvLQfHs-2wldq7z01TNXMp4y9ACNcBGAsYHQ/s16000/Sign.png';
 
 const inputFieldStyles = {
   width: '100%',
@@ -64,11 +72,37 @@ const createOrEditFormSceneStartingState = atom<CreateOrEditFormStartingState
   default: undefined,
 });
 
+const createOrEditFormOpen = atom<boolean>({
+  key: 'createOrEditFormOpen',
+  default: false,
+});
+
+
+const updateFB = async (updatedStoryScene: StoryScene) => {
+  // do firebase stuff to write
+  console.log('submitting');
+  try {
+    await setDoc(
+        doc(db, 'StoryScene', updatedStoryScene.id), updatedStoryScene);
+    await setDoc(
+        doc(db, 'UpdateHistory', Date.now().toString()), updatedStoryScene);
+    console.log('Document written to fb');
+  } catch (e) {
+    console.error('Error adding document: ', e);
+  }
+};
+
 const CreateOrEditStorySceneForm: FC = () => {
-  const allStoryScenes = useRecoilValue(allScenesState);
+  const [allStoryScenes, setAllScenes] = useRecoilState(allScenesState);
   const possiblyUndefined = useRecoilValue(createOrEditFormSceneStartingState);
   const startingFormState = possiblyUndefined === undefined ?
     defaultVal : possiblyUndefined;
+  const {currentUser} = useContext(AuthContext);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [formInit, setFormInit] = useRecoilState(
+      createOrEditFormSceneStartingState);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [open, setOpen] = useRecoilState(createOrEditFormOpen);
   const [sceneTitle, setSceneTitle] = useState<string>(startingFormState.title);
   const [summary, setSummary] = useState<string>(startingFormState.summary);
   const [quests, setQuests] = useState<string[]>(startingFormState.quests);
@@ -82,6 +116,33 @@ const CreateOrEditStorySceneForm: FC = () => {
       startingFormState.wikiUrl);
   const [backendPath, setBackendPath] = useState<string[]>(
       startingFormState.backendPath);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [imgUrlWorks, setImgUrlWorks] = useState<boolean>(true);
+
+
+  const submitForm = () => {
+    const update: StoryScene = {
+      title: sceneTitle,
+      id: startingFormState.id,
+      quests: quests,
+      children: children,
+      parents: parents,
+      summary: summary,
+      imgUrl: imgUrl,
+      wikiUrl: wikiUrl,
+      backendPath: backendPath,
+      editHistory: [{
+        username: (currentUser?.email) as any as string,
+        date: Date(),
+      },
+      ...startingFormState.editHistory],
+    };
+    updateFB(update);
+    setAllScenes({
+      ...allStoryScenes,
+      [startingFormState.id]: update,
+    });
+  };
 
   const questsWithAutocompleteFormatting = Object
       .values(allQuests)
@@ -97,12 +158,14 @@ const CreateOrEditStorySceneForm: FC = () => {
     request.send();
     request.onload = function() {
       const status = request.status;
-      if (status == 200) {
+      if (status == 200 && url !== imgNotFound) {
         console.log('imageLoads!');
         setImgUrl(url);
+        setImgUrlWorks(true);
       } else {
         console.log('image does not load');
         setImgUrl(imgNotFound);
+        setImgUrlWorks(false);
       }
     };
   };
@@ -120,9 +183,16 @@ const CreateOrEditStorySceneForm: FC = () => {
             Please provide summary information below about
              the scene you are editing.
       </Typography>
-      <Typography color="gray" sx={{mt: 2}}>
-            Last updated by: <i>username</i>
-      </Typography>
+      {
+        startingFormState.editHistory.length > 0 ?
+        <Typography color="gray" sx={{mt: 2}}>
+            Last updated by:
+          <i>{startingFormState.editHistory[0].username}</i>,
+          {startingFormState.editHistory[0].date}
+        </Typography> :
+      <></>
+      }
+
       <TextField style={inputFieldStyles}
         id="scene-title"
         value={sceneTitle}
@@ -231,8 +301,21 @@ const CreateOrEditStorySceneForm: FC = () => {
         // eslint-disable-next-line max-len
         label="For example: root having-dinner arrive-to-the-house"
         variant="outlined" />
+      {
+          !imgUrlWorks ?
+      <Alert variant="filled" severity="error">
+        Image url must be valid, please fix.
+      </Alert> : <></>
+      }
       <Button
-        variant="contained">Save changes</Button>
+        disabled={
+          !imgUrlWorks
+        }
+        variant="contained" onClick={() => {
+          submitForm();
+          setOpen(false);
+          setFormInit(undefined);
+        }}>Save changes</Button>
       <h4>To disregard changes, click outside this pop-up.</h4>
       <h4>After saving a change, refresh the page to see your updates.</h4>
     </Box>
@@ -247,7 +330,7 @@ export default function BasicCard() {
       createOrEditFormSceneStartingState);
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useRecoilState(createOrEditFormOpen);
   const handleOpenEdit = () => {
     setFormInit({
       isNewScene: false,
@@ -258,13 +341,13 @@ export default function BasicCard() {
   const handleOpenCreateNew = () => {
     setFormInit({
       isNewScene: true,
-      id: ((new Date).getMilliseconds.toString()),
+      id: Date.now().toString(),
       title: '',
       summary: '',
       quests: [],
       parents: [selectedScene.id],
       children: [],
-      imgUrl: imgNotFound,
+      imgUrl: signpostImgUrl,
       editHistory: [],
       wikiUrl: 'Create a new Google Doc and update this value with that url',
       backendPath: ['NOT_YET_IMPLEMENTED'],
@@ -358,11 +441,17 @@ export default function BasicCard() {
         }
         <br />
         <br />
-        <NavLink to="/adventure" className="nav-item">
-          <Button onClick={returnToScene}
-            variant="contained" color='success'>Return to this scene</Button>
-        </NavLink>
-        <br />
+        {
+          selectedScene.backendPath.length <= 1 ? <></> :
+          <>
+            <NavLink to="/adventure" className="nav-item">
+              <Button onClick={returnToScene}
+                variant="contained" color='success'>
+                  Return to this scene</Button>
+            </NavLink>
+            <br />
+          </>
+        }
         {
           !selectedScene.wikiUrl.includes('docs.google.com') ?
           <p>Wiki not yet implemented.</p> :

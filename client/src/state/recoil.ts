@@ -21,7 +21,8 @@ import questFeatureSetImg
   from '../assets/quest-features.png';
 import questLargeDataImg
   from '../assets/quest-large-data-sets.webp';
-import {mockData} from '../components/create/types';
+import {collection, getDocs} from 'firebase/firestore';
+import {db} from '../components/firebase/firebase-config';
 
 
 export const currentPageState = atom<PageData>({
@@ -69,7 +70,7 @@ export type Url = string
 export type UserUUID = string
 export type EditHistory = {
   username: string,
-  date: Date
+  date: string
 }
 
 
@@ -91,9 +92,20 @@ export const competedScenesState = atom<Record<SceneUUID, Date>>({
   default: {},
 });
 
+const loadStoryScenesFromFB = async () => {
+  const querySnapshot = await getDocs(collection(db, 'StoryScene'));
+  console.log(querySnapshot);
+  return querySnapshot.docs.map((doc) => doc.data()).reduce((obj, item) => {
+    return {
+      ...obj,
+      [item.id]: item,
+    };
+  }, {}) as any as Record<SceneUUID, StoryScene>;
+};
+
 export const allScenesState =atom<Record<SceneUUID, StoryScene>>({
   key: 'all-scenes',
-  default: mockData,
+  default: loadStoryScenesFromFB(),
 });
 
 // export const competedQuestsState = atom<Record<QuestID, SceneUUID[]>>({
