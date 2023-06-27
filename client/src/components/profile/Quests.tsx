@@ -35,7 +35,7 @@ export default function Quests() {
   const allScenes = useRecoilValue(allScenesState);
   const scenesPerQuest = Object.values(allQuests)
       .map((quest) => Object.values(allScenes)
-          .filter((scene) => quest.id in scene.quests ));
+          .filter((scene) => scene.quests.includes(quest.id) ));
   const completedScenesPerQuest = Object.values(scenesPerQuest)
       .map((scenesForQuest_i) => scenesForQuest_i
           .filter((scene) => !completedScenes.has(scene.id)));
@@ -48,9 +48,9 @@ export default function Quests() {
             if (currentUser === undefined) {
               return true;
             } else {
-              return (((currentUser?.email) as any as string) in
-               scene.editHistory
-                   .map((v) => v.username));
+              return (scene.editHistory
+                  .map((v) => v.username)
+                  .includes(((currentUser?.email) as any as string)));
             }
           }));
 

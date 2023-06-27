@@ -7,8 +7,9 @@ import {
   Routes, Route, useNavigate,
 } from 'react-router-dom';
 import './App.css';
-import {currentPageState} from './state/recoil';
-import Landing, {loadStoryScenesFromFB} from './components/landing/landing';
+import {competedScenesState, currentPageState} from './state/recoil';
+import Landing, {loadStoryScenesFromFB,
+  loadVisitedScenesFromFB} from './components/landing/landing';
 import Page from './components/page/Page';
 import Main from './components/map/Main';
 import Form from './components/create/Form';
@@ -24,7 +25,8 @@ const App = () => {
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [visitedScenes, setVisitedScenes] = useRecoilState(competedScenesState);
   // NOTE: console log for testing purposes
   console.log('User:', !!currentUser);
 
@@ -33,6 +35,8 @@ const App = () => {
     if (currentUser) {
       loadStoryScenesFromFB(currentUser?.email as string,
           setCurrentPage);
+      loadVisitedScenesFromFB(currentUser?.email as string,
+          setVisitedScenes);
       navigate('/adventure');
     }
   }, [currentUser]);

@@ -19,7 +19,10 @@ import {Autocomplete, Box,
   Dialog,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
+  FormGroup,
   Stack,
+  Switch,
   TextField, Typography} from '@mui/material';
 import {allQuests} from '../../state/recoil';
 import {NavLink} from 'react-router-dom';
@@ -323,8 +326,17 @@ const CreateOrEditStorySceneForm: FC = () => {
   );
 };
 
+
+const hasPermissions: (completedScenes: Set<string>,
+  selectedScene: StoryScene,
+  username: string) => boolean = (completedScenes,
+      selectedScene, username) =>
+    completedScenes.has(selectedScene.id) ||
+    selectedScene.editHistory.map((v) => v.username).includes(username);
+
 export default function BasicCard() {
   const context = useRecoilValue(userContextState);
+  const [editHistoryHidden, setEditHistoryHidden] = useState(true);
   const allStoryEvents = useRecoilValue(allScenesState);
   const selectedScene = allStoryEvents[context.selectedStorySceneID];
   const [formInit, setFormInit] = useRecoilState(
@@ -411,7 +423,47 @@ export default function BasicCard() {
         <h2>{selectedScene.title}</h2>
         <img alt="preview image" width="200"
           src={selectedScene.imgUrl}/>
-        <p>{selectedScene.summary}</p>
+        {
+            hasPermissions(completedScenes, selectedScene,
+              currentUser?.email as string) ?
+            <p>{selectedScene.summary}</p> :
+            <>
+              <br />
+              <Alert variant="filled" severity="info">
+              Scene info will be unlocked <br />
+              once you complete
+                this scene in <br />
+                adventure mode.
+              </Alert>
+            </>
+        }
+        <p>{selectedScene.quests.length !== 0 ?
+        'Quests fulfilled:' : ''}</p>
+        {
+          selectedScene.quests.map((p) =>
+            <>
+              <Stack
+                direction="column"
+                justifyContent="flex-start"
+                alignItems="flex-start"
+                spacing={0.5}
+              >
+                <img src={allQuests[p].img} style={{width: '62px'}}/>
+                <Chip label={allQuests[p].title} sx={{
+                  'height': 'auto',
+                  '& .MuiChip-label': {
+                    borderRadius: '25px',
+                    whiteSpace: 'normal',
+                    backgroundColor: 'lightGreen',
+                    color: 'black',
+                  },
+                }}
+                key={p}
+                />,
+              </Stack>
+            </>,
+          )
+        }
         <p>{selectedScene.parents.length !== 0 ?
         'parents:' : 'no parents'}</p>
         {
@@ -446,9 +498,13 @@ export default function BasicCard() {
             />,
           )
         }
-        <br />
-        <br />
         {
+         hasPermissions(completedScenes, selectedScene,
+          currentUser?.email as string) ?
+         <>
+           <br />
+           <br />
+           {
           selectedScene.backendPath.length <= 1 ? <></> :
           <>
             <NavLink to="/adventure" className="nav-item">
@@ -458,14 +514,14 @@ export default function BasicCard() {
             </NavLink>
             <br />
           </>
-        }
-        {
+           }
+           {
           !selectedScene.wikiUrl.includes('docs.google.com') ?
           <p>Wiki not yet implemented.</p> :
           // eslint-disable-next-line react/jsx-no-target-blank
           <a target="_blank" href={selectedScene.wikiUrl}><p>Wiki link</p></a>
-        }
-        {
+           }
+           {
           selectedScene.backendPath.length === 0 ?
           <p>Backend not yet implemented.</p> :
           <>
@@ -492,33 +548,58 @@ export default function BasicCard() {
             </Stack>
             <br />
           </>
-        }
-        <Button onClick={handleOpenEdit}
-          variant="contained">Edit this scene</Button>
-        <br />
-        <br />
-        <Button onClick={handleOpenCreateNew}
-          variant="contained">Create new scene <br />
+           }
+           <Button onClick={handleOpenEdit}
+             variant="contained">Edit this scene</Button>
+           <br />
+           <br />
+           <Button onClick={handleOpenCreateNew}
+             variant="contained">Create new scene <br />
           (as a child of this scene)</Button>
+         </> : <></>
+        }
+        <FormGroup>
+          <FormControlLabel control={<Switch value={editHistoryHidden} onClick=
+            {() => setEditHistoryHidden(!editHistoryHidden)}/>}
+          label="Edit history visible" />
+        </FormGroup>
+        {
+          editHistoryHidden ?
+        <p>Edit history:
+          {
+            selectedScene.editHistory
+                .map((h) => `${h.username}, ${h.date}`).map(
+                    (v) =>
+                      <p key={v}>{v}<br /></p>)
+          }
+        </p> :
+        <></>
+        }
       </CardContent>
-      <Dialog
-        open={open}
-        scroll={'body'}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <DialogTitle id="scroll-dialog-title">
-          { formInit === undefined || formInit.isNewScene ?
+      {
+      hasPermissions(completedScenes, selectedScene,
+        currentUser?.email as string) ?
+         <>
+           <Dialog
+             open={open}
+             scroll={'body'}
+             onClose={handleClose}
+             aria-labelledby="modal-modal-title"
+             aria-describedby="modal-modal-description"
+           >
+             <DialogTitle id="scroll-dialog-title">
+               { formInit === undefined || formInit.isNewScene ?
           'Create a new story scene' :
           ' Edit story scene' } </DialogTitle>
-        <DialogContent
-          dividers>
-          { formInit === undefined ? <></> :
+             <DialogContent
+               dividers>
+               { formInit === undefined ? <></> :
           <CreateOrEditStorySceneForm />
-          }
-        </DialogContent>
-      </Dialog>
+               }
+             </DialogContent>
+           </Dialog>
+         </> : <></>
+      }
     </Card>
   );
 }
