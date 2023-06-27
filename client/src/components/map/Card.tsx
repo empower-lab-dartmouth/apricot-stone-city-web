@@ -328,6 +328,8 @@ export default function BasicCard() {
   const selectedScene = allStoryEvents[context.selectedStorySceneID];
   const [formInit, setFormInit] = useRecoilState(
       createOrEditFormSceneStartingState);
+  const {currentUser} = React.useContext(AuthContext);
+
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
   const [open, setOpen] = useRecoilState(createOrEditFormOpen);
@@ -392,7 +394,8 @@ export default function BasicCard() {
       text: 'Returning to a scene!',
       type: 'option'}, {
       ...currentPage,
-      currentStores: stores}, setCurrentPage);
+      currentStores: stores}, setCurrentPage,
+      currentUser?.email as string);
   };
 
   return (

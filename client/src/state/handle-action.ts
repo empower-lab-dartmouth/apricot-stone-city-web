@@ -4,6 +4,8 @@ import {CardData} from '../components/card/card-model';
 import {OptionData} from '../components/option/option-model';
 import {fetchContinueConversationData} from '../utils/data-utils';
 import {Stores} from '../utils/stores';
+import {doc, setDoc} from 'firebase/firestore';
+import {db} from '../components/firebase/firebase-config';
 
 const appendToPage: (pageData: PageData,
     selectedOption: OptionData,
@@ -16,11 +18,26 @@ const appendToPage: (pageData: PageData,
       options: newOptions,
     });
 
+const uploadPageToFB = async (newPage: PageData, username: string) => {
+  // do firebase stuff to write
+  console.log('sending page data to fb');
+  try {
+    await setDoc(
+        doc(db, 'PageData', username), newPage);
+    console.log('Document written to fb');
+  } catch (e) {
+    console.error('Error adding document: ', e);
+  }
+};
+
+
 export const handleAction: (
     option: OptionData,
     currentPage: PageData,
     setCurrentPage: SetterOrUpdater<PageData>,
-) => Promise<void> = async (optionData, currentPage, setCurrentPage) => {
+    username: string,
+) => Promise<void> = async (optionData, currentPage,
+    setCurrentPage, username) => {
   switch (optionData.action.type) {
     case 'click-option': {
       // TODO: update to real implementation
@@ -41,6 +58,7 @@ export const handleAction: (
               optionData,
               updates.cards, updates.options, updates.context);
           setCurrentPage(newPage);
+          uploadPageToFB(newPage, username);
         } else {
           console.log(
               `Server error getting conversation ` +

@@ -7,14 +7,40 @@ import {useNavigate} from 'react-router-dom';
 import '../../App.css';
 import './landing.css';
 import SignUp from './signup';
+import {doc, getDoc} from 'firebase/firestore';
+import {db} from '../firebase/firebase-config';
+import {samplePageData} from '../../state/sample-data';
+import {PageData} from '../page/page-model';
+import {currentPageState} from '../../state/recoil';
+import {useRecoilState} from 'recoil';
 
 const defaultFormFields = {
   email: '',
   password: '',
 };
 
+export const loadStoryScenesFromFB = async (username: string,
+    setter: (p: PageData) => void) => {
+  const ref = doc(db, 'PageData', username);
+  const docSnap = await await getDoc(ref);
+  if (docSnap.exists()) {
+    const data = docSnap.data() as PageData;
+    // trim chat history
+    if (data.chatHistory.length > 15) {
+      data.chatHistory = data.chatHistory.slice(data.chatHistory.length - 15,
+          data.chatHistory.length);
+    }
+    setter(data as PageData);
+  } else {
+    setter(samplePageData);
+  }
+};
+
+
 function Home() {
   const [open, setOpen] = React.useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
   const handleClose = () => {
     setOpen(false);
@@ -39,10 +65,10 @@ function Home() {
     try {
       // Send the email and password to firebase
       const userCredential = await signInUser(email, password);
-      // TODO load content from fb
+
       if (userCredential) {
         resetFormFields();
-
+        loadStoryScenesFromFB(email, setCurrentPage);
         navigate('/profile');
       }
     } catch (error:any) {

@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import './App.css';
 import {currentPageState} from './state/recoil';
-import Landing from './components/landing/landing';
+import Landing, {loadStoryScenesFromFB} from './components/landing/landing';
 import Page from './components/page/Page';
 import Main from './components/map/Main';
 import Form from './components/create/Form';
@@ -22,6 +22,8 @@ const App = () => {
   // eslint-disable-next-line no-unused-vars
   const {currentUser} = useContext(AuthContext);
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
   // NOTE: console log for testing purposes
   console.log('User:', !!currentUser);
@@ -29,7 +31,9 @@ const App = () => {
   // Check if the current user exists on the initial render.
   useEffect(() => {
     if (currentUser) {
-      navigate('/map');
+      loadStoryScenesFromFB(currentUser?.email as string,
+          setCurrentPage);
+      navigate('/adventure');
     }
   }, [currentUser]);
   const [page, _setPage] = useRecoilState(currentPageState);

@@ -18,7 +18,7 @@ export const sampleNewOption: OptionData = {
   id: 'id', text: 'new option!', type: 'option', action: sampleAction,
 };
 
-export const sampleData: PageData = {
+export const samplePageData: PageData = {
   chatHistory: [
     {
       id: '0',

@@ -14,6 +14,7 @@ import Chip from '@mui/material/Chip';
 import Modal from '@mui/material/Modal';
 import {Box, Button, FormControlLabel,
   FormGroup, Switch, TextField, Typography} from '@mui/material';
+import {AuthContext} from '../../context/auth-context';
 // import optionsBackgroundImg from '../../assets/golden-paper-tex.jpeg';
 
 // const radialGradient =
@@ -54,6 +55,8 @@ const Page: React.FC<PageParams> = ({pageData}) => {
     setFreeResponseModalOpen(false);
     setInputtedFreeResponseText('');
   };
+  const {currentUser} = React.useContext(AuthContext);
+
 
   const handleInputTextChange = (e: React.ChangeEvent<HTMLInputElement> |
     React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -86,7 +89,8 @@ const Page: React.FC<PageParams> = ({pageData}) => {
               },
               id: 'free-response',
               text: inputtedFreeResponseText,
-              type: 'option'}, currentPage, setCurrentPage);
+              type: 'option'}, currentPage, setCurrentPage,
+              (currentUser?.email) as string);
             setInputtedFreeResponseText('');
             setFreeResponseModalOpen(false);
           }}>Submit</Button>
@@ -137,7 +141,8 @@ const Page: React.FC<PageParams> = ({pageData}) => {
                 } else {
                   handleAction({
                     ...optionData,
-                    type: 'option'}, currentPage, setCurrentPage);
+                    type: 'option'}, currentPage, setCurrentPage,
+                    (currentUser?.email) as string);
                 }
               }} />,
           )}

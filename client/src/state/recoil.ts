@@ -1,6 +1,6 @@
 import {atom} from 'recoil';
 import {PageData} from '../components/page/page-model';
-import {sampleData} from './sample-data';
+import {samplePageData} from './sample-data';
 import questHumansVsMachineImg
   from '../assets/quest-human-vs-machines-thinking.png';
 import questFindingPatternsInDataImg
@@ -27,7 +27,7 @@ import {db} from '../components/firebase/firebase-config';
 
 export const currentPageState = atom<PageData>({
   key: 'current-page',
-  default: sampleData,
+  default: samplePageData,
 });
 
 export const typewriterEffectState = atom<boolean>({
