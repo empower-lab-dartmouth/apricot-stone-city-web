@@ -25,7 +25,7 @@ const data = [
     'name': 'Page A',
     'Incompleted': 4,
     'Completed': 2,
-    'Created': 1,
+    'Contributions': 1,
   },
 ];
 
@@ -38,10 +38,10 @@ export default function Quests() {
           .filter((scene) => quest.id in scene.quests ));
   const completedScenesPerQuest = Object.values(scenesPerQuest)
       .map((scenesForQuest_i) => scenesForQuest_i
-          .filter((scene) => completedScenes[scene.id] === undefined));
+          .filter((scene) => !completedScenes.has(scene.id)));
   const incompletedScenesPerQuest = Object.values(scenesPerQuest)
       .map((scenesForQuest_i) => scenesForQuest_i
-          .filter((scene) => completedScenes[scene.id] !== undefined));
+          .filter((scene) => completedScenes.has(scene.id)));
   const createdScenesPerQuest = Object.values(scenesPerQuest)
       .map((scenesForQuest_i) => scenesForQuest_i
           .filter((scene) => {
@@ -58,7 +58,7 @@ export default function Quests() {
     'name': val.title,
     'Incompleted': incompletedScenesPerQuest[idx].length,
     'Completed': completedScenesPerQuest[idx].length,
-    'Created': createdScenesPerQuest[idx].length,
+    'Contributions': createdScenesPerQuest[idx].length,
   }]));
   return (
     <div>
@@ -131,7 +131,7 @@ export default function Quests() {
                 borderRadius: '20px'}}/>
               <Bar dataKey="Completed" stackId="a" fill="green" />
               <Bar dataKey="Incompleted" stackId="a" fill="gray" />
-              <Bar dataKey="Created" fill="gold" />
+              <Bar dataKey="Contributions" fill="gold" />
             </BarChart>
           </Stack>
         );

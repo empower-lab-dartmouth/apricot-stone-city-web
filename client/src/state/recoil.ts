@@ -87,9 +87,9 @@ export type StoryScene = {
   backendPath: string[]
 }
 
-export const competedScenesState = atom<Record<SceneUUID, Date>>({
+export const competedScenesState = atom<Set<SceneUUID>>({
   key: 'scenes-completed',
-  default: {},
+  default: new Set(),
 });
 
 const loadStoryScenesFromFB = async () => {

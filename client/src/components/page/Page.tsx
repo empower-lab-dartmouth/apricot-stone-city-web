@@ -7,8 +7,9 @@ import './page.css';
 import Nav from '../nav/NavBar';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import {useRecoilState} from 'recoil';
-import {currentPageState, typewriterEffectState} from '../../state/recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {allScenesState, competedScenesState, currentPageState,
+  typewriterEffectState} from '../../state/recoil';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Modal from '@mui/material/Modal';
@@ -55,6 +56,9 @@ const Page: React.FC<PageParams> = ({pageData}) => {
     setFreeResponseModalOpen(false);
     setInputtedFreeResponseText('');
   };
+  const allStoryScenes = useRecoilValue(allScenesState);
+  const [completedScenes, setCompletedScenes] = useRecoilState(
+      competedScenesState);
   const {currentUser} = React.useContext(AuthContext);
 
 
@@ -90,7 +94,8 @@ const Page: React.FC<PageParams> = ({pageData}) => {
               id: 'free-response',
               text: inputtedFreeResponseText,
               type: 'option'}, currentPage, setCurrentPage,
-              (currentUser?.email) as string);
+              (currentUser?.email) as string,
+              allStoryScenes, completedScenes, setCompletedScenes);
             setInputtedFreeResponseText('');
             setFreeResponseModalOpen(false);
           }}>Submit</Button>
@@ -142,7 +147,8 @@ const Page: React.FC<PageParams> = ({pageData}) => {
                   handleAction({
                     ...optionData,
                     type: 'option'}, currentPage, setCurrentPage,
-                    (currentUser?.email) as string);
+                    (currentUser?.email) as string, allStoryScenes,
+                    completedScenes, setCompletedScenes);
                 }
               }} />,
           )}

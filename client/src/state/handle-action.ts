@@ -6,6 +6,8 @@ import {fetchContinueConversationData} from '../utils/data-utils';
 import {Stores} from '../utils/stores';
 import {doc, setDoc} from 'firebase/firestore';
 import {db} from '../components/firebase/firebase-config';
+import {SceneUUID, StoryScene} from './recoil';
+import {find, isEqual} from 'lodash';
 
 const appendToPage: (pageData: PageData,
     selectedOption: OptionData,
@@ -30,14 +32,45 @@ const uploadPageToFB = async (newPage: PageData, username: string) => {
   }
 };
 
+const updateCompletedScenes = async (completedScenes: Set<string>,
+    username: string) => {
+  console.log('sending completed scenes to fb');
+  try {
+    await setDoc(
+        doc(db, 'CompletedScenes', username), {
+          scenes: Array.from(completedScenes),
+        });
+  } catch (e) {
+    console.error('Error adding document: ', e);
+  }
+};
+
+
+const findSceneWithPath: (allStoryScenes: Record<SceneUUID,
+  StoryScene>, path: string[]) =>
+  StoryScene | undefined = (allStoryScenes, path) => {
+    return find(Object.values(allStoryScenes),
+        (scene: StoryScene) => {
+          if (scene.backendPath.length <= 1) {
+            return false;
+          }
+          return isEqual(scene.backendPath.slice(
+              0, scene.backendPath.length - 1), path);
+        });
+  };
+
 
 export const handleAction: (
     option: OptionData,
     currentPage: PageData,
     setCurrentPage: SetterOrUpdater<PageData>,
     username: string,
+    allStoryScenes: Record<SceneUUID, StoryScene>,
+    completedScenes: Set<SceneUUID>,
+    setCompletedScenes: (c: Set<SceneUUID>) => void
 ) => Promise<void> = async (optionData, currentPage,
-    setCurrentPage, username) => {
+    setCurrentPage, username, allStoryScenes, completedScenes,
+    setCompletedScenes) => {
   switch (optionData.action.type) {
     case 'click-option': {
       // TODO: update to real implementation
@@ -59,6 +92,35 @@ export const handleAction: (
               updates.cards, updates.options, updates.context);
           setCurrentPage(newPage);
           uploadPageToFB(newPage, username);
+          // Check if we have completed a scene.
+          const currentScenePath = currentPage.currentStores !== undefined ?
+          currentPage.currentStores
+              .currentConvoSegmentPath.parentModules : ['root'];
+          const newScenePath = newPage.currentStores !== undefined ?
+          newPage.currentStores
+              .currentConvoSegmentPath.parentModules : ['root'];
+          if (currentScenePath !== newScenePath) {
+            const currentScene = findSceneWithPath(
+                allStoryScenes, currentScenePath);
+            const nextScene = findSceneWithPath(
+                allStoryScenes, newScenePath);
+            if (currentScene !== undefined && nextScene !== undefined) {
+              // User has successfully completed the current scene.
+              if (currentScene.children.includes(nextScene.id) ||
+                currentScene.parents.includes(nextScene.id) ||
+                nextScene.parents.includes(currentScene.id)) {
+                const updatedCompletedScenes = completedScenes.add(
+                    currentScene.id);
+                setCompletedScenes(updatedCompletedScenes);
+                updateCompletedScenes(updatedCompletedScenes,
+                    username);
+                console.log('updated visited scenes');
+              } else {
+                console.log('new scene is not a child '+
+                'of current scene, not updated visited scenes');
+              }
+            }
+          }
         } else {
           console.log(
               `Server error getting conversation ` +

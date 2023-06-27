@@ -9,6 +9,7 @@ import {atom, useRecoilState, useRecoilValue} from 'recoil';
 import {userContextState} from './graph-recoil';
 import metalTex from '../../assets/metal-tex.webp';
 import {EditHistory, StoryScene, allScenesState,
+  competedScenesState,
   currentPageState} from '../../state/recoil';
 import Button from '@mui/material/Button';
 // import CloseIcon from '@mui/icons-material/Close';
@@ -328,6 +329,8 @@ export default function BasicCard() {
   const selectedScene = allStoryEvents[context.selectedStorySceneID];
   const [formInit, setFormInit] = useRecoilState(
       createOrEditFormSceneStartingState);
+  const [completedScenes, setCompletedScenes] = useRecoilState(
+      competedScenesState);
   const {currentUser} = React.useContext(AuthContext);
 
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
@@ -395,7 +398,8 @@ export default function BasicCard() {
       type: 'option'}, {
       ...currentPage,
       currentStores: stores}, setCurrentPage,
-      currentUser?.email as string);
+      currentUser?.email as string, allStoryEvents,
+      completedScenes, setCompletedScenes);
   };
 
   return (
@@ -404,7 +408,7 @@ export default function BasicCard() {
       <CardContent sx={{backgroundColor: 'white',
         border: '5px solid #46c6ea',
         borderRadius: '7px'}}>
-        <h2>{context.selectedStorySceneID}</h2>
+        <h2>{selectedScene.title}</h2>
         <img alt="preview image" width="200"
           src={selectedScene.imgUrl}/>
         <p>{selectedScene.summary}</p>
