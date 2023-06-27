@@ -336,7 +336,7 @@ const hasPermissions: (completedScenes: Set<string>,
 
 export default function BasicCard() {
   const context = useRecoilValue(userContextState);
-  const [editHistoryHidden, setEditHistoryHidden] = useState(true);
+  const [editHistoryHidden, setEditHistoryHidden] = useState(false);
   const allStoryEvents = useRecoilValue(allScenesState);
   const selectedScene = allStoryEvents[context.selectedStorySceneID];
   const [formInit, setFormInit] = useRecoilState(
