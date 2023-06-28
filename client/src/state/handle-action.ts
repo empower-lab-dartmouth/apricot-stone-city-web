@@ -6,7 +6,7 @@ import {fetchContinueConversationData} from '../utils/data-utils';
 import {Stores} from '../utils/stores';
 import {doc, setDoc} from 'firebase/firestore';
 import {db} from '../components/firebase/firebase-config';
-import {SceneUUID, StoryScene} from './recoil';
+import {SceneFeedbackDialog, SceneUUID, StoryScene} from './recoil';
 import {find, isEqual} from 'lodash';
 
 const appendToPage: (pageData: PageData,
@@ -67,10 +67,11 @@ export const handleAction: (
     username: string,
     allStoryScenes: Record<SceneUUID, StoryScene>,
     completedScenes: Set<SceneUUID>,
-    setCompletedScenes: (c: Set<SceneUUID>) => void
+    setCompletedScenes: (c: Set<SceneUUID>) => void,
+    setSceneFeedbackDialog: (c: SceneFeedbackDialog | undefined) => void,
 ) => Promise<void> = async (optionData, currentPage,
     setCurrentPage, username, allStoryScenes, completedScenes,
-    setCompletedScenes) => {
+    setCompletedScenes, setSceneFeedbackDialog) => {
   switch (optionData.action.type) {
     case 'click-option': {
       // TODO: update to real implementation
@@ -109,12 +110,18 @@ export const handleAction: (
               if (currentScene.children.includes(nextScene.id) ||
                 currentScene.parents.includes(nextScene.id) ||
                 nextScene.parents.includes(currentScene.id)) {
+                const firstTime = !completedScenes.has(currentScene.id);
                 const updatedCompletedScenes = completedScenes.add(
                     currentScene.id);
                 setCompletedScenes(updatedCompletedScenes);
                 updateCompletedScenes(updatedCompletedScenes,
                     username);
                 console.log('updated visited scenes');
+                if (firstTime) {
+                  setSceneFeedbackDialog({
+                    scene: currentScene,
+                  });
+                }
               } else {
                 console.log('new scene is not a child '+
                 'of current scene, not updated visited scenes');

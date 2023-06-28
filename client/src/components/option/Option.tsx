@@ -2,7 +2,8 @@ import * as React from 'react';
 import {OptionData} from './option-model';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {allScenesState, competedScenesState,
-  currentPageState} from '../../state/recoil';
+  currentPageState,
+  sceneFeedbackDialogState} from '../../state/recoil';
 import {handleAction} from '../../state/handle-action';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import Typography from '@mui/material/Typography';
@@ -19,6 +20,9 @@ const Option: React.FC<OptionParams> = ({optionData}) => {
   const allStoryScenes = useRecoilValue(allScenesState);
   const [completedScenes, setCompletedScenes] = useRecoilState(
       competedScenesState);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [sceneFeedbackDialog, setFeedbackDialog] = useRecoilState(
+      sceneFeedbackDialogState);
 
 
   return (
@@ -27,7 +31,8 @@ const Option: React.FC<OptionParams> = ({optionData}) => {
         ...optionData,
         type: 'option'}, currentPage, setCurrentPage,
         currentUser?.email as string, allStoryScenes,
-        completedScenes, setCompletedScenes)}>
+        completedScenes, setCompletedScenes,
+        setFeedbackDialog)}>
       <Typography variant="h3" gutterBottom>
         {optionData.text}
       </Typography>
