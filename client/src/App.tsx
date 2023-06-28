@@ -7,7 +7,8 @@ import {
   Routes, Route, useNavigate,
 } from 'react-router-dom';
 import './App.css';
-import {competedScenesState, currentPageState} from './state/recoil';
+import {competedScenesState,
+  currentPageState, serverReadyState} from './state/recoil';
 import Landing, {loadStoryScenesFromFB,
   loadVisitedScenesFromFB} from './components/landing/landing';
 import Page from './components/page/Page';
@@ -18,6 +19,7 @@ import SignUp from './components/landing/signup';
 import {useContext, useEffect} from 'react';
 import {AuthContext} from './context/auth-context';
 import RequireAuth from './components/require-auth';
+import {wakeUpServer} from './state/handle-action';
 
 const App = () => {
   // eslint-disable-next-line no-unused-vars
@@ -29,9 +31,12 @@ const App = () => {
   const [visitedScenes, setVisitedScenes] = useRecoilState(competedScenesState);
   // NOTE: console log for testing purposes
   console.log('User:', !!currentUser);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [serverIsReady, setServerIsReady] = useRecoilState(serverReadyState);
 
   // Check if the current user exists on the initial render.
   useEffect(() => {
+    wakeUpServer(setServerIsReady);
     if (currentUser) {
       loadStoryScenesFromFB(currentUser?.email as string,
           setCurrentPage);

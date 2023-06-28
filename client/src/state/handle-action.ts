@@ -8,6 +8,7 @@ import {doc, setDoc} from 'firebase/firestore';
 import {db} from '../components/firebase/firebase-config';
 import {SceneFeedbackDialog, SceneUUID, StoryScene} from './recoil';
 import {find, isEqual} from 'lodash';
+import {sampleAction} from './sample-data';
 
 const appendToPage: (pageData: PageData,
     selectedOption: OptionData,
@@ -58,6 +59,31 @@ const findSceneWithPath: (allStoryScenes: Record<SceneUUID,
               0, scene.backendPath.length - 1), path);
         });
   };
+
+export const wakeUpServer = async (setServerReady: (b: boolean) => void) => {
+  try {
+    // make the API call
+    console.log('pinging server to wake it up...');
+    const ping = await fetchContinueConversationData(
+        {
+          context: {
+            username: 'SAMPLE',
+            stores: undefined,
+          },
+          action: sampleAction,
+        });
+    if (ping.type === 'continuation-data') {
+      console.log('server is awake :) ');
+      setServerReady(true);
+    } else {
+      console.log('Wake up server call failed, got an error! '+
+    'This may lead to an error.');
+    }
+  } catch {
+    console.log('Wake up server call failed! '+
+    'This may lead to an error.');
+  }
+};
 
 
 export const handleAction: (
