@@ -8,9 +8,11 @@ import CardContent from '@mui/material/CardContent';
 import {atom, useRecoilState, useRecoilValue} from 'recoil';
 import {userContextState} from './graph-recoil';
 import metalTex from '../../assets/metal-tex.webp';
+import checkmark from '../../assets/check-mark.png';
 import {EditHistory, StoryScene, allScenesState,
   competedScenesState,
-  currentPageState} from '../../state/recoil';
+  currentPageState,
+  sceneFeedbackDialogState} from '../../state/recoil';
 import Button from '@mui/material/Button';
 // import CloseIcon from '@mui/icons-material/Close';
 import {Autocomplete, Box,
@@ -344,7 +346,9 @@ export default function BasicCard() {
   const [completedScenes, setCompletedScenes] = useRecoilState(
       competedScenesState);
   const {currentUser} = React.useContext(AuthContext);
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [sceneFeedbackDialog, setFeedbackDialog] = useRecoilState(
+      sceneFeedbackDialogState);
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
 
   const [open, setOpen] = useRecoilState(createOrEditFormOpen);
@@ -411,7 +415,8 @@ export default function BasicCard() {
       ...currentPage,
       currentStores: stores}, setCurrentPage,
       currentUser?.email as string, allStoryEvents,
-      completedScenes, setCompletedScenes);
+      completedScenes, setCompletedScenes,
+      setFeedbackDialog);
   };
 
   return (
@@ -420,7 +425,31 @@ export default function BasicCard() {
       <CardContent sx={{backgroundColor: 'white',
         border: '5px solid #46c6ea',
         borderRadius: '7px'}}>
-        <h2>{selectedScene.title}</h2>
+        {
+            completedScenes.has(selectedScene.id) ?
+            <Stack
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+              spacing={2}
+            >
+              <h2>{selectedScene.title}</h2>
+              <div style={{backgroundColor: 'lightgreen',
+                borderRadius: '20px'}}>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="center"
+                  spacing={0}
+                >
+                  <img alt="preview image" width="20"
+                    src={checkmark}/>
+                  <p style={{color: 'green',
+                    paddingRight: '3px'}}>Completed!</p>
+                </Stack>
+              </div>
+            </Stack> : <></>
+        }
         <img alt="preview image" width="200"
           src={selectedScene.imgUrl}/>
         {

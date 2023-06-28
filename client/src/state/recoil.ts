@@ -49,6 +49,16 @@ const empty: CompletedChallenges = {
   challenge_4: undefined,
 };
 
+export type SceneFeedbackDialog = {
+  scene: StoryScene,
+}
+
+
+export const sceneFeedbackDialogState = atom<SceneFeedbackDialog | undefined>({
+  key: 'scene-feedback-dialog',
+  default: undefined,
+});
+
 export const competedChallengesState = atom<CompletedChallenges>({
   key: 'challenges-completed',
   default: empty,
