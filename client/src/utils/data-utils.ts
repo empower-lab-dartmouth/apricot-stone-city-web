@@ -4,7 +4,7 @@ import {Action} from '../state/action';
 import {Stores} from './stores';
 
 export const IS_DEV = true;
-export const BASE_DEV_URL = 'http://localhost:8000/';
+export const BASE_DEV_URL = 'https://apricot-stone-city-backend.onrender.com/';
 export const BASE_PROD_URL = '?';
 export const BASE_URL = IS_DEV ? BASE_DEV_URL : BASE_PROD_URL;
 export const CONTINUE_CONVERSATION_PATH = 'continue-conversation/';
