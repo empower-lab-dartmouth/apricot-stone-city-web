@@ -16,6 +16,7 @@ import solemWalk from './cs-solemn-walk-in-the-rain'
 import teletubbies from './cs-teletubbies'
 import hotAndCold from './cs-hot-and-cold-minigame'
 import algorithmExplanation from './cs-algorithm-explanation'
+import sightseeingTheCity from './cs-sightseeing-the-city'
 
 const carolArrivesAtASC = make.module({
     id: 'carol-arrives-at-ASC',
@@ -35,6 +36,7 @@ const carolArrivesAtASC = make.module({
         teletubbies,
         hotAndCold,
         algorithmExplanation,
+        sightseeingTheCity,
     ],
     convoSegments: [],
 })
