@@ -1,47 +1,60 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Nav from '../nav/NavBar';
 import './facilitator.css';
-import {Alert, AlertColor, AlertTitle,
+import {Alert, AlertTitle,
   Button, FormControlLabel, FormGroup,
   Stack, Switch, Typography} from '@mui/material';
-// import {collection, query, getDocs} from 'firebase/firestore';
-// import {db} from '../firebase/firebase-config';
+import {collection, query, getDocs} from 'firebase/firestore';
+import {db} from '../firebase/firebase-config';
 
 
-// type PostToFacilitator = {
-//     status: 'accepted' | 'dismissed' | 'active',
-//     title: string,
-//     id: string,
-//     message: string,
-//     username: string,
-//     request: 'upgrade1' | 'upgrade2' | 'upgrade3' | 'upgrade4' | 'other'
-//     // facilitator
-// }
-
-type RequestsProps = {
+type PostToFacilitator = {
     status: 'accepted' | 'dismissed' | 'active',
-    severity: AlertColor,
     title: string,
     id: string,
     message: string,
-    username: string,
+    requestorUsername: string,
+    request: 'upgrade to level 1' | 'upgrade to level 2' | 'upgrade to level 3'
+    | 'upgrade to level 4' | 'other' | 'none'
+    responderUsername: string | undefined,
+    response: string | undefined,
+}
+
+type RequestsProps = PostToFacilitator & {
     accept: undefined | (() => void),
     dismiss: undefined | (() => void)
 }
 
 const UserPost: React.FC<RequestsProps> = (props) => {
-  const {severity, title, message,
-    username, accept, dismiss} = props;
+  const {status, title, message,
+    requestorUsername, request, responderUsername,
+    response, accept, dismiss} = props;
+  const severity = status === 'accepted' ? 'success' :
+        status === 'dismissed' ? 'info' : 'warning';
+
   return (<Alert sx={{backgroundColor: 'white', width: '100%'}}
     severity={severity} variant="outlined">
     <AlertTitle>{title}</AlertTitle>
     <Typography variant="body2" gutterBottom>
-        From: {username}
+        From: {requestorUsername}
     </Typography>
-    <br />
     <Typography variant="body1" gutterBottom>
-      {message}
+      Request: {request}
     </Typography>
+    <Typography variant="body1" gutterBottom>
+      Message: {message}
+    </Typography>
+    {
+        responderUsername !== undefined && response !== undefined ?
+        <>
+          <Typography variant="body2" gutterBottom>
+        Response: {responderUsername}
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+        From: {response}
+          </Typography>
+        </> : <></>
+    }
     {
         accept !== undefined ?
         <Button variant='outlined' sx={{marginRight: '10px'}} color='success'
@@ -58,12 +71,18 @@ const UserPost: React.FC<RequestsProps> = (props) => {
 
 export const FacilitatorPage: React.FC = () => {
   const [showArchivedPosts, setShowArchivedPosts] = useState(false);
-  //   const [requests, ]
-  //   const q = query(collection(db, 'UserRequests'));
-  //   const loadDataFromFb = async () => {
-  //     const querySnapshot = await getDocs(q);
-  //     querySnapshot.docs.map((doc: any) => doc.data());
-  //   };
+  const [requests, setRequests] = useState<PostToFacilitator[]>([]);
+  const q = query(collection(db, 'PostToFacilitator'));
+  const loadDataFromFb = async () => {
+    const querySnapshot = await getDocs(q);
+    const docs = querySnapshot.docs
+        .map((doc: any) => doc.data()) as any as PostToFacilitator[];
+    setRequests(docs);
+    loadDataFromFb();
+  };
+  useEffect(() => {
+    loadDataFromFb();
+  });
   return (<>
     <Nav />
     <div className="page-container">
@@ -84,9 +103,16 @@ export const FacilitatorPage: React.FC = () => {
           alignItems="flex-start"
           spacing={2}
         >
-          <UserPost id='dfs' status='accepted' severity='error' title='test'
-            message='test message' username='user'
-            accept={undefined} dismiss={undefined} />
+          {
+            requests.map((r) => (
+              <UserPost status={r.status} title={r.title}
+                message={r.message} requestorUsername={r.requestorUsername}
+                responderUsername={r.responderUsername}
+                id={r.id} request={r.request} key={r.id}
+                response={r.response}
+                accept={undefined} dismiss={undefined} />
+            ))
+          }
         </Stack>
       </div>
     </div>
