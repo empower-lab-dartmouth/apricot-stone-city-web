@@ -53,6 +53,9 @@ const sampleResponse = {
 // route continue conversation
 app.post('/continue-conversation/', (req: Request, res: Response) => {
  const {context, action}: ContinueConversationRequest = req.body;
+ if (context.username === 'PING') {
+  return res.status(200).json({type: 'continuation-data'});
+ }
  const initStateStores: Stores = context.stores === undefined 
   ? {
       variables: storytellerConfig.initialState as State,

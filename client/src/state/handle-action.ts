@@ -67,7 +67,7 @@ export const wakeUpServer = async (setServerReady: (b: boolean) => void) => {
     const ping = await fetchContinueConversationData(
         {
           context: {
-            username: 'SAMPLE',
+            username: 'PING',
             stores: undefined,
           },
           action: sampleAction,
