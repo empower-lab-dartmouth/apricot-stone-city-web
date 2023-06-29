@@ -12,8 +12,10 @@ import {db} from '../firebase/firebase-config';
 import {samplePageData} from '../../state/sample-data';
 import {PageData} from '../page/page-model';
 import {competedScenesState,
-  currentPageState} from '../../state/recoil';
+  currentPageState,
+  userLevelState} from '../../state/recoil';
 import {useRecoilState} from 'recoil';
+import {UserLevelFB} from '../profile/Quests';
 
 const defaultFormFields = {
   email: '',
@@ -37,6 +39,20 @@ export const loadStoryScenesFromFB = async (username: string,
   }
 };
 
+export const loadUserLevel = async (username: string,
+    setter: (p: number) => void) => {
+  const ref = doc(db, 'UserLevel', username);
+  const docSnap = await await getDoc(ref);
+  if (docSnap.exists()) {
+    const data = docSnap.data() as UserLevelFB;
+    // trim chat history
+    setter(data.level);
+  } else {
+    setter(0);
+  }
+};
+
+
 export const loadVisitedScenesFromFB = async (username: string,
     setter: (s: Set<string>) => void) => {
   const ref = doc(db, 'CompletedScenes', username);
@@ -56,6 +72,8 @@ function Home() {
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [visitedScenes, setVisitedScenes] = useRecoilState(competedScenesState);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [userLevel, setUserLevel] = useRecoilState(userLevelState);
   const handleClose = () => {
     setOpen(false);
   };
@@ -82,6 +100,7 @@ function Home() {
 
       if (userCredential) {
         resetFormFields();
+        loadUserLevel(email, setUserLevel);
         loadStoryScenesFromFB(email, setCurrentPage);
         loadVisitedScenesFromFB(email, setVisitedScenes);
         navigate('/profile');

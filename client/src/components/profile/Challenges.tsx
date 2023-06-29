@@ -4,11 +4,11 @@ import './profile.css';
 import {Stack} from '@mui/material';
 import challengeIcon from '../../assets/navbar-challenges-icon.png';
 import completedChallengeIcon from '../../assets/completed-challenge-icon.png';
-import {competedChallengesState} from '../../state/recoil';
+import {userLevelState} from '../../state/recoil';
 import {useRecoilValue} from 'recoil';
 
 export default function Challenges() {
-  const completedChallenges = useRecoilValue(competedChallengesState);
+  const userLevel = useRecoilValue(userLevelState);
 
   return (
     <div>
@@ -20,7 +20,7 @@ export default function Challenges() {
           alignItems="center"
           spacing={2}
         >
-          {completedChallenges.challenge_1 === undefined ?
+          {userLevel < 1 ?
           <Stack direction="column" justifyContent="flex-start"
             alignItems="center">
             <img src={challengeIcon} style={{width: '62px'}}/>
@@ -29,7 +29,7 @@ export default function Challenges() {
           <Stack direction="column" justifyContent="flex-start"
             alignItems="center">
             <img src={completedChallengeIcon} style={{width: '62px'}}/>
-          Completed
+            <strong style={{color: 'green'}}>Completed</strong>
           </Stack>
           }
           <div>
@@ -46,7 +46,7 @@ export default function Challenges() {
           alignItems="center"
           spacing={2}
         >
-          {completedChallenges.challenge_2 === undefined ?
+          {userLevel < 2 ?
           <Stack direction="column" justifyContent="flex-start"
             alignItems="center">
             <img src={challengeIcon} style={{width: '62px'}}/>
@@ -55,7 +55,7 @@ export default function Challenges() {
           <Stack direction="column" justifyContent="flex-start"
             alignItems="center">
             <img src={completedChallengeIcon} style={{width: '62px'}}/>
-          Completed
+            <strong style={{color: 'green'}}>Completed</strong>
           </Stack> }
           <div>
             <h2 className='challenge-header'> Level 2: Use AI </h2>
@@ -73,7 +73,7 @@ export default function Challenges() {
           alignItems="center"
           spacing={2}
         >
-          {completedChallenges.challenge_3 === undefined ?
+          {userLevel < 3 ?
           <Stack direction="column" justifyContent="flex-start"
             alignItems="center">
             <img src={challengeIcon} style={{width: '62px'}}/>
@@ -82,7 +82,7 @@ export default function Challenges() {
           <Stack direction="column" justifyContent="flex-start"
             alignItems="center">
             <img src={completedChallengeIcon} style={{width: '62px'}}/>
-          Completed
+            <strong style={{color: 'green'}}>Completed</strong>
           </Stack> }
           <div>
             <h2 className='challenge-header'> Level 3: Evaluate
@@ -101,7 +101,7 @@ export default function Challenges() {
           alignItems="center"
           spacing={2}
         >
-          {completedChallenges.challenge_4 === undefined ?
+          {userLevel < 4 ?
           <Stack direction="column" justifyContent="flex-start"
             alignItems="center">
             <img src={challengeIcon} style={{width: '62px'}}/>
@@ -110,7 +110,7 @@ export default function Challenges() {
           <Stack direction="column" justifyContent="flex-start"
             alignItems="center">
             <img src={completedChallengeIcon} style={{width: '62px'}}/>
-          Completed
+            <strong style={{color: 'green'}}>Completed</strong>
           </Stack> }
           <div>
             <h2 className='challenge-header'> Level 4: AI Ethics</h2>

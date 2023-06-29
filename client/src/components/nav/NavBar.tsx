@@ -3,9 +3,10 @@ import React from 'react';
 import {NavLink} from 'react-router-dom';
 import './navbar.css';
 import logo from '../../assets/landing-page-asc-name.png';
-import shieldIcon from '../../assets/navbar-challenges-icon.png';
+import shieldIcon from '../../assets/completed-challenge-icon.png';
 import lockedIcon from '../../assets/lock-icon.png';
 import eyeIcon from '../../assets/eye-icon.png';
+import facilitatorIcon from '../../assets/settings-icon.png';
 import adventureIcon from '../../assets/navbar-adventure-icon.png';
 import mapIcon from '../../assets/navbar-map-icon.png';
 import AppBar from '@mui/material/AppBar';
@@ -14,10 +15,10 @@ import Popover from '@mui/material/Popover';
 import PopupState, {bindTrigger, bindPopover} from 'material-ui-popup-state';
 import Stack from '@mui/material/Stack';
 import {useRecoilValue} from 'recoil';
-import {competedChallengesState} from '../../state/recoil';
+import {userLevelState} from '../../state/recoil';
 
 export default function Nav() {
-  const completedChallenges = useRecoilValue(competedChallengesState);
+  const completedChallenges = useRecoilValue(userLevelState);
   return (
     <AppBar component="nav">
       {/* <Toolbar> */}
@@ -61,7 +62,7 @@ export default function Nav() {
           </NavLink>
 
           {
-          completedChallenges.challenge_1 === undefined ?
+          completedChallenges < 1 ?
           <PopupState variant="popover" popupId="demo-popup-popover">
             {(popupState: any) => (
               <div>
@@ -84,7 +85,7 @@ export default function Nav() {
                   }}
                 >
                   <Typography sx={{p: 2}}>
-                    You must complete challenge 1
+                    You must complete level 1
                      to unlock this tool.</Typography>
                 </Popover>
               </div>
@@ -100,7 +101,7 @@ export default function Nav() {
           }
 
           {
-          completedChallenges.challenge_4 === undefined ?
+          completedChallenges < 4 ?
           <PopupState variant="popover" popupId="demo-popup-popover">
             {(popupState: any) => (
               <div>
@@ -123,16 +124,16 @@ export default function Nav() {
                   }}
                 >
                   <Typography sx={{p: 2}}>
-                    You must complete challenge 4
+                    You must complete level 4
                      to unlock this tool.</Typography>
                 </Popover>
               </div>
             )}
           </PopupState> :
-          <NavLink to="/profile" className="nav-item">
+          <NavLink to="/facilitator" className="nav-item">
             <Stack direction="column" justifyContent="flex-start"
               alignItems="center">
-              <img src={eyeIcon} style={{width: '62px'}}/>
+              <img src={facilitatorIcon} style={{width: '62px'}}/>
             Facilitator
             </Stack>
           </NavLink>

@@ -1,0 +1,29 @@
+/* Facilitator.css */
+
+.page-container {
+    background-image: url("../../assets/adventure-view-background.png");
+    /* max-height: 100vh; */
+    padding-top: 100px;
+    display: flex;
+    align-items: top;
+    justify-content: center;
+  }
+
+.controls {
+    padding-top: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-right: 10px;
+    margin-bottom: 10px;
+    background-color: white;
+    width: 200px;
+    border-radius: 30px;
+    color: black;
+}
+
+  fixed {
+    position: fixed;
+    /* bottom: 0; */
+    right: 0;
+    height: fit-content;
+  }

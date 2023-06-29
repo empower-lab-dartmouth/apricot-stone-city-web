@@ -5,11 +5,12 @@
 import React, {useContext} from 'react';
 import './profile.css';
 import {CChart} from '@coreui/react-chartjs';
-import {useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {
   allQuests, allScenesState, competedScenesState} from '../../state/recoil';
 import {AuthContext} from '../../context/auth-context';
 import {CProgress, CProgressBar} from '@coreui/react';
+import {userLevelState} from '../../state/recoil';
 import {Bar,
   BarChart,
   CartesianGrid,
@@ -17,8 +18,10 @@ import {Bar,
   Tooltip,
   XAxis,
   YAxis} from 'recharts';
-import {Stack} from '@mui/material';
+import {Alert, AlertTitle, Stack} from '@mui/material';
 import {User} from 'firebase/auth';
+import {doc, setDoc} from 'firebase/firestore';
+import {db} from '../firebase/firebase-config';
 
 const data = [
   {
@@ -29,6 +32,24 @@ const data = [
   },
 ];
 
+export type UserLevelFB = {
+  level: number,
+}
+
+export const updateLevel = async (username: string, newLevel: number) => {
+  console.log('Updating user level');
+  try {
+    await setDoc(
+        doc(db, 'UserLevel', username), {
+          level: newLevel,
+        });
+    console.log('Updated level');
+  } catch (e) {
+    console.error('Error adding document: ', e);
+  }
+};
+
+
 export default function Quests() {
   const {currentUser} = useContext(AuthContext);
   const completedScenes = useRecoilValue(competedScenesState);
@@ -38,10 +59,11 @@ export default function Quests() {
           .filter((scene) => scene.quests.includes(quest.id) ));
   const completedScenesPerQuest = Object.values(scenesPerQuest)
       .map((scenesForQuest_i) => scenesForQuest_i
-          .filter((scene) => !completedScenes.has(scene.id)));
+          .filter((scene) => completedScenes.has(scene.id)));
   const incompletedScenesPerQuest = Object.values(scenesPerQuest)
       .map((scenesForQuest_i) => scenesForQuest_i
           .filter((scene) => completedScenes.has(scene.id)));
+  const [userLevel, setUserLevel] = useRecoilState(userLevelState);
   const createdScenesPerQuest = Object.values(scenesPerQuest)
       .map((scenesForQuest_i) => scenesForQuest_i
           .filter((scene) => {
@@ -53,6 +75,13 @@ export default function Quests() {
                   .includes(((currentUser?.email) as any as string)));
             }
           }));
+  const completedAllScenes = completedScenesPerQuest
+      .map((arr) => arr.length > 0)
+      .reduce((acc, curr) => curr && acc, true);
+  if (completedAllScenes && userLevel < 1) {
+    updateLevel(currentUser?.email as string, 1);
+    setUserLevel(1);
+  }
 
   const chartData = Object.values(allQuests).map((val, idx) => ([{
     'name': val.title,
@@ -63,6 +92,14 @@ export default function Quests() {
   return (
     <div>
       <h1 className='profile-title challenge-header'>Quests</h1>
+      {
+        completedAllScenes ?
+        <Alert severity="success">
+          <AlertTitle>Nice work!</AlertTitle>
+          You completed all the quests!
+        </Alert> :
+        <></>
+      }
       {/* <CChart
           type="radar"
           options= {{

@@ -3,10 +3,7 @@ import {OptionData} from '../components/option/option-model';
 import {Action} from '../state/action';
 import {Stores} from './stores';
 
-export const IS_DEV = true;
-export const BASE_DEV_URL = 'https://apricot-stone-city-backend.onrender.com/';
-export const BASE_PROD_URL = '?';
-export const BASE_URL = IS_DEV ? BASE_DEV_URL : BASE_PROD_URL;
+
 export const CONTINUE_CONVERSATION_PATH = 'continue-conversation/';
 
 export type ClientSideUserContext = {
@@ -36,6 +33,16 @@ export const fetchContinueConversationData: (req: ContinueConversationRequest)
     request: ContinueConversationRequest,
 ) => {
   console.log('pre fetch');
+  // console.log(process);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  console.log(process.env.REACT_APP_IS_DEV === undefined ?
+    'WARNING! You are running using the remote server.' :
+  'Running on local server');
+  const IS_DEV = process.env.REACT_APP_IS_DEV === undefined ?
+false : process.env.REACT_APP_IS_DEV;
+  const BASE_DEV_URL = ' http://localhost:8000/';
+  const BASE_PROD_URL = 'https://apricot-stone-city-backend.onrender.com/';
+  const BASE_URL = IS_DEV ? BASE_DEV_URL : BASE_PROD_URL;
   const url = `${BASE_URL}${CONTINUE_CONVERSATION_PATH}`;
   const res = await fetch(url, {
     method: 'Post',

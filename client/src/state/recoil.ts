@@ -35,20 +35,6 @@ export const typewriterEffectState = atom<boolean>({
   default: false,
 });
 
-type ChallengeName = 'challenge_1'
-| 'challenge_2'
-| 'challenge_3'
-| 'challenge_4'
-
-type CompletedChallenges = Record<ChallengeName, Date | undefined>
-
-const empty: CompletedChallenges = {
-  challenge_1: undefined,
-  challenge_2: undefined,
-  challenge_3: undefined,
-  challenge_4: undefined,
-};
-
 export type SceneFeedbackDialog = {
   scene: StoryScene,
 }
@@ -63,9 +49,9 @@ export const sceneFeedbackDialogState = atom<SceneFeedbackDialog | undefined>({
   default: undefined,
 });
 
-export const competedChallengesState = atom<CompletedChallenges>({
-  key: 'challenges-completed',
-  default: empty,
+export const userLevelState = atom<number>({
+  key: 'user-level-state',
+  default: 0,
 });
 
 type QuestID = string
