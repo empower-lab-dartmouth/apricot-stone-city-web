@@ -255,7 +255,471 @@ const sightseeingTheCity = make.module({
                 
             ],
         },
+        {
+            id: 'q1',
+            convo: [
+                {
+                    type: 'text',
+                    text: `In the story, how did Carol metaphorically represent the AI concept of feature selection?`,
+                },
+            ],
+            choices: [
+                {
+                    text: 'By examining the intricate details of the statues.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q2'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'By researching the origins and historical context of the statues.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q1incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'By capturing the statues through her camera lens.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q1incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'By appreciating the visual impact and emotional response to the statues.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q1incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: 'q1incorrect',
+            convo: [
+                {
+                    type: 'text',
+                    text: `Not quite, try again?`,
+                },
+            ],
+            choices: [
+                {
+                    text: 'Try again',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q1'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+
+        {
+            id: 'q2',
+            convo: [
+                {
+                    type: 'text',
+                    text: `That’s correct! Next question: What is the purpose of feature selection in AI classification?`,
+                },
+            ],
+            choices: [
+                {
+                    text: 'To extract and identify the most relevant features for accurate classification.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q3'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'To choose the most suitable algorithm for the classification task.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q2incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'To evaluate the performance of the classification model.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q2incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'To interpret the decisions made by the classification model.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q2incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: 'q2incorrect',
+            convo: [
+                {
+                    type: 'text',
+                    text: `Not quite, try again?`,
+                },
+            ],
+            choices: [
+                {
+                    text: 'Try again',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q2'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+
+        {
+            id: 'q3',
+            convo: [
+                {
+                    type: 'text',
+                    text: `That’s correct! Next question: In the story, what AI concept did Carol associate with model selection?`,
+                },
+            ],
+            choices: [
+                {
+                    text: 'Evaluating the visual impact of the statues.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q3incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'Appreciating the historical significance of the statues.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q3incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'Choosing the right criteria to judge the statues\' artistic merit.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q3incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'Pointing at and observing the statues\' unique structures and features.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q4'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: 'q3incorrect',
+            convo: [
+                {
+                    type: 'text',
+                    text: `Not quite, try again?`,
+                },
+            ],
+            choices: [
+                {
+                    text: 'Try again',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q3'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
         
+        {
+            id: 'q4',
+            convo: [
+                {
+                    type: 'text',
+                    text: `That’s correct! Next question: What does training data quality refer to in AI classification?`,
+                },
+            ],
+            choices: [
+                {
+                    text: 'The accuracy and reliability of the information used to classify objects.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q4incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'The interpretability of the decisions made by the classification model.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q4incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'The evaluation metrics used to assess the performance of the model.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q4incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'The diversity and representativeness of the dataset used to train a model.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q5'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: 'q4incorrect',
+            convo: [
+                {
+                    type: 'text',
+                    text: `Not quite, try again?`,
+                },
+            ],
+            choices: [
+                {
+                    text: 'Try again',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q4'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+
+        {
+            id: 'q5',
+            convo: [
+                {
+                    type: 'text',
+                    text: `How did Carol connect the idea of training data quality to her understanding of the statues?`,
+                },
+            ],
+            choices: [
+                {
+                    text: 'By appreciating the level of detail and craftsmanship in the statues.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['completed'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'By researching the historical and cultural significance of each statue.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q5incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'By capturing diverse examples of statues to enhance her understanding.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q5incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'By using reliable and credible sources to gather information about the statues.',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q5incorrect'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: 'q5incorrect',
+            convo: [
+                {
+                    type: 'text',
+                    text: `Not quite, try again?`,
+                },
+            ],
+            choices: [
+                {
+                    text: 'Try again',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q5'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+
+        {
+            id: 'completed',
+            convo: [
+                {
+                    type: 'text',
+                    text: `Great job! Let’s continue the journey`,
+                },
+            ],
+            choices: [
+                {
+                    text: 'Continue',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['gohome'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+
     ],
 })
 
