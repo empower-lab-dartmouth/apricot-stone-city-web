@@ -20,7 +20,7 @@ const logEventToRemote: (event: LogToRemoteEvent) => void = async (
     }
     console.log(eventWithEnv)
     if (eventWithEnv !== undefined) {
-        setDoc(doc(firebaseDB, EVENTS_ENV, currentDate), eventWithEnv)
+        // setDoc(doc(firebaseDB, EVENTS_ENV, currentDate), eventWithEnv)
     }
 }
 
