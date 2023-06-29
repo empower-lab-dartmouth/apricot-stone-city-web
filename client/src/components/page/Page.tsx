@@ -6,7 +6,7 @@ import {PageData} from './page-model';
 import './page.css';
 import Nav from '../nav/NavBar';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-import {allQuests} from '../../state/recoil';
+import {allQuests, serverReadyState} from '../../state/recoil';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import {useRecoilState, useRecoilValue} from 'recoil';
@@ -17,7 +17,8 @@ import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Modal from '@mui/material/Modal';
 import {Box, Button, FormControlLabel,
-  FormGroup, Switch, TextField, Typography} from '@mui/material';
+  FormGroup, LinearProgress, Switch,
+  TextField, Typography} from '@mui/material';
 import {AuthContext} from '../../context/auth-context';
 import {EmojiRating} from 'emoji-rating-component';
 import {doc, setDoc} from 'firebase/firestore';
@@ -111,6 +112,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
   const [learning, setLearning] = React.useState<number>(3);
   const [likedFeedback, setLikedFeedback] = React.useState<string>('');
   const [wantedFeedback, setWantedFeedback] = React.useState<string>('');
+  const serverIsReady = useRecoilValue(serverReadyState);
 
   const handleInputTextChange = (e: React.ChangeEvent<HTMLInputElement> |
     React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -280,6 +282,8 @@ const Page: React.FC<PageParams> = ({pageData}) => {
             onChange={() => setTypewriterEffectOn(!typewriterEffectOn)} />}
           label="Typewriter effect" />
         </FormGroup>
+        {
+            serverIsReady ?
         <BottomNavigation showLabels sx={{
           backgroundColor: 'white',
         }}>
@@ -298,7 +302,19 @@ const Page: React.FC<PageParams> = ({pageData}) => {
                 }
               }} />,
           )}
-        </BottomNavigation>
+        </BottomNavigation> :
+        <>
+          <LinearProgress color="secondary" />
+          <LinearProgress color="success" />
+          <LinearProgress color="inherit" />
+          <p>
+        Oops, the server went to sleep and is waking up for you now.
+            <br />
+        This shouldn&rsquo;t
+        take more than a minute or two.
+          </p>
+        </>
+        }
       </div>
     </div>
   );

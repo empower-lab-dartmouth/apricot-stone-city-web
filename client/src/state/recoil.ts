@@ -53,6 +53,10 @@ export type SceneFeedbackDialog = {
   scene: StoryScene,
 }
 
+export const serverReadyState = atom<boolean>({
+  key: 'server-is-ready',
+  default: false,
+});
 
 export const sceneFeedbackDialogState = atom<SceneFeedbackDialog | undefined>({
   key: 'scene-feedback-dialog',

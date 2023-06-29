@@ -11,7 +11,8 @@ import {doc, getDoc} from 'firebase/firestore';
 import {db} from '../firebase/firebase-config';
 import {samplePageData} from '../../state/sample-data';
 import {PageData} from '../page/page-model';
-import {competedScenesState, currentPageState} from '../../state/recoil';
+import {competedScenesState,
+  currentPageState} from '../../state/recoil';
 import {useRecoilState} from 'recoil';
 
 const defaultFormFields = {
@@ -55,7 +56,6 @@ function Home() {
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [visitedScenes, setVisitedScenes] = useRecoilState(competedScenesState);
-
   const handleClose = () => {
     setOpen(false);
   };
