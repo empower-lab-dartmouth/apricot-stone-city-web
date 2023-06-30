@@ -176,7 +176,7 @@ export const FacilitatorPage: React.FC = () => {
                 const updatedReq: PostToFacilitator = {
                   ...(facilitatorResponseOpen as PostToFacilitator),
                   status: 'accepted',
-                  hiddenForUser: false,
+                  hiddenForUser: true,
                   title: 'Accepted request',
                   responseDate: (new Date()).toString(),
                   responderUsername: currentUser?.email as string,
@@ -202,7 +202,7 @@ export const FacilitatorPage: React.FC = () => {
                   ...(facilitatorResponseOpen as PostToFacilitator),
                   title: 'Dismissed request',
                   status: 'dismissed',
-                  hiddenForUser: false,
+                  hiddenForUser: true,
                   responseDate: (new Date()).toString(),
                   responderUsername: currentUser?.email as string,
                   response: facilitatorMessage,
@@ -240,8 +240,8 @@ export const FacilitatorPage: React.FC = () => {
                   showArchivedPosts || r.status === 'active',
                 )
                 .sort((a, b) => (
-                  new Date(a.date)).getMilliseconds() -
-                (new Date(b.date)).getMilliseconds())
+                  new Date(b.date)).getMilliseconds() -
+                (new Date(a.date)).getMilliseconds()).reverse()
                 .map((r) => {
                   const reply = r.status === 'active' ? () => {
                     setFacilitatorResponseOpen(r);

@@ -97,7 +97,10 @@ export default function Profile() {
       <Nav/>
       <Modal
         open={submitRequestOpen}
-        onClose={() => setSubmitRequestOpen(false)}
+        onClose={() => {
+          setSubmitRequestOpen(false);
+          setUserResponseMessage('');
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -176,16 +179,20 @@ export default function Profile() {
                   userResponseMessage === ''
                 }
                 onClick={() => {
-                  setFacilitatorRequestInFB({
+                  const r: PostToFacilitator = {
                     status: 'active',
                     title: 'Request',
-                    hiddenForUser: false,
+                    hiddenForUser: true,
                     date: (new Date()).toString(), // also ID
                     message: userResponseMessage,
                     requestorUsername: currentUser?.email as string,
                     request: options[selectedIndex],
-                  });
+                  };
+                  setFacilitatorRequestInFB(r);
+                  // Update locally
+                  setRequests([r, ...requests]);
                   setSubmitRequestOpen(false);
+                  setUserResponseMessage('');
                 }}>Submit</Button>
             </Box>
           </div>
@@ -201,7 +208,7 @@ export default function Profile() {
             <div className='controls' style={{backgroundColor: 'white'}}>
               <FormGroup>
                 <FormControlLabel control={<Switch
-                  checked={!showHiddenPosts}
+                  checked={showHiddenPosts}
                   onChange={() => {
                     setShowHiddenPosts(!showHiddenPosts);
                   }} />}
@@ -221,7 +228,7 @@ export default function Profile() {
                     )
                     .sort((a, b) => (
                       new Date(a.date)).getMilliseconds() -
-                (new Date(b.date)).getMilliseconds())
+                (new Date(b.date)).getMilliseconds()).reverse()
                     .map((r) => {
                       const reply = () => {
                         // Update remotely
