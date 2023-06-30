@@ -34,7 +34,6 @@ const App = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [userLevel, setUserLevel] = useRecoilState(userLevelState);
   // NOTE: console log for testing purposes
-  console.log('User:', !!currentUser);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [serverIsReady, setServerIsReady] = useRecoilState(serverReadyState);
 

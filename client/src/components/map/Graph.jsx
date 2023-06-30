@@ -19,7 +19,6 @@ export default function Graph() {
 
 
   const handleNodeClick = (node) => {
-    console.log(node);
     if (node) {
       setContext({
         ...context,

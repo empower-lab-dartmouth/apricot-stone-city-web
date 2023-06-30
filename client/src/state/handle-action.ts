@@ -113,7 +113,6 @@ export const handleAction: (
               action: optionData.action,
             });
         if (updates.type === 'continuation-data') {
-          console.log(updates);
           const newPage = appendToPage(currentPage,
               optionData,
               updates.cards, updates.options, updates.context);

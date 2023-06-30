@@ -94,7 +94,6 @@ export const competedScenesState = atom<Set<SceneUUID>>({
 
 const loadStoryScenesFromFB = async () => {
   const querySnapshot = await getDocs(collection(db, 'StoryScene'));
-  console.log(querySnapshot);
   return querySnapshot.docs.map((doc) => doc.data()).reduce((obj, item) => {
     return {
       ...obj,

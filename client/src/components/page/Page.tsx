@@ -198,7 +198,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
             variant="outlined" />
             <Button variant="contained" onClick={() => {
               sendSceneFeedbackToFB({
-                date: (new Date()).toDateString(),
+                date: (new Date()).toString(),
                 enjoymentRating: enjoyable,
                 learningRating: learning,
                 liked: likedFeedback,
