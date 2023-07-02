@@ -72,7 +72,7 @@ const sightseeingTheCity = make.module({
                             do: [
                                 {
                                     type: 'goto',
-                                    path: ['traningdata'],
+                                    path: ['trainingdata'],
                                 },
                             ],
                         },
@@ -170,7 +170,7 @@ const sightseeingTheCity = make.module({
             ],
         },
         {
-            id: 'traningdata',
+            id: 'trainingdata',
             convo: [
                 {
                     type: 'text',
@@ -252,7 +252,71 @@ const sightseeingTheCity = make.module({
                 },
             ],
             choices: [
-                
+                {
+                    text: 'Question 1',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q1'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'Question 2',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q2'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'Question 3',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q3'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'Question 4',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q4'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    text: 'Question 5',
+                    logic: [
+                        {
+                            do: [
+                                {
+                                    type: 'goto',
+                                    path: ['q5'],
+                                },
+                            ],
+                        },
+                    ],
+                },
             ],
         },
         {
@@ -711,7 +775,12 @@ const sightseeingTheCity = make.module({
                             do: [
                                 {
                                     type: 'goto',
-                                    path: ['gohome'],
+                                    path: [
+                                        'root',
+                                        'carol-arrives-at-ASC',
+                                        'on-the-plane',
+                                        'opening',
+                                    ],
                                 },
                             ],
                         },
