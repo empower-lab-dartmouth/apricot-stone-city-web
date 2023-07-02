@@ -80,6 +80,7 @@ export type StoryScene = {
   summary: string,
   quests: string[],
   parents: string[],
+  deleted: boolean,
   children: string[],
   imgUrl: string,
   editHistory: EditHistory[]
@@ -94,12 +95,14 @@ export const competedScenesState = atom<Set<SceneUUID>>({
 
 const loadStoryScenesFromFB = async () => {
   const querySnapshot = await getDocs(collection(db, 'StoryScene'));
-  return querySnapshot.docs.map((doc) => doc.data()).reduce((obj, item) => {
-    return {
-      ...obj,
-      [item.id]: item,
-    };
-  }, {}) as any as Record<SceneUUID, StoryScene>;
+  return querySnapshot.docs.map((doc) => doc.data())
+      .filter((doc) => !(doc as StoryScene).deleted)
+      .reduce((obj, item) => {
+        return {
+          ...obj,
+          [item.id]: item,
+        };
+      }, {}) as any as Record<SceneUUID, StoryScene>;
 };
 
 export const allScenesState =atom<Record<SceneUUID, StoryScene>>({

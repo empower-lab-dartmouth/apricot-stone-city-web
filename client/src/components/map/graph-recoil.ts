@@ -10,11 +10,13 @@ type UserContext = {
   // TODO: Add things here as needed
 }
 
+export const defaultUserContext = {
+  selectedStorySceneID: 'root', // TODO: update this value to be the root.
+};
+
 // Tracks stuff that you don't need to store in fb
 export const userContextState = atom<UserContext>({
   key: 'user-context',
-  default: {
-    selectedStorySceneID: 'title1', // TODO: update this value to be the root.
-  },
+  default: defaultUserContext,
 });
 

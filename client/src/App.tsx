@@ -9,7 +9,7 @@ import {
 import './App.css';
 import {competedScenesState,
   currentPageState, serverReadyState, userLevelState} from './state/recoil';
-import Landing, {loadStoryScenesFromFB,
+import Landing, {loadPageDataFromFB,
   loadUserLevel,
   loadVisitedScenesFromFB} from './components/landing/landing';
 import Page from './components/page/Page';
@@ -41,7 +41,7 @@ const App = () => {
   useEffect(() => {
     wakeUpServer(setServerIsReady);
     if (currentUser) {
-      loadStoryScenesFromFB(currentUser?.email as string,
+      loadPageDataFromFB(currentUser?.email as string,
           setCurrentPage);
       loadUserLevel(currentUser?.email as string,
           setUserLevel);

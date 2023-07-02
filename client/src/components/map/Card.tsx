@@ -6,13 +6,14 @@ import {doc, setDoc} from 'firebase/firestore';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import {atom, useRecoilState, useRecoilValue} from 'recoil';
-import {userContextState} from './graph-recoil';
+import {defaultUserContext, userContextState} from './graph-recoil';
 import metalTex from '../../assets/metal-tex.webp';
 import checkmark from '../../assets/check-mark.png';
 import {EditHistory, StoryScene, allScenesState,
   competedScenesState,
   currentPageState,
-  sceneFeedbackDialogState} from '../../state/recoil';
+  sceneFeedbackDialogState,
+  userLevelState} from '../../state/recoil';
 import Button from '@mui/material/Button';
 // import CloseIcon from '@mui/icons-material/Close';
 import {Autocomplete, Box,
@@ -111,6 +112,8 @@ const CreateOrEditStorySceneForm: FC = () => {
   const [open, setOpen] = useRecoilState(createOrEditFormOpen);
   const [sceneTitle, setSceneTitle] = useState<string>(startingFormState.title);
   const [summary, setSummary] = useState<string>(startingFormState.summary);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [context, setContext] = useRecoilState(userContextState);
   const [quests, setQuests] = useState<string[]>(startingFormState.quests);
   const [children, setChildren] = useState<string[]>(
       startingFormState.children);
@@ -126,7 +129,7 @@ const CreateOrEditStorySceneForm: FC = () => {
   const [imgUrlWorks, setImgUrlWorks] = useState<boolean>(true);
 
 
-  const submitForm = () => {
+  const submitForm = (deleted?: boolean) => {
     const update: StoryScene = {
       title: sceneTitle,
       id: startingFormState.id,
@@ -134,6 +137,7 @@ const CreateOrEditStorySceneForm: FC = () => {
       children: children,
       parents: parents,
       summary: summary,
+      deleted: deleted === undefined ? false : deleted,
       imgUrl: imgUrl,
       wikiUrl: wikiUrl,
       backendPath: backendPath,
@@ -144,10 +148,16 @@ const CreateOrEditStorySceneForm: FC = () => {
       ...startingFormState.editHistory],
     };
     updateFB(update);
-    setAllScenes({
-      ...allStoryScenes,
-      [startingFormState.id]: update,
-    });
+    if (deleted === undefined) {
+      setAllScenes({
+        ...allStoryScenes,
+        [startingFormState.id]: update,
+      });
+    } else {
+      // eslint-disable-next-line no-unused-vars
+      const {[startingFormState.id]: _, ...remaining} = allStoryScenes;
+      setAllScenes(remaining);
+    }
   };
 
   const questsWithAutocompleteFormatting = Object
@@ -166,11 +176,9 @@ const CreateOrEditStorySceneForm: FC = () => {
       const status = request.status;
       if (status == 200 && url !== imgNotFound) {
         console.log('imageLoads!');
-        setImgUrl(url);
         setImgUrlWorks(true);
       } else {
         console.log('image does not load');
-        setImgUrl(imgNotFound);
         setImgUrlWorks(false);
       }
     };
@@ -285,6 +293,7 @@ const CreateOrEditStorySceneForm: FC = () => {
         onChange={(e) => {
           const v = e.target.value;
           if (v !== null) {
+            setImgUrl(v);
             checkImage(v);
           }
         }}
@@ -324,6 +333,21 @@ const CreateOrEditStorySceneForm: FC = () => {
         }}>Save changes</Button>
       <h4>To disregard changes, click outside this pop-up.</h4>
       <h4>After saving a change, refresh the page to see your updates.</h4>
+      {
+        !startingFormState.isNewScene ?
+      <Button
+        disabled={
+          startingFormState.id === 'root'
+        }
+        color='error'
+        variant="contained" onClick={() => {
+          submitForm(true);
+          setOpen(false);
+          setFormInit(undefined);
+          setContext(defaultUserContext);
+        }}>Delete Scene</Button> :
+        <></>
+      }
     </Box>
   );
 };
@@ -331,15 +355,18 @@ const CreateOrEditStorySceneForm: FC = () => {
 
 const hasPermissions: (completedScenes: Set<string>,
   selectedScene: StoryScene,
+  userLevel: number,
   username: string) => boolean = (completedScenes,
-      selectedScene, username) =>
+      selectedScene, userLevel, username) =>
     completedScenes.has(selectedScene.id) ||
+    userLevel >= 1 ||
     selectedScene.editHistory.map((v) => v.username).includes(username);
 
 export default function BasicCard() {
   const context = useRecoilValue(userContextState);
   const [editHistoryHidden, setEditHistoryHidden] = useState(false);
   const allStoryEvents = useRecoilValue(allScenesState);
+  const userLevel = useRecoilValue(userLevelState);
   const selectedScene = allStoryEvents[context.selectedStorySceneID];
   const [formInit, setFormInit] = useRecoilState(
       createOrEditFormSceneStartingState);
@@ -371,7 +398,7 @@ export default function BasicCard() {
       imgUrl: signpostImgUrl,
       editHistory: [],
       wikiUrl: 'Create a new Google Doc and update this value with that url',
-      backendPath: ['NOT_YET_IMPLEMENTED'],
+      backendPath: [],
     });
     setOpen(true);
   };
@@ -421,7 +448,8 @@ export default function BasicCard() {
 
   return (
     <Card sx={{paddingTop: '150px', paddingLeft: '40px',
-      paddingRight: '40px', backgroundImage: `url(${metalTex})`}}>
+      paddingRight: '40px', backgroundImage: `url(${metalTex})`,
+      width: '30%'}}>
       <CardContent sx={{backgroundColor: 'white',
         border: '5px solid #46c6ea',
         borderRadius: '7px'}}>
@@ -448,12 +476,12 @@ export default function BasicCard() {
                     paddingRight: '3px'}}>Completed!</p>
                 </Stack>
               </div>
-            </Stack> : <></>
+            </Stack> : <h2>{selectedScene.title}</h2>
         }
         <img alt="preview image" width="200"
           src={selectedScene.imgUrl}/>
         {
-            hasPermissions(completedScenes, selectedScene,
+            hasPermissions(completedScenes, selectedScene, userLevel,
               currentUser?.email as string) ?
             <p>{selectedScene.summary}</p> :
             <>
@@ -528,7 +556,7 @@ export default function BasicCard() {
           )
         }
         {
-         hasPermissions(completedScenes, selectedScene,
+         hasPermissions(completedScenes, selectedScene, userLevel,
           currentUser?.email as string) ?
          <>
            <br />
@@ -606,7 +634,7 @@ export default function BasicCard() {
         }
       </CardContent>
       {
-      hasPermissions(completedScenes, selectedScene,
+      hasPermissions(completedScenes, selectedScene, userLevel,
         currentUser?.email as string) ?
          <>
            <Dialog

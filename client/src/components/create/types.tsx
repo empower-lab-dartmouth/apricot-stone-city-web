@@ -23,6 +23,7 @@ export type AIConcept = 'Learning-1-A' | 'Learning-1-B'; // ...
 
 export const mockData: Record<SceneUUID, StoryScene> = {
   'title1': {
+    deleted: false,
     id: 'title1',
     title: 'title1',
     summary: 'desc',
@@ -39,6 +40,7 @@ export const mockData: Record<SceneUUID, StoryScene> = {
     ],
   },
   'title2': {
+    deleted: false,
     id: 'title2',
     title: 'title2',
     summary: 'desc',

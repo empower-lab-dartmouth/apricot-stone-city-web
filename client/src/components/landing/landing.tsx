@@ -22,7 +22,7 @@ const defaultFormFields = {
   password: '',
 };
 
-export const loadStoryScenesFromFB = async (username: string,
+export const loadPageDataFromFB = async (username: string,
     setter: (p: PageData) => void) => {
   const ref = doc(db, 'PageData', username);
   const docSnap = await await getDoc(ref);
@@ -101,7 +101,7 @@ function Home() {
       if (userCredential) {
         resetFormFields();
         loadUserLevel(email, setUserLevel);
-        loadStoryScenesFromFB(email, setCurrentPage);
+        loadPageDataFromFB(email, setCurrentPage);
         loadVisitedScenesFromFB(email, setVisitedScenes);
         navigate('/profile');
       }
