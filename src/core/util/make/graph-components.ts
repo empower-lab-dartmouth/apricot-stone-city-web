@@ -62,7 +62,6 @@ function convoSegmentId(unvalidatedId: _ConvoSegmentId): ConvoSegmentId {
 export function absoluteConvoSegmentPath(
     content: _ConvoSegmentPath
 ): AbsoluteConvoSegmentPath {
-    console.log(content)
     if (content.length == 0) {
         throw new Error(`Empty convo segment path is not allowed`)
     }
