@@ -29,16 +29,19 @@ export default function Graph() {
 
   // Random connected graph
   const gData = {
-    nodes: Object.values(allScenes).map((event) => ({
-      id: event.id,
-      img: event.imgUrl,
-    })),
+    nodes: Object.values(allScenes)
+        .filter((s) => !s.deleted)
+        .map((event) => ({
+          id: event.id,
+          img: event.imgUrl,
+        })),
     links: [...Object.values(allScenes)
-        .flatMap((s) => s.parents.map(
-            (p) => ({source: p, target: s.id}))),
-    ...Object.values(allScenes)
-        .flatMap((s) => s.children.map(
-            (c) => ({source: s.id, target: c})))],
+        .filter((s) => !s.deleted)
+        .flatMap((s) => s.parents
+            .filter((p) => allScenes[p] !== undefined &&
+        !allScenes[p].deleted)
+            .map(
+                (p) => ({source: p, target: s.id})))],
   };
 
   return (

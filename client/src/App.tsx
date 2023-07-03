@@ -22,6 +22,7 @@ import {AuthContext} from './context/auth-context';
 import RequireAuth from './components/require-auth';
 import {wakeUpServer} from './state/handle-action';
 import {FacilitatorPage} from './components/facilitator/Facilitator';
+import {AnalyticsPage} from './components/analytics/Analytics';
 
 const App = () => {
   // eslint-disable-next-line no-unused-vars
@@ -67,6 +68,10 @@ const App = () => {
 
       <Route path="/facilitator" element={<RequireAuth>
         <FacilitatorPage/>
+      </RequireAuth>} />
+
+      <Route path="/analytics" element={<RequireAuth>
+        <AnalyticsPage />
       </RequireAuth>} />
 
       <Route path="/map" element={<RequireAuth>

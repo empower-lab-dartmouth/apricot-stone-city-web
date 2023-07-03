@@ -91,7 +91,7 @@ export default function Nav() {
               </div>
             )}
           </PopupState> :
-          <NavLink to="/profile" className="nav-item">
+          <NavLink to="/analytics" className="nav-item">
             <Stack direction="column" justifyContent="flex-start"
               alignItems="center">
               <img src={eyeIcon} style={{width: '62px'}}/>

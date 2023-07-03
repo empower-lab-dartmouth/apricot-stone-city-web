@@ -132,8 +132,7 @@ export const handleAction: (
                 allStoryScenes, newScenePath);
             if (currentScene !== undefined && nextScene !== undefined) {
               // User has successfully completed the current scene.
-              if (currentScene.children.includes(nextScene.id) ||
-                currentScene.parents.includes(nextScene.id) ||
+              if (currentScene.parents.includes(nextScene.id) ||
                 nextScene.parents.includes(currentScene.id)) {
                 const firstTime = !completedScenes.has(currentScene.id);
                 const updatedCompletedScenes = completedScenes.add(

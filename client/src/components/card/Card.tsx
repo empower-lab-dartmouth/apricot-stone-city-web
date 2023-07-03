@@ -15,7 +15,6 @@ import Typography from '@mui/material/Typography';
 //   </Typography>
 // );
 
-
 type CardDataParams = {
   cardData: CardData
 }

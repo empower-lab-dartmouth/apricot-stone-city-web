@@ -49,7 +49,6 @@ type CreateOrEditFormStartingState = {
   title: string,
   id: string,
   quests: string[],
-  children: string[],
   parents: string[],
   summary: string,
   imgUrl: string,
@@ -64,7 +63,6 @@ const defaultVal: CreateOrEditFormStartingState = {
   title: '',
   id: '',
   quests: [],
-  children: [],
   parents: [],
   summary: '',
   imgUrl: '',
@@ -115,8 +113,8 @@ const CreateOrEditStorySceneForm: FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [context, setContext] = useRecoilState(userContextState);
   const [quests, setQuests] = useState<string[]>(startingFormState.quests);
-  const [children, setChildren] = useState<string[]>(
-      startingFormState.children);
+  // const [children, setChildren] = useState<string[]>(
+  //     startingFormState.children);
   const [parents, setParents] = useState<string[]>(
       startingFormState.parents);
   const [imgUrl, setImgUrl] = useState<string>(
@@ -134,7 +132,6 @@ const CreateOrEditStorySceneForm: FC = () => {
       title: sceneTitle,
       id: startingFormState.id,
       quests: quests,
-      children: children,
       parents: parents,
       summary: summary,
       deleted: deleted === undefined ? false : deleted,
@@ -215,10 +212,13 @@ const CreateOrEditStorySceneForm: FC = () => {
       <Autocomplete
         multiple
         sx={inputFieldStyles}
-        value={parents.map((p) => ({
-          item: p,
-          label: allStoryScenes[p].title,
-        }))}
+        value={parents
+            .filter((p) => allStoryScenes[p] !== undefined &&
+          !allStoryScenes[p].deleted)
+            .map((p) => ({
+              item: p,
+              label: allStoryScenes[p].title,
+            }))}
         onChange={(_event, val, _reason, _details) => setParents(
             val.map((p) => p.item))}
         // value={.value}
@@ -234,7 +234,7 @@ const CreateOrEditStorySceneForm: FC = () => {
         // renderOption={renderOption}
         // renderGroup={(params) => params}
       />
-      <Autocomplete
+      {/* <Autocomplete
         multiple
         sx={inputFieldStyles}
         value={children.map((c) => ({
@@ -256,7 +256,7 @@ const CreateOrEditStorySceneForm: FC = () => {
           label={'Child scene(s)'} />}
         // renderOption={renderOption}
         // renderGroup={(params) => params}
-      />
+      /> */}
       <Autocomplete
         multiple
         sx={inputFieldStyles}
@@ -394,7 +394,6 @@ export default function BasicCard() {
       summary: '',
       quests: [],
       parents: [selectedScene.id],
-      children: [],
       imgUrl: signpostImgUrl,
       editHistory: [],
       wikiUrl: 'Create a new Google Doc and update this value with that url',
@@ -446,6 +445,9 @@ export default function BasicCard() {
       setFeedbackDialog);
   };
 
+  const children = Object.values(allStoryEvents)
+      .filter((s) => s.parents.includes(selectedScene.id) && !s.deleted);
+
   return (
     <Card sx={{paddingTop: '150px', paddingLeft: '40px',
       paddingRight: '40px', backgroundImage: `url(${metalTex})`,
@@ -483,7 +485,11 @@ export default function BasicCard() {
         {
             hasPermissions(completedScenes, selectedScene, userLevel,
               currentUser?.email as string) ?
-            <p>{selectedScene.summary}</p> :
+              <>
+                <p style={{color: 'gray'}}>Summary:</p>
+                <p>{selectedScene.summary}</p>
+              </> :
+
             <>
               <br />
               <Alert variant="filled" severity="info">
@@ -494,17 +500,18 @@ export default function BasicCard() {
               </Alert>
             </>
         }
-        <p>{selectedScene.quests.length !== 0 ?
-        'Quests fulfilled:' : ''}</p>
-        {
-          selectedScene.quests.map((p) =>
-            <>
-              <Stack
-                direction="column"
-                justifyContent="flex-start"
-                alignItems="flex-start"
-                spacing={0.5}
-              >
+        <p style={{color: 'gray'}}>{
+        selectedScene.quests.length !== 0 ?
+        'Quests fulfilled:' : 'Fulfils no quests.'}</p>
+        <Stack
+          direction="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={1}
+        >
+          {
+            selectedScene.quests.map((p) => (
+              <>
                 <img src={allQuests[p].img} style={{width: '62px'}}/>
                 <Chip label={allQuests[p].title} sx={{
                   'height': 'auto',
@@ -515,34 +522,36 @@ export default function BasicCard() {
                     color: 'black',
                   },
                 }}
+                key={p}/>
+              </>
+            ))
+          }
+        </Stack>
+        <p style={{color: 'gray'}}>{selectedScene.parents.length !== 0 ?
+        'Parents:' : 'No parents.'}</p>
+        {
+          selectedScene.parents
+              .filter((p) => allStoryEvents[p] !== undefined &&
+          !allStoryEvents[p].deleted)
+              .map((p) =>
+                <Chip label={allStoryEvents[p].title} sx={{
+                  'height': 'auto',
+                  '& .MuiChip-label': {
+                    borderRadius: '25px',
+                    whiteSpace: 'normal',
+                    backgroundColor: '#ffb800',
+                    color: 'black',
+                  },
+                }}
                 key={p}
                 />,
-              </Stack>
-            </>,
-          )
+              )
         }
-        <p>{selectedScene.parents.length !== 0 ?
-        'parents:' : 'no parents'}</p>
+        <p style={{color: 'gray'}}>{children.length !== 0 ?
+        'Children:' : 'No children.'}</p>
         {
-          selectedScene.parents.map((p) =>
-            <Chip label={allStoryEvents[p].title} sx={{
-              'height': 'auto',
-              '& .MuiChip-label': {
-                borderRadius: '25px',
-                whiteSpace: 'normal',
-                backgroundColor: '#ffb800',
-                color: 'black',
-              },
-            }}
-            key={p}
-            />,
-          )
-        }
-        <p>{selectedScene.children.length !== 0 ?
-        'children:' : 'no children'}</p>
-        {
-          selectedScene.children.map((p) =>
-            <Chip label={allStoryEvents[p].title} sx={{
+          children.map((p) =>
+            <Chip label={p.title} sx={{
               'height': 'auto',
               '& .MuiChip-label': {
                 borderRadius: '25px',
@@ -551,7 +560,7 @@ export default function BasicCard() {
                 color: 'black',
               },
             }}
-            key={p}
+            key={p.id}
             />,
           )
         }
@@ -559,8 +568,6 @@ export default function BasicCard() {
          hasPermissions(completedScenes, selectedScene, userLevel,
           currentUser?.email as string) ?
          <>
-           <br />
-           <br />
            {
           selectedScene.backendPath.length <= 1 ? <></> :
           <>
@@ -574,15 +581,15 @@ export default function BasicCard() {
            }
            {
           !selectedScene.wikiUrl.includes('docs.google.com') ?
-          <p>Wiki not yet implemented.</p> :
+          <p style={{color: 'gray'}}>Wiki not yet implemented.</p> :
           // eslint-disable-next-line react/jsx-no-target-blank
           <a target="_blank" href={selectedScene.wikiUrl}><p>Wiki link</p></a>
            }
            {
-          selectedScene.backendPath.length === 0 ?
-          <p>Backend not yet implemented.</p> :
+          selectedScene.backendPath.length <= 1 ?
+          <p style={{color: 'gray'}}>Backend not yet implemented.</p> :
           <>
-            <p>backend path:</p>
+            <p style={{color: 'gray'}}>Backend path:</p>
             <Stack direction="column" spacing={0}>
               {
                 selectedScene.backendPath.map((p) =>

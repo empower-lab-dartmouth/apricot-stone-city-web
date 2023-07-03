@@ -63,7 +63,7 @@ export default function Profile() {
   };
   useEffect(() => {
     loadDataFromFb();
-  });
+  }, []);
 
   const handleClick = () => {
     console.info(`You clicked ${options[selectedIndex]}`);

@@ -1,0 +1,10 @@
+/* Analytics.css */
+
+.page-container1 {
+    background-image: url("../../assets/analytics-background.png");
+    /* max-height: 100vh; */
+    padding-top: 100px;
+    display: flex;
+    align-items: top;
+    justify-content: center;
+  }

@@ -81,7 +81,6 @@ export type StoryScene = {
   quests: string[],
   parents: string[],
   deleted: boolean,
-  children: string[],
   imgUrl: string,
   editHistory: EditHistory[]
   wikiUrl: string,
