@@ -3,10 +3,11 @@ import {PageData} from '../components/page/page-model';
 import {CardData} from '../components/card/card-model';
 import {OptionData} from '../components/option/option-model';
 import {fetchContinueConversationData} from '../utils/data-utils';
-import {Stores} from '../utils/stores';
+import {ConvoSegmentPath, Stores} from '../utils/stores';
 import {doc, setDoc} from 'firebase/firestore';
 import {db} from '../components/firebase/firebase-config';
-import {SceneFeedbackDialog, SceneUUID, StoryScene} from './recoil';
+import {ChatButtonEvent, SceneFeedbackDialog,
+  SceneUUID, StoryScene} from './recoil';
 import {find, isEqual} from 'lodash';
 import {sampleAction} from './sample-data';
 
@@ -27,7 +28,29 @@ const uploadPageToFB = async (newPage: PageData, username: string) => {
   try {
     await setDoc(
         doc(db, 'PageData', username), newPage);
-    console.log('Document written to fb');
+  } catch (e) {
+    console.error('Error adding document: ', e);
+  }
+};
+
+const uploadChatButtonEventToFB = async (option: OptionData,
+    response: string[], username: string, path: Required<ConvoSegmentPath>) => {
+  try {
+    console.log('sending event logs to fb');
+    const d = (new Date()).toString();
+    const id = `${username}${d}`;
+    const loggedEvent: ChatButtonEvent = {
+      type: 'chat-option',
+      option: option.text,
+      correctAnswer: option.correctAnswer,
+      response,
+      username,
+      date: d,
+      path,
+      id,
+    };
+    await setDoc(
+        doc(db, 'EventLog', id), loggedEvent);
   } catch (e) {
     console.error('Error adding document: ', e);
   }
@@ -117,11 +140,22 @@ export const handleAction: (
               optionData,
               updates.cards, updates.options, updates.context);
           setCurrentPage(newPage);
+          const path: Required<ConvoSegmentPath> = currentPage
+              .currentStores !== undefined ?
+          currentPage.currentStores
+              .currentConvoSegmentPath : // Should be unreachable state.
+          {
+            id: 'root',
+            parentModules: ['root'],
+          } as Required<ConvoSegmentPath>;
+          uploadChatButtonEventToFB(optionData, updates.cards.map(
+              (c) => c.type === 'image' ? '<IMAGE>' : c.text), username,
+          path);
           uploadPageToFB(newPage, username);
           // Check if we have completed a scene.
           const currentScenePath = currentPage.currentStores !== undefined ?
-          currentPage.currentStores
-              .currentConvoSegmentPath.parentModules : ['root'];
+            currentPage.currentStores
+                .currentConvoSegmentPath.parentModules : ['root'];
           const newScenePath = newPage.currentStores !== undefined ?
           newPage.currentStores
               .currentConvoSegmentPath.parentModules : ['root'];

@@ -437,6 +437,7 @@ export default function BasicCard() {
         type: 'click-option',
         option: 'Returning to a scene!',
       },
+      correctAnswer: 'na',
       id: 'free-response',
       text: 'Returning to a scene!',
       type: 'option'}, {

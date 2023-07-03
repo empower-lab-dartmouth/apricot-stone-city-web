@@ -235,6 +235,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
                     type: 'click-option',
                     option: inputtedFreeResponseText,
                   },
+                  correctAnswer: 'na',
                   id: 'free-response',
                   text: inputtedFreeResponseText,
                   type: 'option'}, currentPage, setCurrentPage,

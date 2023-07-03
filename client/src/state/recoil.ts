@@ -23,6 +23,7 @@ import questLargeDataImg
   from '../assets/quest-large-data-sets.webp';
 import {collection, getDocs} from 'firebase/firestore';
 import {db} from '../components/firebase/firebase-config';
+import {ConvoSegmentPath} from '../utils/stores';
 
 
 export const currentPageState = atom<PageData>({
@@ -73,6 +74,18 @@ export type EditHistory = {
   date: string
 }
 
+export type ChatButtonEvent = {
+  type: 'chat-option',
+  option: string,
+  response: string[]
+  date: string,
+  correctAnswer: 'true' | 'false' | 'na'
+  path: Required<ConvoSegmentPath>,
+  id: string,
+  username: string,
+}
+
+export type LoggedEvent = ChatButtonEvent;
 
 export type StoryScene = {
   id: SceneUUID,

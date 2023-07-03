@@ -15,7 +15,8 @@ export const sampleNewCard: CardData = {
 };
 
 export const sampleNewOption: OptionData = {
-  id: 'id', text: 'new option!', type: 'option', action: sampleAction,
+  id: 'id', text: 'new option!', correctAnswer: 'na',
+  type: 'option', action: sampleAction,
 };
 
 export const samplePageData: PageData = {
@@ -33,9 +34,13 @@ export const samplePageData: PageData = {
   ],
   currentStores: undefined,
   options: [
-    {id: '0', type: 'option', text: 'optiofdgdsfgfdgn1', action: sampleAction},
-    {id: '1', type: 'option', text: 'dgdsfgfdgn1', action: sampleAction},
-    {id: '2', type: 'option', text: 'option 2', action: sampleAction},
+    {id: '0', correctAnswer: 'na',
+      type: 'option', text: 'optiofdgdsfgfdgn1', action: sampleAction},
+    {id: '1', correctAnswer: 'na',
+      type: 'option',
+      text: 'dgdsfgfdgn1', action: sampleAction},
+    {id: '2', correctAnswer: 'na',
+      type: 'option', text: 'option 2', action: sampleAction},
   ],
 };
 
