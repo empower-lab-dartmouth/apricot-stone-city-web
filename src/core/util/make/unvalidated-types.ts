@@ -57,6 +57,7 @@ export type _Logic = {
 
 export type _Choice = {
     text: _Text
+    correctAnswer?: boolean
     logic: _Logic[]
 }
 

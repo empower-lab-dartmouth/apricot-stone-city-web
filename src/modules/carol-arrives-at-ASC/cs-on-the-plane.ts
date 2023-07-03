@@ -415,6 +415,7 @@ const onThePlane = make.module({
             choices: [
                 {
                     text: 'She compared her predictions to true objects using a test dataset.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -428,6 +429,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'She relied on qualitative feedback from other observers.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [

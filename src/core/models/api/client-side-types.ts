@@ -23,6 +23,7 @@ export type Action = ClickOptionAction | FreeResponseAction
 
 export type OptionData = {
     text: string
+    correctAnswer: 'true' | 'false' | 'na'
     action: Action
 }
 

@@ -118,14 +118,22 @@ const keyboardButtonFromChoice: (
     return evaluateText(choice.text, errorHandler, stateInstance)
 }
 
+type KeyboardButton = {
+    text: string
+    correctAnswer: 'true' | 'false' | 'na'
+}
+
 const keyboardButtonsFromChoices: (
     stateInstance: GeneralizedStateInstance,
     choices: UserChoice[]
-) => string[] = (stateInstance, choices) => {
+) => KeyboardButton[] = (stateInstance, choices) => {
     const keyboardButtonFromChoiceWithState = keyboardButtonFromChoice(
         stateInstance
     )
-    return choices.map(keyboardButtonFromChoiceWithState)
+    return choices.map((c) => ({
+        text: keyboardButtonFromChoiceWithState(c),
+        correctAnswer: c.correctAnswer,
+    }))
 }
 
 const executeAction: (params: ExecuteActionParams) => CardData[] = params => {
@@ -236,15 +244,17 @@ const executeConvoLogic: (logic: ExecuteConvoLogicParams) => ContinueConversatio
     const freeResponseOption: OptionData[] = stateManager.getCurrentConvoSegment().defaultChoice !== undefined ?
     [{
         text: 'Free Reponse',
+        correctAnswer: 'na',
         action: {
         type: 'free-response',
         option: ''
     }}] : []
     const keyboardOptions: OptionData[] = keyboardButtons.map((c) => ({
-        text: c,
+        text: c.text,
+        correctAnswer: c.correctAnswer,
         action: {
             type: 'click-option',
-            option: c,
+            option: c.text,
         }
     }))
     return ({
@@ -378,10 +388,11 @@ export const convoManagerConstructor: ConvoManagerConstructor = (
                         }],
                         context: stateManager.getStores(),
                         options: keyboardButtons.map((c) => ({
-                            text: c,
+                            text: c.text,
+                            correctAnswer: c.correctAnswer,
                             action: {
                                 type: 'click-option',
-                                option: c,
+                                option: c.text,
                             }
                         })),
                     })

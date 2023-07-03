@@ -171,8 +171,16 @@ function convoLogic(content: _Logic[]): ConvoLogic {
 }
 
 function choice(content: _Choice): UserChoice {
+    if (content.correctAnswer === undefined) {
+        return {
+            text: text(content.text),
+            correctAnswer: 'na',
+            logic: convoLogic(content.logic),
+        }
+    }
     return {
         text: text(content.text),
+        correctAnswer: content.correctAnswer ? 'true' : 'false',
         logic: convoLogic(content.logic),
     }
 }
