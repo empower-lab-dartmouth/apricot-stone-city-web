@@ -775,8 +775,8 @@ const taxiToDestination = make.module({
                                     path: [
                                         'root',
                                         'carol-arrives-at-ASC',
-                                        'missing-bags',
-                                        'miss-bag',
+                                        'Lost-pasport',
+                                        'miss-pasport',
                                     ],
                                 },
                             ],

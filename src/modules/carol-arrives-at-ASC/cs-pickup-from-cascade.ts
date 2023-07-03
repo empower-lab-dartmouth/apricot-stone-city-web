@@ -1,16 +1,16 @@
 import make from '../../core/util/make'
 
-const walkToDestination = make.module({
-    id: 'walk-to-destination',
+const pickupFromCascade = make.module({
+    id: 'pickup-from-cascade',
     submodules: [],
     convoSegments: [
         {
-            id: 'walk',
+            id: 'pickup',
             convo: [
                 {
                     type: 'text',
                     text:
-                        'Carol was an adventurous and independent woman who loved exploring new places on foot. On a sunny day, she decided to embark on a walking journey to her general destination, eager to immerse herself in the sights and sounds of the city. As she strolled through the bustling streets, Carol\'s senses absorbed the vibrant colors, the enticing aromas, and the rhythmic sounds of the city. However, as fate would have it, dark clouds began to gather overhead, and raindrops started to fall from the sky. Carol found herself caught in an unexpected downpour, drenching her clothes and dampening her spirits. Realizing that walking in the rain would be uncomfortable and inconvenient, she decided to seek shelter and hailed a passing taxi. As Carol delved deeper into her metaphorical exploration, she unraveled five fundamental ideas about machine learning algorithms adjusting internal representations: Idea 1: Adaptation to changing circumstances - Just as Carol adjusts her mode of transportation from walking to taking a taxi due to the rain, machine learning algorithms adapt their internal representations based on the evolving data and patterns they encounter. Idea 2: Optimization of performance - Carol\'s decision to take a taxi is driven by the desire for convenience and comfort. Similarly, machine learning algorithms optimize their performance by adjusting their internal representations to minimize errors or differences between predicted and actual outcomes. Idea 3: Perceiving patterns and data - Carol\'s awareness of the rain and the need for an alternative transportation method represents the algorithms\' ability to perceive and analyze patterns and data in order to make informed decisions. Idea 4: Continuous evaluation and adjustment - As Carol assesses the rain\'s intensity and decides to hail a taxi, machine learning algorithms continuously evaluate the accuracy of their predictions or classifications and adjust their internal representations accordingly. Idea 5: Learning and improvement over time - Carol\'s adaptation to the rain through the taxi ride symbolizes the concept of machine learning algorithms learning from the data they encounter and updating their internal representations. By doing so, they enhance their predictive or classification capabilities, similar to how Carol\'s experience with the rain influences her future decision-making in similar situations.',
+                        'Carol, a curious and open-minded woman, found herself standing at the foot of the Cascade, a magnificent memorial with cascading steps. The memorial stood tall, symbolizing the collective memory and resilience of a people. As she marveled at the beauty of the monument, Carol couldn\'t help but notice the intricate details carved into each step, representing the lives lost in the Armenian genocide. Suddenly, a kind voice broke her reverie. It was Anoush, a warm-hearted individual who had a deep connection to the memorial. Anoush recognized Carol\'s curiosity and began to share the story behind the monument, explaining the significance of each feature and its encoded meaning. As Carol delved deeper into her metaphorical exploration, she unraveled five fundamental ideas about comparing datasets: Idea 1: Real-world datasets - The story revolves around the comparison of real-world datasets, which are analogous to the features comprising the Cascade memorial in the story. Idea 2: Features and their composition - The intricate carvings on the steps of the memorial represent the features of the dataset, highlighting the importance of understanding the composition of features in datasets. Idea 3: Encoding of features - The encoded meaning behind each carving on the steps of the memorial mirrors how features in datasets are encoded, emphasizing the significance of decoding and interpreting the information they hold. Idea 4: Comparing datasets: Just as Carol learns about the stories and history embedded in the memorial\'s features, comparing datasets involves analyzing their features to identify similarities and differences, leading to valuable insights. Idea 5: Uncovering meaningful insights - By exploring the composition and encoding of features, both in the memorial and datasets, Carol discovers the hidden narratives and stories within the data, reflecting the power of uncovering meaningful insights through dataset comparison.',
                 },
             ],
             choices: [
@@ -40,72 +40,72 @@ const walkToDestination = make.module({
             ],
             choices: [
                 {
-                    text: "Adaptation to changing circumstances",
+                    text: "Real-world datasets",
                     logic: [
                         {
                             do: [
                                 {
                                     type: 'goto',
-                                    path: ['adaptation'],
+                                    path: ['availability'],
                                 },
                             ],
                         },
                     ],
                 },
                 {
-                    text: "Optimization of performance",
+                    text: "Features and their composition",
                     logic: [
                         {
                             do: [
                                 {
                                     type: 'goto',
-                                    path: ['optimization'],
+                                    path: ['desiredoutput'],
                                 },
                             ],
                         },
                     ],
                 },
                 {
-                    text: "Perceiving patterns and data",
+                    text: "Encoding of features",
                     logic: [
                         {
                             do: [
                                 {
                                     type: 'goto',
-                                    path: ['patterns'],
+                                    path: ['nature'],
                                 },
                             ],
                         },
                     ],
                 },
                 {
-                    text: "Continuous evaluation and adjustment",
+                    text: "Comparing datasets",
                     logic: [
                         {
                             do: [
                                 {
                                     type: 'goto',
-                                    path: ['evaluation'],
+                                    path: ['trade-offs'],
                                 },
                             ],
                         },
                     ],
                 },
                 {
-                    text: "Learning and improvement over time",
+                    text: "Uncovering meaningful insights",
                     logic: [
                         {
                             do: [
                                 {
                                     type: 'goto',
-                                    path: ['learning'],
+                                    path: ['requirements'],
                                 },
                             ],
                         },
                     ],
                 },
                 {
-                    text: "Arrive at Destination",
+                    text: "Arrive at Anoush's house",
                     logic: [
                         {
                             do: [
@@ -120,11 +120,11 @@ const walkToDestination = make.module({
             ],
         },
         {
-            id: 'adaptation',
+            id: 'availability',
             convo: [
                 {
                     type: 'text',
-                    text: `Carol was an adventurous and curious woman who enjoyed exploring the world around her. On a beautiful sunny day, she decided to set out on foot to her general destination, relishing the opportunity to soak in the sights and sounds of the city. With a spring in her step and a sense of adventure in her heart, Carol embarked on her walking journey. As Carol meandered through the lively streets, observing the architecture, interacting with locals, and discovering hidden gems, she felt a sudden shift in the weather. Dark clouds rolled in, and raindrops began to fall gently at first, then more persistently. The unexpected rain shower caught Carol off guard, forcing her to seek shelter and reconsider her plans. In this scenario, Carol\'s decision to adapt her mode of transportation from walking to taking a taxi serves as a metaphor for the AI concept of adaptation to changing circumstances. Just as Carol swiftly adjusted her plans in response to the rain, machine learning algorithms also possess the ability to adapt their internal representations to dynamically respond to variations in the data environment. Machine learning algorithms continuously monitor and evaluate the changing conditions and patterns in the data they encounter. When faced with new circumstances or unforeseen events, they are capable of adjusting their internal representations to optimize their performance and make accurate predictions or classifications. In Carol\'s case, the rain served as the changing circumstance that prompted her to adapt her journey. Similarly, machine learning algorithms analyze incoming data, identify patterns, and recognize when the existing internal representations may not be sufficient to capture the evolving information accurately. They then adjust their internal representations, such as updating weights, fine-tuning parameters, or modifying model architecture, to adapt to the new circumstances and improve their predictive capabilities. Just as Carol\'s adaptation to the rain by taking a taxi allowed her to continue her journey comfortably, machine learning algorithms\' ability to adapt their internal representations ensures they can effectively handle variations in the data and provide reliable predictions or classifications. By embracing the concept of adaptation to changing circumstances, machine learning algorithms showcase their flexibility and resilience in navigating complex real-world scenarios.`,
+                    text: `Carol, a curious and analytical woman, found herself in the enchanting surroundings of the Cascade. As she strolled through its serene pathways, she stumbled upon Anoush, a knowledgeable companion who shared her passion for unraveling hidden stories. Engrossed in conversation, Carol learned that Anoush\'s grandmother, Ani, held a profound connection to the Cascade. Ani, with a gentle smile on her face, began to narrate the rich history of the moment—a memorial dedicated to the victims of the Armenian genocide. Intrigued by the memorial\'s significance, Carol couldn\'t help but draw a metaphorical connection to the realm of AI and machine learning. Just as the Cascade stood as a real-world dataset—a collection of meaningful elements—so did the vast array of datasets encountered in the world of AI. The features comprising the Cascade, from its towering statues to the meticulously carved inscriptions, were akin to the diverse attributes found in real-world datasets. Each feature held its own story, reflecting the unique characteristics of the dataset it represented. Just as Carol explored the Cascade, comparing its features, she envisioned AI algorithms scrutinizing and comparing real-world datasets. These algorithms sought to understand the intricacies of the datasets\' features, evaluating how they interrelated and contributed to the overall narrative. The memorial\'s features were encoded with emotions, symbolism, and historical significance—a representation of how real-world dataset features are encoded. In AI, the encoding of features referred to the transformation and representation of raw data into a format that algorithms could interpret and analyze effectively. As Carol listened to Ani\'s captivating tales, she realized the immense value of comparing real-world datasets. Similarly, AI algorithms compared datasets to uncover hidden patterns, correlations, and insights that might otherwise go unnoticed. By delving into the features and their composition, AI could extract valuable information, enabling informed decision-making and driving innovation across various domains. Just as Carol\'s journey through the Cascade alongside Anoush and Ani reached its poignant conclusion, Anoush\'s daughter arrived to pick them up. The story of the Cascade, like that of the real-world datasets, was ever-evolving, forever open to exploration, and ready to unravel new narratives with each passing day.`,
                 },
             ],
             choices: [
@@ -144,11 +144,11 @@ const walkToDestination = make.module({
             ],
         },
         {
-            id: 'optimization',
+            id: 'desiredoutput',
             convo: [
                 {
                     type: 'text',
-                    text: 'As Carol strolled through the bustling streets, taking in the sights, sounds, and scents of the urban landscape, the weather suddenly took an unexpected turn. Dark clouds gathered overhead, and raindrops began to fall, dampening the sidewalks and dampening Carol\'s spirits. Undeterred by the rain, Carol pressed on for a while, seeking cover under awnings and trees. However, as the rain intensified, she realized that continuing her journey on foot would not only be inconvenient but also compromise her overall experience. In this narrative, Carol\'s decision to optimize her performance by taking a taxi in response to the rain serves as a metaphor for the AI concept of optimization of performance in machine learning algorithms. Just as Carol recognized the need to modify her approach to maximize her efficiency and comfort, machine learning algorithms constantly strive to enhance their performance by adjusting their internal representations. Machine learning algorithms are designed to optimize their performance by minimizing errors or discrepancies between their predictions or classifications and the ground truth. They achieve this by iteratively adjusting their internal representations, such as fine-tuning model parameters, optimizing hyperparameters, or updating the network weights, to find the best configuration that yields the most accurate and reliable outcomes. Similar to Carol\'s decision to take a taxi, which allowed her to reach her destination faster and more comfortably, machine learning algorithms undergo a process of optimization to improve their predictive capabilities. By adjusting their internal representations, they aim to reduce errors, enhance accuracy, and increase the overall efficiency and effectiveness of their predictions or classifications. Optimization of performance in machine learning algorithms involves a continuous cycle of evaluation, adjustment, and refinement. As Carol made the choice to optimize her performance by hailing a taxi, machine learning algorithms continuously evaluate their performance metrics, identify areas for improvement, and adjust their internal representations accordingly to maximize their predictive power and achieve higher performance levels. Through the metaphor of Carol\'s decision to optimize her performance by taking a taxi in response to the rain, the concept of optimization of performance in machine learning algorithms comes to life, emphasizing the importance of fine-tuning and adjusting internal representations to achieve the best possible outcomes in real-world scenarios.',
+                    text: 'Amidst the captivating beauty of the Cascade, Carol and Anoush stumbled upon Ani, Anoush\'s grandmother, who radiated wisdom and warmth. Ani, a custodian of memories, invited Carol to delve into the history of the moment—a memorial paying tribute to the lives lost in the Armenian genocide. As Ani began to narrate the compelling stories etched within the memorial\'s features, Carol\'s mind intertwined the threads of her surroundings with the realm of artificial intelligence. In her imagination, the Cascade became a metaphor for real-world datasets, each containing a multitude of distinct features that form the backbone of comparison. Just as the Cascade boasted an array of features—its elegant sculptures, intricate engravings, and poignant inscriptions—real-world datasets, too, encompassed a variety of elements. The features in a dataset, like the carefully crafted attributes of the Cascade, held the power to convey meaning and provide valuable insights. Carol envisioned AI algorithms scrutinizing real-world datasets, evaluating the composition and interplay of their features. By comparing the features within and across datasets, AI algorithms sought to unravel patterns, relationships, and underlying information that could fuel discovery and understanding. Much like the distinctive features of the Cascade, the composition of features in a dataset played a pivotal role in AI\'s ability to comprehend and extract meaningful insights. The arrangement and combination of features within a dataset held the potential to unlock hidden narratives and illuminate connections that may have otherwise remained concealed. As Ani\'s captivating storytelling continued, Carol realized the importance of considering the composition of features when comparing real-world datasets. Just as the arrangement of sculptures, engravings, and inscriptions shaped the essence of the Cascade, the composition of features influenced the narrative and value derived from a dataset. The art of comparing features and their composition in real-world datasets was like a dance—an intricate choreography of analysis and interpretation. Through this harmonious interplay, AI algorithms could discern patterns, identify correlations, and uncover valuable insights that contributed to advancements in various fields. As Anoush, Ani\'s daughter, arrived to pick them up, the story of the Cascade, much like that of real-world datasets, continued to evolve and inspire. Carol bid farewell to the resplendent grounds, carrying with her a newfound appreciation for the significance of features and their composition in the realm of AI. In the tapestry of knowledge and exploration, Carol understood that comparing the features and their composition within real-world datasets opened doors to hidden narratives, deepened understanding, and propelled the limitless potential of AI towards new horizons.',
                 },
             ],
             choices: [
@@ -168,11 +168,11 @@ const walkToDestination = make.module({
             ],
         },
         {
-            id: 'patterns',
+            id: 'nature',
             convo: [
                 {
                     type: 'text',
-                    text: `As Carol strolled through the bustling streets, she admired the diverse architecture, vibrant colors, and the rhythmic buzz of the city\'s activities. She found joy in deciphering the patterns that emerged from the intricate interplay of people, buildings, and nature around her. However, just as Carol was engrossed in her surroundings, she felt the first droplets of rain start to fall. She looked up at the darkening sky and realized that continuing her walk in the rain would dampen her spirits and hinder her enjoyment of the experience. Seeking shelter under a nearby awning, Carol observed the rain\'s impact on the cityscape. The droplets formed patterns as they trickled down windows, formed puddles on the ground, and altered the rhythm of the bustling streets. Intrigued by these new patterns, Carol pondered the concept of perceiving patterns and data. In the world of AI, the concept of perceiving patterns and data refers to the ability of machine learning algorithms to discern meaningful patterns and extract valuable insights from the data they encounter. Just as Carol observed and interpreted the rain\'s patterns to make informed decisions about her next steps, machine learning algorithms rely on perceiving patterns in data to learn and make predictions or classifications. These algorithms are trained to recognize patterns and uncover hidden relationships within the data. They analyze vast amounts of information, searching for recurring patterns, correlations, and trends. By adjusting their internal representations based on these observed patterns, they improve their ability to make accurate predictions or classifications. Similarly, Carol adapted her plans by hailing a taxi, using her perception of the rain\'s patterns and its impact on her surroundings. The decision to take a taxi was informed by her understanding of the changing circumstances and the ability to perceive the patterns in the rain\'s behavior. In the metaphorical context, the concept of perceiving patterns and data in machine learning algorithms represents their capacity to identify and interpret significant patterns in the data they encounter. By adjusting their internal representations based on these patterns, the algorithms optimize their learning process, enhancing their predictive capabilities and enabling them to navigate complex real-world scenarios effectively. Carol\'s observation of the rain\'s patterns and her decision to take a taxi showcase the essence of perceiving patterns and data in the realm of AI, highlighting the importance of recognizing and leveraging meaningful patterns to make informed decisions and achieve optimal outcomes.`,
+                    text: `Within the ethereal beauty of the Cascade, Carol and Anoush crossed paths with Ani, Anoush\'s grandmother, a guardian of memories and a storyteller of profound tales. As they stood before a memorial honoring the victims of the Armenian genocide, Ani\'s voice carried the weight of history, weaving together the threads of the past. As Carol listened intently to Ani\'s words, her mind wandered into the realm of artificial intelligence, where comparing real-world datasets was akin to deciphering the encoded features of the Cascade. Just as the memorial held layers of encoded information, real-world datasets too possessed a myriad of features, encoded in their own unique ways. Carol envisioned AI algorithms as skilled interpreters, unravelling the intricate encoding of features within datasets. Each feature, like a symbol carved into the memorial\'s structure, held a story waiting to be deciphered. The encoding of features encompassed various techniques and representations, capturing the essence of the data they encapsulated. Like a master of languages, AI algorithms understood the diverse encoding methods employed within datasets. They could interpret numerical values, categorical labels, textual representations, and even complex structures, each encoding revealing a facet of the data\'s narrative. Through meticulous analysis, AI algorithms decoded the features, transforming encoded information into meaningful insights. Just as the Cascade\'s memorial conveyed profound historical events through its encoded features, real-world datasets encoded vital information about the phenomena they represented. The encoding of features encompassed the translation of raw data into a format that AI algorithms could comprehend and analyze. Carol marveled at the ability of AI algorithms to compare the encoded features of different datasets, much like deciphering the hidden messages within the memorial\'s intricate encoding. By understanding the encoding mechanisms, AI algorithms could uncover patterns, relationships, and correlations that fueled discovery and understanding. The encoding of features in real-world datasets became a language of communication between humans and machines, bridging the gap between raw data and meaningful insights. It allowed AI algorithms to traverse the intricate landscapes of data, uncovering knowledge and unlocking the transformative power of information. As Anoush, Ani\'s daughter, arrived to pick them up, Carol reflected on the profound encounter at the Cascade. The encoded features within real-world datasets, like the memorial\'s symbolism, carried stories of tragedy, resilience, and hope. The decoding and comparison of these features through AI algorithms held the promise of revealing hidden connections and empowering human understanding. Leaving the Cascade behind, Carol carried with her a newfound appreciation for the art of encoding features in real-world datasets. It was through this encoding that the essence of the data could be captured and the collective wisdom of the past and present could be harnessed. In the grand tapestry of AI and human collaboration, the encoding of features emerged as a powerful tool, enabling the exploration of knowledge and the illumination of truth.`,
                 },
             ],
             choices: [
@@ -192,11 +192,11 @@ const walkToDestination = make.module({
             ],
         },
         {
-            id: 'evaluation',
+            id: 'trade-offs',
             convo: [
                 {
                     type: 'text',
-                    text: `As Carol embarked on her journey, the weather took an unexpected turn, and raindrops began to descend from the heavens. The rhythmic pitter-patter of raindrops on her umbrella created a soothing symphony, yet Carol realized that continuing her walk would lead to a soggy outcome. Quick on her feet, Carol swiftly hailed a passing taxi and hopped inside, seeking refuge from the downpour. As the taxi\'s tires splashed through the rain-soaked streets, Carol pondered the metaphorical concept of continuous evaluation and adjustment in the realm of artificial intelligence. Just as Carol seamlessly adjusted her plans from walking to taking a taxi in response to changing circumstances, machine learning algorithms employ the principle of continuous evaluation and adjustment to optimize their internal representations and enhance their performance. In the world of AI, continuous evaluation and adjustment refers to the iterative process of refining and fine-tuning the internal representations of machine learning algorithms based on new data and feedback. These algorithms dynamically adapt to changing circumstances and evolving patterns, allowing them to continuously learn and improve their predictions or classifications. Much like Carol\'s decision to take a taxi as soon as the rain started, machine learning algorithms continuously evaluate their predictions or classifications and adjust their internal representations to minimize errors and enhance accuracy. They learn from the feedback provided by comparing their outputs to the expected outcomes, making incremental adjustments to improve their performance over time. Carol\'s swift transition from walking to taking a taxi showcases the essence of continuous evaluation and adjustment in the world of AI. Just as Carol swiftly adapted her plans to accommodate the rain, machine learning algorithms adapt their internal representations to better align with the observed data, allowing them to make more precise and reliable predictions or classifications. As Carol arrived at her destination, the rain began to subside, leaving behind a renewed sense of clarity and freshness. Similarly, through continuous evaluation and adjustment, machine learning algorithms refine their internal representations, ensuring that they remain attuned to the nuances of the data and capable of adapting to ever-changing circumstances. Carol\'s journey through the rain-soaked streets and her seamless transition to a taxi ride beautifully mirrors the concept of continuous evaluation and adjustment in the world of AI. It highlights the importance of flexibility, adaptability, and ongoing refinement as machine learning algorithms learn and improve their internal representations to make accurate and impactful predictions or classifications.`,
+                    text: `Amidst the tranquil ambiance of the Cascade, Carol and Anoush were joined by Ani, Anoush\'s wise and insightful grandmother. Ani\'s presence was like a beacon of wisdom, guiding them towards the memorial that stood as a testament to the victims of the Armenian genocide. Ani\'s words painted a vivid picture of the past, breathing life into the stories etched within the memorial\'s walls. As Carol immersed herself in Ani\'s storytelling, her mind wandered into the realm of artificial intelligence, where comparing real-world datasets was akin to embarking on a journey of discovery. Just as the memorial encompassed various features and details, real-world datasets too consisted of distinct features that held valuable information. Carol envisioned the AI concept of comparing datasets as a quest to unravel the intricate details woven within them. Each dataset, like a tapestry, comprised a collection of features that acted as threads, interweaving to form a larger narrative. Comparing datasets meant examining these features and understanding how they encoded the underlying information. In Carol\'s mind, AI algorithms became intrepid explorers, equipped with the ability to analyze and compare the features of different datasets. Much like a skilled archaeologist studying ancient artifacts, these algorithms meticulously examined the encoded features, searching for similarities, differences, and hidden connections. Through their mathematical prowess, AI algorithms quantified the features and extracted meaningful insights. They scrutinized numerical values, dissected textual data, and dissected categorical labels, all to decipher the intricate language of the datasets. By comparing the features across different datasets, these algorithms sought to uncover patterns, trends, and valuable knowledge. The act of comparing datasets was like an intricate dance of observation and analysis. AI algorithms measured the similarities and dissimilarities between features, mapping out the landscape of data and highlighting areas of interest. The encoded features acted as the building blocks, allowing the algorithms to navigate through the intricate complexities of the datasets. Just as Carol marveled at the memorial\'s details and how they conveyed the history of the Armenian genocide, she marveled at the power of AI algorithms to compare datasets. By examining the features and understanding how they were encoded, these algorithms provided a means to extract meaningful information, draw insights, and make informed decisions. As their enlightening encounter at the Cascade came to an end, Anoush, Ani\'s daughter, arrived to pick them up. Carol bid farewell to Ani, grateful for the lessons she had learned about the rich history encoded within the memorial and the importance of comparing datasets in the realm of artificial intelligence. With a renewed sense of wonder, Carol carried the metaphor of comparing datasets in her heart. It reminded her that within the vast ocean of data, every feature held significance and every comparison brought forth new knowledge. Just as the memorial stood as a testament to the past, the act of comparing datasets empowered AI algorithms to unlock the hidden stories within real-world data, expanding our understanding and shaping our future.`,
                 },
             ],
             choices: [
@@ -216,11 +216,11 @@ const walkToDestination = make.module({
             ],
         },
         {
-            id: 'learning',
+            id: 'requirements',
             convo: [
                 {
                     type: 'text',
-                    text: `As Carol set off on her journey, a gentle drizzle began to descend from the sky, gradually transforming into a heavy downpour. Undeterred by the rain, Carol bravely continued walking, her determination guiding her steps. However, as the rain intensified, her clothes grew damp, and the once enjoyable walk turned into a soggy struggle. Realizing that reaching her destination in such conditions would be challenging, Carol spotted a nearby taxi. Without hesitation, she flagged it down and hopped inside, seeking shelter from the rain and a quicker way to her desired location. Little did Carol know that her journey mirrored a metaphorical concept in the world of artificial intelligence: the process of learning and improvement over time. Just as Carol adapted her plans from walking to taking a taxi in response to the rain, various types of machine learning algorithms exhibit a remarkable ability to learn and improve their performance over time. This process involves the continuous adjustment of their internal representations based on new data and experiences, allowing them to enhance their decision-making capabilities. In the realm of AI, learning and improvement over time refers to the iterative process by which machine learning algorithms refine their internal representations and adjust their decision boundaries. These algorithms assimilate new information, analyze patterns, and make adjustments to optimize their predictions or classifications. Carol\'s decision to take a taxi reflects the essence of learning and improvement over time in the AI world. Just as Carol recognized the need to adapt to the changing circumstances, machine learning algorithms analyze and process new data, identifying patterns and refining their internal representations to make more accurate and informed decisions. Over time, machine learning algorithms become increasingly adept at recognizing complex patterns and making better predictions or classifications. They learn from their mistakes and successes, continuously adjusting their internal representations to align with the observed data. This iterative process empowers them to improve their performance and deliver more reliable outcomes. As Carol arrived at her destination in the cozy comfort of the taxi, the rain began to subside, leaving behind a sense of accomplishment. Similarly, through learning and improvement over time, machine learning algorithms evolve and mature, acquiring a deeper understanding of the data and enhancing their decision-making capabilities. Carol\'s journey through the rain-soaked streets serves as a powerful metaphor for the concept of learning and improvement over time in the AI landscape. It highlights the importance of adaptability, continuous refinement, and the capacity to evolve. Just as Carol\'s decision to take a taxi helped her reach her destination more efficiently, machine learning algorithms, through their ability to adjust their internal representations, strive for increased accuracy and effectiveness in making predictions or classifications. In the world of AI, learning and improvement over time is a vital concept that fuels the progress of machine learning algorithms, enabling them to continuously evolve and enhance their internal representations. Much like Carol\'s journey, the path to success in machine learning is paved with a commitment to learning, growth, and the pursuit of excellence.`,
+                    text: `It was there, amidst the solemn beauty of the memorial dedicated to the victims of the Armenian genocide, that Carol\'s path intertwined with Anoush\'s. Anoush, a kind-hearted soul with a deep connection to her heritage, shared the secrets of the monument with Carol, guiding her through the layers of history that adorned its walls. In the midst of their exploration, Ani, Anoush\'s grandmother, joined them. Ani was a woman whose words carried the weight of wisdom and the essence of the past. As she recounted the stories behind the memorial, her voice painted vivid images in Carol\'s mind, igniting a fire within her to seek even deeper understanding. It was in this moment, as Carol listened intently to Ani\'s narratives, that she drew a parallel to the concept of comparing real-world datasets using artificial intelligence. Just as Ani\'s stories unraveled the hidden truths of the memorial, AI algorithms had the power to uncover meaningful insights buried within datasets. Carol envisioned AI algorithms as detectives, equipped with the ability to analyze and compare the features that comprised different datasets. Just as Ani\'s stories were woven with layers of details, datasets were composed of various features that held valuable information waiting to be discovered. The process of comparing datasets became a quest for knowledge, where AI algorithms acted as keen observers, dissecting the features and decoding their meanings. Like skilled archaeologists, they meticulously excavated the encoded information, sifting through numerical values, textual descriptions, and categorical labels to reveal the hidden patterns and correlations. Much like Carol\'s fascination with the stories shared by Ani, AI algorithms delved deep into the features, seeking connections and insights that were not immediately apparent. They recognized the importance of every individual feature and understood that the true power lay in the interplay and relationships between them. Through their analytical prowess, AI algorithms transformed the encoded features into meaningful representations of knowledge. They unraveled the threads that connected disparate data points, shining a light on previously unseen relationships and providing valuable insights that could shape decisions and drive progress. Just as Ani\'s stories revealed the profound impact of the Armenian genocide, the act of comparing datasets allowed AI algorithms to uncover the underlying truths hidden within the vast sea of data. By recognizing the significance of each feature and exploring their interactions, these algorithms offered a means to extract knowledge and gain a deeper understanding of complex real-world phenomena. As their time at the Cascade drew to a close, Anoush arrived to pick up Carol, signaling the end of their enlightening encounter with Ani. Carol bid farewell, carrying with her the metaphor of comparing datasets as a powerful tool for uncovering meaningful insights. The stories shared by Ani and the AI concept of comparing datasets had become intertwined in Carol\'s mind. Both revealed the transformative power of digging deeper, recognizing the significance of individual features, and uncovering the hidden connections that could change our understanding of the world. As Carol and Anoush departed from the Cascade, Carol\'s heart was filled with a newfound appreciation for the untapped potential of data and the role of AI in unraveling its secrets. She realized that within the vast realms of information, every feature had a story to tell, and by comparing datasets, AI algorithms could unveil the meaningful insights that lay just beneath the surface, guiding us towards a brighter future.`,
                 },
             ],
             choices: [
@@ -244,7 +244,7 @@ const walkToDestination = make.module({
             convo: [
                 {
                     type: 'text',
-                    text: `Carol found a taxi! Now test your knowledge before following Carol to explore her general destination`,
+                    text: `Carol is at Anoush's house! Now test your knowledge before following Carol to explore`,
                 },
             ],
             choices: [
@@ -320,12 +320,12 @@ const walkToDestination = make.module({
             convo: [
                 {
                     type: 'text',
-                    text: `In the story, when it started to rain, what did Carol do?`,
+                    text: `In the story, Anoush represents which AI concept?`,
                 },
             ],
             choices: [
                 {
-                    text: 'She took a taxi.',
+                    text: 'Uncovering meaningful insights through comparing datasets',
                     logic: [
                         {
                             do: [
@@ -338,7 +338,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'She continued walking.',
+                    text: 'Carol\'s curiosity and hunger for knowledge',
                     logic: [
                         {
                             do: [
@@ -351,7 +351,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'She ran for cover.',
+                    text: 'The importance of historical memorials',
                     logic: [
                         {
                             do: [
@@ -364,7 +364,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'She stopped and waited for the rain to stop.',
+                    text: 'The relationship between Carol and Anoush\'s grandmother',
                     logic: [
                         {
                             do: [
@@ -409,12 +409,12 @@ const walkToDestination = make.module({
                 {
                     type: 'text',
                     text: `That's correct! Next question:
-                    The concept of adaptation to changing circumstances in AI refers to:`,
+                    How does the AI concept of comparing datasets relate to the story?`,
                 },
             ],
             choices: [
                 {
-                    text: 'Adjusting internal representations based on new data.',
+                    text: 'It highlights the significance of encoding features in real-world datasets',
                     logic: [
                         {
                             do: [
@@ -427,7 +427,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Optimizing performance by fine-tuning algorithms.',
+                    text: 'It reflects the emotional connection between characters',
                     logic: [
                         {
                             do: [
@@ -440,7 +440,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Evaluating and adjusting models continuously.',
+                    text: 'It represents the power of storytelling',
                     logic: [
                         {
                             do: [
@@ -453,7 +453,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Perceiving patterns and making informed decisions.',
+                    text: 'It symbolizes the importance of historical understanding',
                     logic: [
                         {
                             do: [
@@ -497,12 +497,12 @@ const walkToDestination = make.module({
             convo: [
                 {
                     type: 'text',
-                    text: `That’s correct! Next question: Which concept in AI involves refining internal representations to enhance decision-making capabilities?`,
+                    text: `What do features in real-world datasets refer to?`,
                 },
             ],
             choices: [
                 {
-                    text: 'Optimization of performance.',
+                    text: 'Insights gained through analyzing datasets',
                     logic: [
                         {
                             do: [
@@ -515,7 +515,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Continuous evaluation and adjustment.',
+                    text: 'The hidden truths of historical events',
                     logic: [
                         {
                             do: [
@@ -528,7 +528,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Perceiving patterns and data.',
+                    text: 'Characters and their relationships in a story',
                     logic: [
                         {
                             do: [
@@ -541,7 +541,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Learning and improvement over time.',
+                    text: 'Numeric values, textual descriptions, and categorical labels in data',
                     logic: [
                         {
                             do: [
@@ -585,12 +585,12 @@ const walkToDestination = make.module({
             convo: [
                 {
                     type: 'text',
-                    text: `That’s correct! Next question: In the story, what does the representative's questioning process represent?`,
+                    text: `That’s correct! Next question: How are features in real-world datasets encoded?`,
                 },
             ],
             choices: [
                 {
-                    text: 'Adaptation to changing circumstances.',
+                    text: 'Through storytelling techniques',
                     logic: [
                         {
                             do: [
@@ -603,7 +603,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Perceiving patterns and data.',
+                    text: 'By uncovering hidden patterns and correlations',
                     logic: [
                         {
                             do: [
@@ -616,7 +616,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Optimization of performance.',
+                    text: 'Through the analysis of historical monuments',
                     logic: [
                         {
                             do: [
@@ -629,7 +629,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Adaptation to changing circumstances.',
+                    text: 'Numerically, textually, and categorically',
                     logic: [
                         {
                             do: [
@@ -673,12 +673,12 @@ const walkToDestination = make.module({
             convo: [
                 {
                     type: 'text',
-                    text: `That’s correct! Next question: The concept of optimization of performance in AI refers to:`,
+                    text: `That’s correct! Next question: What does comparing datasets using AI algorithms allow us to do?`,
                 },
             ],
             choices: [
                 {
-                    text: 'Fine-tuning algorithms to improve outcomes.',
+                    text: 'Gain insights and deeper understanding from encoded features',
                     logic: [
                         {
                             do: [
@@ -691,7 +691,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Recognizing patterns and making accurate predictions.',
+                    text: 'Uncover the hidden truths of historical events',
                     logic: [
                         {
                             do: [
@@ -704,7 +704,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Learning from mistakes and improving over time.',
+                    text: 'Explore the interactions between real-world phenomena',
                     logic: [
                         {
                             do: [
@@ -717,7 +717,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Adjusting internal representations based on new data.',
+                    text: 'Understand the importance of individual features',
                     logic: [
                         {
                             do: [
@@ -766,7 +766,7 @@ const walkToDestination = make.module({
             ],
             choices: [
                 {
-                    text: 'Carol arrives at destination.',
+                    text: 'Arrive at Anoush\'s house',
                     logic: [
                         {
                             do: [
@@ -775,8 +775,8 @@ const walkToDestination = make.module({
                                     path: [
                                         'root',
                                         'carol-arrives-at-ASC',
-                                        'Lost-pasport',
-                                        'miss-pasport',
+                                        'at-the-warm-home',
+                                        'around-the-table',
                                     ],
                                 },
                             ],
@@ -790,4 +790,4 @@ const walkToDestination = make.module({
     ],
 })
 
-export default walkToDestination
+export default pickupFromCascade
