@@ -109,7 +109,6 @@ export const FacilitatorPage: React.FC = () => {
     const docs = querySnapshot.docs
         .map((doc: any) => doc.data()) as any as PostToFacilitator[];
     setRequests(docs);
-    console.log(docs);
     loadDataFromFb();
   };
   useEffect(() => {

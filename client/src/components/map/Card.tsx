@@ -9,6 +9,7 @@ import {atom, useRecoilState, useRecoilValue} from 'recoil';
 import {defaultUserContext, userContextState} from './graph-recoil';
 import metalTex from '../../assets/metal-tex.webp';
 import checkmark from '../../assets/check-mark.png';
+import actionIcon from '../../assets/action-icon.png';
 import {EditHistory, StoryScene, allScenesState,
   competedScenesState,
   currentPageState,
@@ -33,6 +34,7 @@ import {ConvoSegmentId, ModulePath, Stores} from '../../utils/stores';
 import {handleAction} from '../../state/handle-action';
 import {AuthContext} from '../../context/auth-context';
 import Alert from '@mui/material/Alert';
+import {isEqual} from 'lodash';
 // import IconButton from '@mui/material/IconButton';
 
 
@@ -478,6 +480,30 @@ export default function BasicCard() {
                     paddingRight: '3px'}}>Completed!</p>
                 </Stack>
               </div>
+              {
+                selectedScene.backendPath.length > 1 &&
+                currentPage.currentStores !== undefined &&
+                currentPage.currentStores
+                    .currentConvoSegmentPath.parentModules.length >= 1 &&
+                isEqual(selectedScene.backendPath.slice(
+                    0, selectedScene.backendPath.length - 1),
+                currentPage.currentStores?.currentConvoSegmentPath
+                    .parentModules) ?
+                <div style={{backgroundColor: 'lightyellow',
+                  borderRadius: '20px'}}>
+                  <Stack
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    spacing={0}
+                  >
+                    <img alt="preview image" width="20"
+                      src={actionIcon}/>
+                    <p style={{color: 'darkblue',
+                      paddingRight: '3px'}}>In progress!</p>
+                  </Stack>
+                </div> : <></>
+              }
             </Stack> : <h2>{selectedScene.title}</h2>
         }
         <img alt="preview image" width="200"
