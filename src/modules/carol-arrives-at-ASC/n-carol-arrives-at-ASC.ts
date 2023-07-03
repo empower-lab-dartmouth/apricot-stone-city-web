@@ -20,6 +20,7 @@ import sightseeingTheCity from './cs-sightseeing-the-city'
 import rideTaxi from './cs-ride-taxi'
 import walkToDestination from './cs-walk-to-destination'
 import taxiToDestination from './cs-taxi-to-destination'
+import pickupFromCascade from './cs-pickup-from-cascade'
 
 const carolArrivesAtASC = make.module({
     id: 'carol-arrives-at-ASC',
@@ -43,6 +44,7 @@ const carolArrivesAtASC = make.module({
         rideTaxi,
         walkToDestination,
         taxiToDestination,
+        pickupFromCascade,
     ],
     convoSegments: [],
 })
