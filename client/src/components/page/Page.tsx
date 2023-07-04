@@ -6,7 +6,7 @@ import {PageData} from './page-model';
 import './page.css';
 import Nav from '../nav/NavBar';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-import {allQuests, serverReadyState} from '../../state/recoil';
+import {RatedSceneEvent, allQuests, serverReadyState} from '../../state/recoil';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import {useRecoilState, useRecoilValue} from 'recoil';
@@ -65,6 +65,21 @@ const sendSceneFeedbackToFB = async (feedback: SceneFeedback) => {
   try {
     await setDoc(
         doc(db, 'SceneFeedback', feedback.date), feedback);
+    const id = `${feedback.username}-sceen-feedback${feedback.date}`;
+    const loggedEvent: RatedSceneEvent = {
+      type: 'scene-feedback',
+      liked: feedback.liked,
+      wanted: feedback.wanted,
+      learningRating: feedback.learningRating,
+      enjoymentRating: feedback.enjoymentRating,
+      username: feedback.username,
+      quests: feedback.quests,
+      date: feedback.date,
+      sceneId: feedback.sceneId,
+      id,
+    };
+    await setDoc(
+        doc(db, 'EventLog', id), loggedEvent);
     console.log('Feedback written to fb');
   } catch (e) {
     console.error('Error adding document: ', e);

@@ -34,6 +34,7 @@ const data = [
 
 export type UserLevelFB = {
   level: number,
+  username: string,
 }
 
 export const updateLevel = async (username: string, newLevel: number) => {
@@ -42,6 +43,7 @@ export const updateLevel = async (username: string, newLevel: number) => {
     await setDoc(
         doc(db, 'UserLevel', username), {
           level: newLevel,
+          username,
         });
     console.log('Updated level');
   } catch (e) {
