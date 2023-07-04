@@ -326,6 +326,7 @@ const lostPasport = make.module({
             choices: [
                 {
                     text: 'Feed-forward network',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -339,6 +340,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: '2D convolutional network',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -352,6 +354,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: 'Recurrent network',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -365,6 +368,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: 'Generative adversarial network (GAN)',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -415,6 +419,7 @@ const lostPasport = make.module({
             choices: [
                 {
                     text: 'Feed-forward network',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -428,6 +433,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: '2D convolutional network',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -441,6 +447,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: 'Recurrent network',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -454,6 +461,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: 'Generative adversarial network (GAN)',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -503,6 +511,7 @@ const lostPasport = make.module({
             choices: [
                 {
                     text: 'Feed-forward network',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -516,6 +525,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: 'Generative adversarial network (GAN)',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -529,6 +539,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: 'Recurrent network',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -542,6 +553,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: '2D convolutional network',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -591,6 +603,7 @@ const lostPasport = make.module({
             choices: [
                 {
                     text: 'Generative adversarial network (GAN)',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -604,6 +617,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: 'Recurrent network',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -617,6 +631,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: 'Feed-forward network',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -630,6 +645,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: '2D convolutional network',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -679,6 +695,7 @@ const lostPasport = make.module({
             choices: [
                 {
                     text: 'Recurrent network',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -692,6 +709,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: 'Generative adversarial network (GAN)',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -705,6 +723,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: '2D convolutional network',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -718,6 +737,7 @@ const lostPasport = make.module({
                 },
                 {
                     text: 'Feed-forward network',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [

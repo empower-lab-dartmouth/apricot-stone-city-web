@@ -326,6 +326,7 @@ const walkToDestination = make.module({
             choices: [
                 {
                     text: 'She took a taxi.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -339,6 +340,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'She continued walking.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -352,6 +354,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'She ran for cover.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -365,6 +368,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'She stopped and waited for the rain to stop.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -415,6 +419,7 @@ const walkToDestination = make.module({
             choices: [
                 {
                     text: 'Adjusting internal representations based on new data.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -428,6 +433,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'Optimizing performance by fine-tuning algorithms.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -441,6 +447,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'Evaluating and adjusting models continuously.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -454,6 +461,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'Perceiving patterns and making informed decisions.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -503,6 +511,7 @@ const walkToDestination = make.module({
             choices: [
                 {
                     text: 'Optimization of performance.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -516,6 +525,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'Continuous evaluation and adjustment.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -529,6 +539,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'Perceiving patterns and data.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -542,6 +553,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'Learning and improvement over time.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -591,6 +603,7 @@ const walkToDestination = make.module({
             choices: [
                 {
                     text: 'Adaptation to changing circumstances.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -604,6 +617,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'Perceiving patterns and data.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -617,6 +631,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'Optimization of performance.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -630,6 +645,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'Adaptation to changing circumstances.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -679,6 +695,7 @@ const walkToDestination = make.module({
             choices: [
                 {
                     text: 'Fine-tuning algorithms to improve outcomes.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -692,6 +709,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'Recognizing patterns and making accurate predictions.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -705,6 +723,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'Learning from mistakes and improving over time.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -718,6 +737,7 @@ const walkToDestination = make.module({
                 },
                 {
                     text: 'Adjusting internal representations based on new data.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
