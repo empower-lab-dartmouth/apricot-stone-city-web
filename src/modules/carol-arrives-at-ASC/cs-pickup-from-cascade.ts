@@ -326,6 +326,7 @@ const pickupFromCascade = make.module({
             choices: [
                 {
                     text: 'Uncovering meaningful insights through comparing datasets',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -339,6 +340,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'Carol\'s curiosity and hunger for knowledge',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -352,6 +354,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'The importance of historical memorials',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -365,6 +368,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'The relationship between Carol and Anoush\'s grandmother',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -415,6 +419,7 @@ const pickupFromCascade = make.module({
             choices: [
                 {
                     text: 'It highlights the significance of encoding features in real-world datasets',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -428,6 +433,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'It reflects the emotional connection between characters',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -441,6 +447,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'It represents the power of storytelling',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -454,6 +461,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'It symbolizes the importance of historical understanding',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -503,6 +511,7 @@ const pickupFromCascade = make.module({
             choices: [
                 {
                     text: 'Insights gained through analyzing datasets',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -516,6 +525,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'The hidden truths of historical events',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -529,6 +539,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'Characters and their relationships in a story',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -542,6 +553,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'Numeric values, textual descriptions, and categorical labels in data',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -591,6 +603,7 @@ const pickupFromCascade = make.module({
             choices: [
                 {
                     text: 'Through storytelling techniques',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -604,6 +617,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'By uncovering hidden patterns and correlations',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -617,6 +631,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'Through the analysis of historical monuments',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -630,6 +645,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'Numerically, textually, and categorically',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -679,6 +695,7 @@ const pickupFromCascade = make.module({
             choices: [
                 {
                     text: 'Gain insights and deeper understanding from encoded features',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -692,6 +709,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'Uncover the hidden truths of historical events',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -705,6 +723,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'Explore the interactions between real-world phenomena',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -718,6 +737,7 @@ const pickupFromCascade = make.module({
                 },
                 {
                     text: 'Understand the importance of individual features',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [

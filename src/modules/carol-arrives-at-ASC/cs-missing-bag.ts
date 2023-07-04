@@ -331,6 +331,7 @@ const missingBag = make.module({
             choices: [
                 {
                     text: 'She experienced issues with Data Collection.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -344,6 +345,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'Her bags went through inadequate Data Preprocessing.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -357,6 +359,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'Feature Extraction caused her bags to go missing.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -370,6 +373,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'Model Evaluation failed to locate her bags.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -419,6 +423,7 @@ const missingBag = make.module({
             choices: [
                 {
                     text: 'To clean and transform the data for analysis.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -432,6 +437,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'To evaluate the performance of the model.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -445,6 +451,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'To extract useful features from the data.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -458,6 +465,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'To collect relevant data for training.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -507,6 +515,7 @@ const missingBag = make.module({
             choices: [
                 {
                     text: 'Data Preprocessing.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -520,6 +529,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'Data Collection.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -533,6 +543,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'Feature Extraction.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -546,6 +557,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'Model Evaluation.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -595,6 +607,7 @@ const missingBag = make.module({
             choices: [
                 {
                     text: 'The importance of Data Preprocessing.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -608,6 +621,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'The significance of Model Training.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -621,6 +635,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'The effectiveness of Feature Extraction.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -634,6 +649,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'The thoroughness of Data Collection.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -683,6 +699,7 @@ const missingBag = make.module({
             choices: [
                 {
                     text: 'Data Collection.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -696,6 +713,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'Data Preprocessing.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -709,6 +727,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'Feature Extraction.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -722,6 +741,7 @@ const missingBag = make.module({
                 },
                 {
                     text: 'Model Training.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [

@@ -326,6 +326,7 @@ const taxiToDestination = make.module({
             choices: [
                 {
                     text: 'Nature of the problem and data',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -339,6 +340,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Trade-offs between interpretability and complexity',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -352,6 +354,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Requirements for feedback and decision-making',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -365,6 +368,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Availability of labeled training data',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -415,6 +419,7 @@ const taxiToDestination = make.module({
             choices: [
                 {
                     text: 'Nature of the problem and data',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -428,6 +433,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Trade-offs between interpretability and complexity',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -441,6 +447,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Requirements for feedback and decision-making',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -454,6 +461,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Availability of labeled training data',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -503,6 +511,7 @@ const taxiToDestination = make.module({
             choices: [
                 {
                     text: 'Desired output or objective',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -516,6 +525,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Nature of the problem and data',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -529,6 +539,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Trade-offs between interpretability and complexity',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -542,6 +553,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Requirements for feedback and decision-making',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -591,6 +603,7 @@ const taxiToDestination = make.module({
             choices: [
                 {
                     text: 'Defining the goal or target the algorithm should achieve',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -604,6 +617,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Analyzing the nature of the problem and data',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -617,6 +631,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'The availability of labeled training data',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -630,6 +645,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Defining the goal or target the algorithm should achieve',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -679,6 +695,7 @@ const taxiToDestination = make.module({
             choices: [
                 {
                     text: 'Desired output or objective',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -692,6 +709,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Availability of labeled training data',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -705,6 +723,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Nature of the problem and data',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -718,6 +737,7 @@ const taxiToDestination = make.module({
                 },
                 {
                     text: 'Trade-offs between interpretability and complexity',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [

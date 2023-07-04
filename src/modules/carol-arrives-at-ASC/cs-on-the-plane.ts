@@ -326,6 +326,7 @@ const onThePlane = make.module({
             choices: [
                 {
                     text: 'She focused on the most relevant and distinctive aspects of cloud formations while filtering out noise.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -339,6 +340,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'She combined different recognition strategies to form a holistic understanding.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -352,6 +354,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'She adjusted hyperparameters to control the behavior and performance of her recognition models.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -365,6 +368,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'She blended observations of shapes, colors, and textures to achieve higher recognition accuracy.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -443,6 +447,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'She tested her approaches on familiar cloud formations.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -456,6 +461,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'She collected a new set of labeled clouds for training.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -505,6 +511,7 @@ const onThePlane = make.module({
             choices: [
                 {
                     text: 'Under-generalizing leads to accurate predictions in unfamiliar territories.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -518,6 +525,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'Under-generalizing allows for greater flexibility in recognizing familiar objects.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -531,6 +539,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'Over-generalizing improves the accuracy of predictions.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -544,6 +553,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'Over-generalizing leads to mistaking unrelated objects for familiar ones.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -593,6 +603,7 @@ const onThePlane = make.module({
             choices: [
                 {
                     text: 'It enhanced her ability to discern subtle details in cloud formations.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -606,6 +617,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'It facilitated the iterative process of refining her understanding.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -619,6 +631,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'It reduced confusion and improved the accuracy of her predictions.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -632,6 +645,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'It allowed her to discover more patterns and relationships.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -681,6 +695,7 @@ const onThePlane = make.module({
             choices: [
                 {
                     text: 'Insights into the strengths and weaknesses of her recognition abilities.',
+                    correctAnswer: true,
                     logic: [
                         {
                             do: [
@@ -694,6 +709,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'larger mental labeled dataset.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -707,6 +723,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'A new set of evaluation metrics.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
@@ -720,6 +737,7 @@ const onThePlane = make.module({
                 },
                 {
                     text: 'The ability to recognize unfamiliar cloud formations.',
+                    correctAnswer: false,
                     logic: [
                         {
                             do: [
