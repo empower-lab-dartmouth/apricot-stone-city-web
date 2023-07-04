@@ -227,8 +227,8 @@ export default function Profile() {
                       showHiddenPosts || r.hiddenForUser,
                     )
                     .sort((a, b) => (
-                      new Date(a.date)).getMilliseconds() -
-                (new Date(b.date)).getMilliseconds()).reverse()
+                      new Date(a.date)).getTime() -
+                (new Date(b.date)).getTime())
                     .map((r) => {
                       const reply = () => {
                         // Update remotely

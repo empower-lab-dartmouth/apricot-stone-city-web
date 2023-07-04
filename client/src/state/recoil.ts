@@ -85,7 +85,30 @@ export type ChatButtonEvent = {
   username: string,
 }
 
-export type LoggedEvent = ChatButtonEvent;
+export type ReturnToSceneEvent = {
+  type: 'return-to-scene',
+  date: string,
+  priorPath: Required<ConvoSegmentPath>,
+  newPath: Required<ConvoSegmentPath>,
+  id: string,
+  username: string,
+}
+
+export type RatedSceneEvent = {
+  type: 'scene-feedback',
+  date: string,
+  sceneId: string,
+  id: string,
+  username: string,
+  liked: string,
+  wanted: string,
+  learningRating: number,
+  enjoymentRating: number,
+  quests: string[],
+}
+
+export type LoggedEvent = ChatButtonEvent | ReturnToSceneEvent
+| RatedSceneEvent;
 
 export type StoryScene = {
   id: SceneUUID,

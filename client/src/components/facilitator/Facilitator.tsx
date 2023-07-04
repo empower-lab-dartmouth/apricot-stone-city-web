@@ -239,8 +239,8 @@ export const FacilitatorPage: React.FC = () => {
                   showArchivedPosts || r.status === 'active',
                 )
                 .sort((a, b) => (
-                  new Date(b.date)).getMilliseconds() -
-                (new Date(a.date)).getMilliseconds()).reverse()
+                  new Date(b.date)).getTime() -
+                (new Date(a.date)).getTime())
                 .map((r) => {
                   const reply = r.status === 'active' ? () => {
                     setFacilitatorResponseOpen(r);

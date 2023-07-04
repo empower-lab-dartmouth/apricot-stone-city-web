@@ -6,7 +6,7 @@ import {fetchContinueConversationData} from '../utils/data-utils';
 import {ConvoSegmentPath, Stores} from '../utils/stores';
 import {doc, setDoc} from 'firebase/firestore';
 import {db} from '../components/firebase/firebase-config';
-import {ChatButtonEvent, SceneFeedbackDialog,
+import {ChatButtonEvent, ReturnToSceneEvent, SceneFeedbackDialog,
   SceneUUID, StoryScene} from './recoil';
 import {find, isEqual} from 'lodash';
 import {sampleAction} from './sample-data';
@@ -38,7 +38,7 @@ const uploadChatButtonEventToFB = async (option: OptionData,
   try {
     console.log('sending event logs to fb');
     const d = (new Date()).toString();
-    const id = `${username}${d}`;
+    const id = `${username}-button${d}`;
     const loggedEvent: ChatButtonEvent = {
       type: 'chat-option',
       option: option.text,
@@ -47,6 +47,29 @@ const uploadChatButtonEventToFB = async (option: OptionData,
       username,
       date: d,
       path,
+      id,
+    };
+    await setDoc(
+        doc(db, 'EventLog', id), loggedEvent);
+  } catch (e) {
+    console.error('Error adding document: ', e);
+  }
+};
+
+export const uploadReturnToSceneEventToFB = async (
+    priorPath: Required<ConvoSegmentPath>,
+    newPath: Required<ConvoSegmentPath>,
+    username: string) => {
+  try {
+    console.log('sending return to scene event log to fb');
+    const d = (new Date()).toString();
+    const id = `${username}-ret.to.scn${d}`;
+    const loggedEvent: ReturnToSceneEvent = {
+      type: 'return-to-scene',
+      username,
+      date: d,
+      priorPath,
+      newPath,
       id,
     };
     await setDoc(

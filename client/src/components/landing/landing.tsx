@@ -7,7 +7,7 @@ import {useNavigate} from 'react-router-dom';
 import '../../App.css';
 import './landing.css';
 import SignUp from './signup';
-import {doc, getDoc} from 'firebase/firestore';
+import {doc, getDoc, setDoc} from 'firebase/firestore';
 import {db} from '../firebase/firebase-config';
 import {samplePageData} from '../../state/sample-data';
 import {PageData} from '../page/page-model';
@@ -48,6 +48,15 @@ export const loadUserLevel = async (username: string,
     // trim chat history
     setter(data.level);
   } else {
+    try {
+      await setDoc(
+          doc(db, 'UserLevel', username), {
+            level: 0,
+            username,
+          });
+    } catch (e) {
+      console.error('Error adding document: ', e);
+    }
     setter(0);
   }
 };

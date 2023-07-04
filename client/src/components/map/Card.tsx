@@ -30,8 +30,10 @@ import {Autocomplete, Box,
   TextField, Typography} from '@mui/material';
 import {allQuests} from '../../state/recoil';
 import {NavLink} from 'react-router-dom';
-import {ConvoSegmentId, ModulePath, Stores} from '../../utils/stores';
-import {handleAction} from '../../state/handle-action';
+import {ConvoSegmentId, ConvoSegmentPath,
+  ModulePath, Stores} from '../../utils/stores';
+import {handleAction,
+  uploadReturnToSceneEventToFB} from '../../state/handle-action';
 import {AuthContext} from '../../context/auth-context';
 import Alert from '@mui/material/Alert';
 import {isEqual} from 'lodash';
@@ -421,6 +423,11 @@ export default function BasicCard() {
     if (selectedScene.backendPath.length < 2) {
       return;
     }
+    const newPath: Required<ConvoSegmentPath> = {
+      id: selectedScene.backendPath[
+          selectedScene.backendPath.length - 1] as ConvoSegmentId,
+      parentModules: selectedScene.backendPath.slice(0, -1) as ModulePath,
+    };
     const stores: Stores = {
       ...(currentPage.currentStores as any as Stores),
       currentConvoSegmentPath: {
@@ -429,6 +436,10 @@ export default function BasicCard() {
         parentModules: selectedScene.backendPath.slice(0, -1) as ModulePath,
       },
     };
+    const currentPath = currentPage.currentStores === undefined ? newPath :
+    currentPage.currentStores.currentConvoSegmentPath;
+    uploadReturnToSceneEventToFB(currentPath, newPath,
+      currentUser?.email as string);
     setCurrentPage({
       ...currentPage,
       currentStores: stores});
