@@ -87,7 +87,8 @@ const createOrEditFormOpen = atom<boolean>({
 });
 
 
-const updateFB = async (updatedStoryScene: StoryScene) => {
+const updateFB = async (updatedStoryScene: StoryScene,
+    priorScene: StoryScene) => {
   // do firebase stuff to write
   console.log('submitting');
   try {
@@ -148,7 +149,20 @@ const CreateOrEditStorySceneForm: FC = () => {
       },
       ...startingFormState.editHistory],
     };
-    updateFB(update);
+    const priorScene: StoryScene = {
+      title: startingFormState.title,
+      id: startingFormState.id,
+      quests: startingFormState.quests,
+      parents: startingFormState.parents,
+      summary: startingFormState.summary,
+      deleted: false,
+      imgUrl: startingFormState.imgUrl,
+      wikiUrl: startingFormState.wikiUrl,
+      backendPath: startingFormState.backendPath,
+      editHistory: startingFormState.editHistory,
+    };
+
+    updateFB(update, priorScene);
     if (deleted === undefined) {
       setAllScenes({
         ...allStoryScenes,

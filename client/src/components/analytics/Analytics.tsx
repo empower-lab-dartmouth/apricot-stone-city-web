@@ -53,9 +53,15 @@ const ExpandedComponent: ExpandableRowsComponent<Row> = (
         data.correctAnswer === 'false' ? 'lightcoral' : 'lightgray',
     }}>{JSON.stringify(data, null, 2)}</pre>;
   } else if (data.type === 'return-to-scene') {
-    return <pre>{JSON.stringify(data, null, 2)}</pre>;
+    return <pre style={{
+      borderWidth: '30px',
+      borderStyle: 'none none none solid',
+      borderColor: 'lightgray'}}>{JSON.stringify(data, null, 2)}</pre>;
   } else if (data.type === 'scene-feedback') {
-    return <pre>{JSON.stringify(data, null, 2)}</pre>;
+    return <pre style={{
+      borderWidth: '30px',
+      borderStyle: 'none none none solid',
+      borderColor: 'lightgray'}}>{JSON.stringify(data, null, 2)}</pre>;
   }
   return <></>;
 };
