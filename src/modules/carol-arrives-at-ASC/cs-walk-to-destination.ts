@@ -261,58 +261,58 @@ const walkToDestination = make.module({
                         },
                     ],
                 },
-                {
-                    text: 'Question 2',
-                    logic: [
-                        {
-                            do: [
-                                {
-                                    type: 'goto',
-                                    path: ['q2'],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    text: 'Question 3',
-                    logic: [
-                        {
-                            do: [
-                                {
-                                    type: 'goto',
-                                    path: ['q3'],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    text: 'Question 4',
-                    logic: [
-                        {
-                            do: [
-                                {
-                                    type: 'goto',
-                                    path: ['q4'],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    text: 'Question 5',
-                    logic: [
-                        {
-                            do: [
-                                {
-                                    type: 'goto',
-                                    path: ['q5'],
-                                },
-                            ],
-                        },
-                    ],
-                },
+                // {
+                //     text: 'Question 2',
+                //     logic: [
+                //         {
+                //             do: [
+                //                 {
+                //                     type: 'goto',
+                //                     path: ['q2'],
+                //                 },
+                //             ],
+                //         },
+                //     ],
+                // },
+                // {
+                //     text: 'Question 3',
+                //     logic: [
+                //         {
+                //             do: [
+                //                 {
+                //                     type: 'goto',
+                //                     path: ['q3'],
+                //                 },
+                //             ],
+                //         },
+                //     ],
+                // },
+                // {
+                //     text: 'Question 4',
+                //     logic: [
+                //         {
+                //             do: [
+                //                 {
+                //                     type: 'goto',
+                //                     path: ['q4'],
+                //                 },
+                //             ],
+                //         },
+                //     ],
+                // },
+                // {
+                //     text: 'Question 5',
+                //     logic: [
+                //         {
+                //             do: [
+                //                 {
+                //                     type: 'goto',
+                //                     path: ['q5'],
+                //                 },
+                //             ],
+                //         },
+                //     ],
+                // },
             ],
         },
         {
@@ -644,7 +644,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Adaptation to changing circumstances.',
+                    text: 'Adaptation to changing circumstances',
                     correctAnswer: true,
                     logic: [
                         {
