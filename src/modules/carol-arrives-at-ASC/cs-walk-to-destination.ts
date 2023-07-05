@@ -644,7 +644,7 @@ const walkToDestination = make.module({
                     ],
                 },
                 {
-                    text: 'Adaptation to changing circumstances.',
+                    text: 'Adaptation to changing circumstances',
                     correctAnswer: true,
                     logic: [
                         {
