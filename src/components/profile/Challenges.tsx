@@ -36,7 +36,7 @@ export default function Challenges() {
             <h2 className='challenge-header'>
               Level 1: Know and Understand AI</h2>
             <h3>Complete all AI learning quests in adventure mode.</h3>
-            <p>More info</p>
+            <a href='https://docs.google.com/document/d/1RqSKEeRGO_AmevaX6TMje46Ff_yW4gd5ZsUxLcp61wQ/edit?usp=sharing'>More info</a>
           </div>
         </Stack>
 
@@ -62,7 +62,7 @@ export default function Challenges() {
             <h3>Design, create, and
               code your own AI teaching quest within the story.
             </h3>
-            <p>More info</p>
+            <a href='https://docs.google.com/document/d/1RqSKEeRGO_AmevaX6TMje46Ff_yW4gd5ZsUxLcp61wQ/edit?usp=sharing'>More info</a>
           </div>
         </Stack>
 
@@ -91,7 +91,7 @@ export default function Challenges() {
               to both &quot;shows and tell,&quot;
               by integrate AI into the story flow.
             </h3>
-            <p>More info</p>
+            <a href='https://docs.google.com/document/d/1RqSKEeRGO_AmevaX6TMje46Ff_yW4gd5ZsUxLcp61wQ/edit?usp=sharing'>More info</a>
           </div>
         </Stack>
 
@@ -118,7 +118,7 @@ export default function Challenges() {
               on an ethical, social,
               political, or economic issue.
             </h3>
-            <p>More info</p>
+            <a href='https://docs.google.com/document/d/1RqSKEeRGO_AmevaX6TMje46Ff_yW4gd5ZsUxLcp61wQ/edit?usp=sharing'>More info</a>
           </div>
         </Stack>
       </div>
