@@ -28,9 +28,12 @@ export type ContinueConversationResponse = {
   context: Stores
 }
 
-export const fetchContinueConversationData: (req: ContinueConversationRequest)
+export const REMOTE_SERVER_URL = 'https://apricot-stone-city-backend.onrender.com/';
+
+export const fetchContinueConversationData: (req: ContinueConversationRequest,
+  server: string)
 => Promise<ContinueConversationResponse | ErrorReponse> = async (
-    request: ContinueConversationRequest,
+    request: ContinueConversationRequest, server: string,
 ) => {
   console.log('pre fetch');
   // console.log(process);
@@ -42,8 +45,7 @@ export const fetchContinueConversationData: (req: ContinueConversationRequest)
 false : process.env.REACT_APP_IS_DEV === 'true' ||
   process.env.REACT_APP_IS_DEV === 'True';
   const BASE_DEV_URL = ' http://localhost:8000/';
-  const BASE_PROD_URL = 'https://apricot-stone-city-backend.onrender.com/';
-  const BASE_URL = IS_DEV ? BASE_DEV_URL : BASE_PROD_URL;
+  const BASE_URL = IS_DEV ? BASE_DEV_URL : server;
   const url = `${BASE_URL}${CONTINUE_CONVERSATION_PATH}`;
   const res = await fetch(url, {
     method: 'Post',

@@ -106,7 +106,8 @@ const findSceneWithPath: (allStoryScenes: Record<SceneUUID,
         });
   };
 
-export const wakeUpServer = async (setServerReady: (b: boolean) => void) => {
+export const wakeUpServer = async (setServerReady: (b: boolean) => void,
+    server: string) => {
   try {
     // make the API call
     console.log('pinging server to wake it up...');
@@ -117,15 +118,17 @@ export const wakeUpServer = async (setServerReady: (b: boolean) => void) => {
             stores: undefined,
           },
           action: sampleAction,
-        });
+        }, server);
     if (ping.type === 'continuation-data') {
       console.log('server is awake :) ');
       setServerReady(true);
     } else {
+      setServerReady(false);
       console.log('Wake up server call failed, got an error! '+
     'This may lead to an error.');
     }
   } catch {
+    setServerReady(false);
     console.log('Wake up server call failed! '+
     'This may lead to an error.');
   }
@@ -141,9 +144,10 @@ export const handleAction: (
     completedScenes: Set<SceneUUID>,
     setCompletedScenes: (c: Set<SceneUUID>) => void,
     setSceneFeedbackDialog: (c: SceneFeedbackDialog | undefined) => void,
+    server: string,
 ) => Promise<void> = async (optionData, currentPage,
     setCurrentPage, username, allStoryScenes, completedScenes,
-    setCompletedScenes, setSceneFeedbackDialog) => {
+    setCompletedScenes, setSceneFeedbackDialog, server) => {
   switch (optionData.action.type) {
     case 'click-option': {
       // TODO: update to real implementation
@@ -157,7 +161,7 @@ export const handleAction: (
                 stores: currentPage.currentStores,
               },
               action: optionData.action,
-            });
+            }, server);
         if (updates.type === 'continuation-data') {
           const newPage = appendToPage(currentPage,
               optionData,

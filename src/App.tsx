@@ -2,13 +2,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // banstest
 import * as React from 'react';
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {
   Routes, Route, useNavigate,
 } from 'react-router-dom';
 import './App.css';
 import {competedScenesState,
-  currentPageState, serverReadyState, userLevelState} from './state/recoil';
+  currentPageState, serverReadyState, useServerUrlState,
+  userLevelState} from './state/recoil';
 import Landing, {loadPageDataFromFB,
   loadUserLevel,
   loadVisitedScenesFromFB} from './components/landing/landing';
@@ -37,10 +38,10 @@ const App = () => {
   // NOTE: console log for testing purposes
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [serverIsReady, setServerIsReady] = useRecoilState(serverReadyState);
-
+  const server = useRecoilValue(useServerUrlState);
   // Check if the current user exists on the initial render.
   useEffect(() => {
-    wakeUpServer(setServerIsReady);
+    wakeUpServer(setServerIsReady, server);
     if (currentUser) {
       loadPageDataFromFB(currentUser?.email as string,
           setCurrentPage);

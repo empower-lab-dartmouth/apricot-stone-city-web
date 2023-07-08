@@ -14,6 +14,7 @@ import {EditHistory, StoryScene, allScenesState,
   competedScenesState,
   currentPageState,
   sceneFeedbackDialogState,
+  useServerUrlState,
   userLevelState} from '../../state/recoil';
 import Button from '@mui/material/Button';
 // import CloseIcon from '@mui/icons-material/Close';
@@ -386,6 +387,7 @@ export default function BasicCard() {
   const allStoryEvents = useRecoilValue(allScenesState);
   const userLevel = useRecoilValue(userLevelState);
   const selectedScene = allStoryEvents[context.selectedStorySceneID];
+  const server = useRecoilValue(useServerUrlState);
   const [formInit, setFormInit] = useRecoilState(
       createOrEditFormSceneStartingState);
   const [completedScenes, setCompletedScenes] = useRecoilState(
@@ -470,7 +472,7 @@ export default function BasicCard() {
       currentStores: stores}, setCurrentPage,
       currentUser?.email as string, allStoryEvents,
       completedScenes, setCompletedScenes,
-      setFeedbackDialog);
+      setFeedbackDialog, server);
   };
 
   const children = Object.values(allStoryEvents)

@@ -24,6 +24,7 @@ import questLargeDataImg
 import {collection, getDocs} from 'firebase/firestore';
 import {db} from '../components/firebase/firebase-config';
 import {ConvoSegmentPath} from '../utils/stores';
+import {REMOTE_SERVER_URL} from '../utils/data-utils';
 
 
 export const currentPageState = atom<PageData>({
@@ -107,8 +108,17 @@ export type RatedSceneEvent = {
   quests: string[],
 }
 
+export type UserLoginEvent = {
+  type: 'login',
+  date: string,
+  id: string,
+  username: string,
+  server: string,
+  remoteServer: boolean,
+}
+
 export type LoggedEvent = ChatButtonEvent | ReturnToSceneEvent
-| RatedSceneEvent;
+| RatedSceneEvent | UserLoginEvent;
 
 export type StoryScene = {
   id: SceneUUID,
@@ -126,6 +136,21 @@ export type StoryScene = {
 export const competedScenesState = atom<Set<SceneUUID>>({
   key: 'scenes-completed',
   default: new Set(),
+});
+
+export const useServerUrlState = atom<string>({
+  key: 'use-server-url',
+  default: REMOTE_SERVER_URL,
+});
+
+export const inputtedServerUrlState = atom<string>({
+  key: 'inputted-server-url',
+  default: '',
+});
+
+export const firstTimePullingServerState = atom<boolean>({
+  key: 'first-time-pulling-server',
+  default: true,
 });
 
 const loadStoryScenesFromFB = async () => {

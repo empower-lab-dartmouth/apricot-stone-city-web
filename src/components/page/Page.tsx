@@ -6,7 +6,8 @@ import {PageData} from './page-model';
 import './page.css';
 import Nav from '../nav/NavBar';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-import {RatedSceneEvent, allQuests, serverReadyState} from '../../state/recoil';
+import {RatedSceneEvent, allQuests,
+  serverReadyState, useServerUrlState} from '../../state/recoil';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import {useRecoilState, useRecoilValue} from 'recoil';
@@ -128,6 +129,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
   const [likedFeedback, setLikedFeedback] = React.useState<string>('');
   const [wantedFeedback, setWantedFeedback] = React.useState<string>('');
   const serverIsReady = useRecoilValue(serverReadyState);
+  const server = useRecoilValue(useServerUrlState);
 
   const handleInputTextChange = (e: React.ChangeEvent<HTMLInputElement> |
     React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -256,7 +258,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
                   type: 'option'}, currentPage, setCurrentPage,
               (currentUser?.email) as string,
               allStoryScenes, completedScenes,
-              setCompletedScenes, setFeedbackDialog);
+              setCompletedScenes, setFeedbackDialog, server);
                 setInputtedFreeResponseText('');
                 setFreeResponseModalOpen(false);
               }}>Submit</Button>
@@ -314,7 +316,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
                     type: 'option'}, currentPage, setCurrentPage,
                     (currentUser?.email) as string, allStoryScenes,
                     completedScenes, setCompletedScenes,
-                    setFeedbackDialog);
+                    setFeedbackDialog, server);
                 }
               }} />,
           )}

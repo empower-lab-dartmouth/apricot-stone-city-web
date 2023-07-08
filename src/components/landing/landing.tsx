@@ -11,11 +11,19 @@ import {doc, getDoc, setDoc} from 'firebase/firestore';
 import {db} from '../firebase/firebase-config';
 import {samplePageData} from '../../state/sample-data';
 import {PageData} from '../page/page-model';
+import checkmark from '../../assets/check-mark.png';
+import xIcon from '../../assets/x-icon.webp';
 import {competedScenesState,
   currentPageState,
+  inputtedServerUrlState,
+  useServerUrlState,
   userLevelState} from '../../state/recoil';
 import {useRecoilState} from 'recoil';
 import {UserLevelFB} from '../profile/Quests';
+import {FormControlLabel,
+  FormGroup, Stack, Switch, TextField, Typography} from '@mui/material';
+import {REMOTE_SERVER_URL} from '../../utils/data-utils';
+import {wakeUpServer} from '../../state/handle-action';
 
 const defaultFormFields = {
   email: '',
@@ -42,7 +50,7 @@ export const loadPageDataFromFB = async (username: string,
 export const loadUserLevel = async (username: string,
     setter: (p: number) => void) => {
   const ref = doc(db, 'UserLevel', username);
-  const docSnap = await await getDoc(ref);
+  const docSnap = await getDoc(ref);
   if (docSnap.exists()) {
     const data = docSnap.data() as UserLevelFB;
     // trim chat history
@@ -61,6 +69,26 @@ export const loadUserLevel = async (username: string,
   }
 };
 
+type LastUserServer = {
+  username: string,
+  server: string,
+  inputtedServer: string,
+}
+
+export const loadLastUserServerValues: (username: string,
+    inputServerSetter: (p: string) => void,
+    serverSetter: (p: string) => void) => Promise<void> =
+    async (username, inputServerSetter, serverSetter) => {
+      const ref = doc(db, 'LastUserServer', username);
+      const docSnap = await getDoc(ref);
+      if (docSnap.exists()) {
+        const data = docSnap.data() as LastUserServer;
+        // trim chat history
+        serverSetter(data.server);
+        inputServerSetter(data.inputtedServer);
+      }
+    };
+
 
 export const loadVisitedScenesFromFB = async (username: string,
     setter: (s: Set<string>) => void) => {
@@ -74,6 +102,10 @@ export const loadVisitedScenesFromFB = async (username: string,
   }
 };
 
+const inputFieldStyles = {
+  width: '100%',
+  backgroundColor: 'white',
+};
 
 function Home() {
   const [open, setOpen] = React.useState(false);
@@ -83,6 +115,12 @@ function Home() {
   const [visitedScenes, setVisitedScenes] = useRecoilState(competedScenesState);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [userLevel, setUserLevel] = useRecoilState(userLevelState);
+  const [useServer, setUseServer] = useRecoilState(useServerUrlState);
+  const [inputtedServerUrl, setInputtedServerUrl] = useRecoilState(
+      inputtedServerUrlState);
+  const [serverIsReady, setServerIsReady] = useState<boolean>(false);
+  const [hasPingedServer, setHasPingedServer] = useState<string>('');
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -105,7 +143,8 @@ function Home() {
 
     try {
       // Send the email and password to firebase
-      const userCredential = await signInUser(email, password);
+      const userCredential = await signInUser(email, password,
+          useServer, inputtedServerUrl);
 
       if (userCredential) {
         resetFormFields();
@@ -122,6 +161,12 @@ function Home() {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
     setFormFields({...formFields, [name]: value});
+  };
+
+  const updateServerIsReady = (b: boolean) => {
+    console.log('setting server ready to');
+    console.log(b);
+    setServerIsReady(b);
   };
 
   return (
@@ -167,6 +212,74 @@ function Home() {
                 style={{backgroundColor: 'white', color: 'black'}}
                 type="submit" />
             </div>
+            <FormGroup>
+              <FormControlLabel sx={{color: 'black'}}
+                control={<Switch checked={useServer === REMOTE_SERVER_URL}
+                  onChange={() => useServer === REMOTE_SERVER_URL ?
+                  setUseServer(inputtedServerUrl) :
+                  setUseServer(REMOTE_SERVER_URL)}
+                />} label="Use remote server" />
+            </FormGroup>
+            {
+              useServer === REMOTE_SERVER_URL ? <></> :
+              <>
+                <div>
+                  <TextField style={inputFieldStyles}
+                    value={inputtedServerUrl}
+                    onChange={(e) => {
+                      setInputtedServerUrl(e.target.value);
+                      setHasPingedServer(
+                          `pinging server \n${(new Date()).toString()}`);
+                      wakeUpServer(updateServerIsReady, e.target.value);
+                    }
+                    }
+                    label="Use local server url:" variant="outlined" />
+                </div>
+                {
+                  hasPingedServer !== '' ?
+                  <Typography variant="caption" display="block"
+                    sx={{color: 'white'}} gutterBottom>
+                    { hasPingedServer }
+                  </Typography> : <></>
+                }
+                { serverIsReady ?
+                  <div style={{backgroundColor: 'lightgreen',
+                    borderRadius: '20px'}}>
+                    <Stack
+                      direction="row"
+                      justifyContent="flex-start"
+                      alignItems="center"
+                      spacing={0}
+                    >
+                      <img alt="preview image" width="20"
+                        src={checkmark}/>
+                      <p style={{color: 'green',
+                        paddingRight: '3px'}}>Connected to local server</p>
+                    </Stack>
+                  </div> :
+                  <>{
+                    hasPingedServer === '' ||
+                    inputtedServerUrl !== '' ?
+                  <div style={{backgroundColor: 'lightred',
+                    borderRadius: '20px'}}>
+                    <Stack
+                      direction="row"
+                      justifyContent="flex-start"
+                      alignItems="center"
+                      spacing={0}
+                    >
+                      <img alt="preview image" width="20"
+                        src={xIcon}/>
+                      <p style={{color: 'red',
+                        paddingRight: '3px'}}>
+                          Local server connection error...</p>
+                    </Stack>
+                  </div> : <></>
+                  }
+                  </>
+                }
+              </>
+            }
           </form>
           {open && (
             <SignUp
