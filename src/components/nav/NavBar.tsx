@@ -15,10 +15,14 @@ import Popover from '@mui/material/Popover';
 import PopupState, {bindTrigger, bindPopover} from 'material-ui-popup-state';
 import Stack from '@mui/material/Stack';
 import {useRecoilValue} from 'recoil';
-import {userLevelState} from '../../state/recoil';
+import {useServerUrlState, userLevelState} from '../../state/recoil';
+import {REMOTE_SERVER_URL} from '../../utils/data-utils';
 
 export default function Nav() {
   const completedChallenges = useRecoilValue(userLevelState);
+  const server = useRecoilValue(useServerUrlState);
+  console.log('server:');
+  console.log(server);
   return (
     <AppBar component="nav">
       {/* <Toolbar> */}
@@ -37,7 +41,15 @@ export default function Nav() {
           spacing={2}
           sx={{paddingRight: '40px'}}
         >
-
+          {
+            server !== REMOTE_SERVER_URL ?
+            <Stack direction="column">
+              <p style={{height: '1px', color: 'white'}}><strong>
+              Running on</strong></p>
+              <p style={{color: 'white', height: '1px'}}><strong>
+                {server}</strong></p>
+            </Stack> :
+          <></> }
           <NavLink to="/adventure" className="nav-item">
             <Stack direction="column" justifyContent="flex-start"
               alignItems="center">

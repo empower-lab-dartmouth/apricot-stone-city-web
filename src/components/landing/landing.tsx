@@ -16,6 +16,7 @@ import xIcon from '../../assets/x-icon.webp';
 import {competedScenesState,
   currentPageState,
   inputtedServerUrlState,
+  serverReadyState,
   useServerUrlState,
   userLevelState} from '../../state/recoil';
 import {useRecoilState} from 'recoil';
@@ -118,7 +119,7 @@ function Home() {
   const [useServer, setUseServer] = useRecoilState(useServerUrlState);
   const [inputtedServerUrl, setInputtedServerUrl] = useRecoilState(
       inputtedServerUrlState);
-  const [serverIsReady, setServerIsReady] = useState<boolean>(false);
+  const [serverIsReady, setServerIsReady] = useRecoilState(serverReadyState);
   const [hasPingedServer, setHasPingedServer] = useState<string>('');
 
   const handleClose = () => {
@@ -145,6 +146,7 @@ function Home() {
       // Send the email and password to firebase
       const userCredential = await signInUser(email, password,
           useServer, inputtedServerUrl);
+      wakeUpServer(setServerIsReady, useServer);
 
       if (userCredential) {
         resetFormFields();
@@ -218,7 +220,7 @@ function Home() {
                   onChange={() => useServer === REMOTE_SERVER_URL ?
                   setUseServer(inputtedServerUrl) :
                   setUseServer(REMOTE_SERVER_URL)}
-                />} label="Use remote server" />
+                />} label="local/remote server url" />
             </FormGroup>
             {
               useServer === REMOTE_SERVER_URL ? <></> :
@@ -228,6 +230,7 @@ function Home() {
                     value={inputtedServerUrl}
                     onChange={(e) => {
                       setInputtedServerUrl(e.target.value);
+                      setUseServer(e.target.value);
                       setHasPingedServer(
                           `pinging server \n${(new Date()).toString()}`);
                       wakeUpServer(updateServerIsReady, e.target.value);

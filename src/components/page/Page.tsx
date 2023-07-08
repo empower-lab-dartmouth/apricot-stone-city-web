@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import * as React from 'react';
 import Card from '../card/Card';
-import {handleAction} from '../../state/handle-action';
+import {handleAction, wakeUpServer} from '../../state/handle-action';
 import {PageData} from './page-model';
 import './page.css';
 import Nav from '../nav/NavBar';
@@ -128,7 +128,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
   const [learning, setLearning] = React.useState<number>(3);
   const [likedFeedback, setLikedFeedback] = React.useState<string>('');
   const [wantedFeedback, setWantedFeedback] = React.useState<string>('');
-  const serverIsReady = useRecoilValue(serverReadyState);
+  const [serverIsReady, setServerIsReady] = useRecoilState(serverReadyState);
   const server = useRecoilValue(useServerUrlState);
 
   const handleInputTextChange = (e: React.ChangeEvent<HTMLInputElement> |
@@ -331,6 +331,8 @@ const Page: React.FC<PageParams> = ({pageData}) => {
         This shouldn&rsquo;t
         take more than a minute or two.
           </p>
+          <Button onClick={() => wakeUpServer(setServerIsReady, server)}>
+            Ping server again</Button>
         </>
         }
       </div>

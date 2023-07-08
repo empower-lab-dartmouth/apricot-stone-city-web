@@ -35,7 +35,8 @@ export const fetchContinueConversationData: (req: ContinueConversationRequest,
 => Promise<ContinueConversationResponse | ErrorReponse> = async (
     request: ContinueConversationRequest, server: string,
 ) => {
-  console.log('pre fetch');
+  console.log('pre fetch, server:');
+  console.log(server);
   // console.log(process);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   console.log(process.env.REACT_APP_IS_DEV === undefined ?

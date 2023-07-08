@@ -38,7 +38,8 @@ const logUserSignIn = async (username: string,
           inputtedServer,
         });
     console.log('Wrote a sign in event to the event log, '+
-    'and updated last server');
+    'and updated last server to');
+    console.log(server);
   } catch (e) {
     console.error('Error adding document: ', e);
   }
