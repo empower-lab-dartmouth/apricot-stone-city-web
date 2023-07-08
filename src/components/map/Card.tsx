@@ -382,7 +382,7 @@ const hasPermissions: (completedScenes: Set<string>,
     selectedScene.editHistory.map((v) => v.username).includes(username);
 
 export default function BasicCard() {
-  const context = useRecoilValue(userContextState);
+  const [context, setContext] = useRecoilState(userContextState);
   const [editHistoryHidden, setEditHistoryHidden] = useState(false);
   const allStoryEvents = useRecoilValue(allScenesState);
   const userLevel = useRecoilValue(userLevelState);
@@ -588,7 +588,12 @@ export default function BasicCard() {
               .filter((p) => allStoryEvents[p] !== undefined &&
           !allStoryEvents[p].deleted)
               .map((p) =>
-                <Chip label={allStoryEvents[p].title} sx={{
+                <Chip onClick={(e) => {
+                  setContext({
+                    ...context,
+                    selectedStorySceneID: p,
+                  });
+                }} label={allStoryEvents[p].title} sx={{
                   'height': 'auto',
                   '& .MuiChip-label': {
                     borderRadius: '25px',
@@ -605,7 +610,12 @@ export default function BasicCard() {
         'Children:' : 'No children.'}</p>
         {
           children.map((p) =>
-            <Chip label={p.title} sx={{
+            <Chip onClick={(e) => {
+              setContext({
+                ...context,
+                selectedStorySceneID: p.id,
+              });
+            }} label={p.title} sx={{
               'height': 'auto',
               '& .MuiChip-label': {
                 borderRadius: '25px',
@@ -625,6 +635,8 @@ export default function BasicCard() {
            {
           selectedScene.backendPath.length <= 1 ? <></> :
           <>
+            <br />
+            <br />
             <NavLink to="/adventure" className="nav-item">
               <Button onClick={returnToScene}
                 variant="contained" color='success'>
