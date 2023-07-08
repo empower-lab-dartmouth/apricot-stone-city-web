@@ -158,6 +158,7 @@ export const firstTimePullingServerState = atom<boolean>({
 
 const loadStoryScenesFromFB = async () => {
   const querySnapshot = await getDocs(collection(db, 'StoryScene'));
+  console.log('Firebase collection read <story scenes>');
   return querySnapshot.docs.map((doc) => doc.data())
       .filter((doc) => !(doc as StoryScene).deleted)
       .reduce((obj, item) => {

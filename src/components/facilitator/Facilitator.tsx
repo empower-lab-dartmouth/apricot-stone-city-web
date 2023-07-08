@@ -105,15 +105,16 @@ export const FacilitatorPage: React.FC = () => {
   PostToFacilitator | undefined>(undefined);
   const q = query(collection(db, 'PostToFacilitator'));
   const loadDataFromFb = async () => {
+    console.log('Firebase collection read facilitator page <story scenes>');
     const querySnapshot = await getDocs(q);
     const docs = querySnapshot.docs
         .map((doc: any) => doc.data()) as any as PostToFacilitator[];
     setRequests(docs);
-    loadDataFromFb();
+    // loadDataFromFb();
   };
   useEffect(() => {
     loadDataFromFb();
-  });
+  }, []);
 
   const approveRequest = (r: RequestType, username: string) => {
     if (r === 'Complete Level 1') {

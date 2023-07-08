@@ -55,11 +55,12 @@ export default function Profile() {
   const q = query(collection(db, 'PostToFacilitator'),
       where('requestorUsername', '==', currentUser?.email as string));
   const loadDataFromFb = async () => {
+    console.log('Firebase collection read profile page <post to facilitator>');
     const querySnapshot = await getDocs(q);
     const docs = querySnapshot.docs
         .map((doc: any) => doc.data()) as any as PostToFacilitator[];
     setRequests(docs);
-    loadDataFromFb();
+    // loadDataFromFb();
   };
   useEffect(() => {
     loadDataFromFb();

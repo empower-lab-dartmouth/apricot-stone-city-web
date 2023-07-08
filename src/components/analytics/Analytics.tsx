@@ -44,6 +44,8 @@ const columns: TableColumn<Row>[] = [
     name: 'Custom server',
     selector: (row: Row) => row.customServer ? 'Yes' : 'No',
     sortable: true,
+    sortFunction: (rowA, rowB) => (rowA.customServer === rowB.customServer ? 0 :
+    rowA.customServer ? -1 : 1),
   },
   {
     name: 'Data',
@@ -84,7 +86,7 @@ const loadLogs = async (username: string | undefined,
   const q = query(collection(db, 'EventLog'),
       where('username', '==', username), limit(QUERY_LIMIT));
   const querySnapshot = await getDocs(q);
-  console.log('load logs');
+  console.log('Firebase collection read <event logs>');
   const docs = querySnapshot.docs
       .map((doc: any) => {
         const d = doc.data() as any as LoggedEventOptionalFields;
@@ -105,6 +107,7 @@ type UserLevel = {
 
 const loadUsers = async (setter: (v: UserLevel[]) => void) => {
   const q = query(collection(db, 'UserLevel'));
+  console.log('Firebase collection read <User Level>');
   const querySnapshot = await getDocs(q);
   console.log('set docs!');
   const docs = querySnapshot.docs.map((d) => d.data() as any as UserLevel);
