@@ -93,7 +93,15 @@ export default function Quests() {
   }]));
   return (
     <div>
-      <h1 className='profile-title challenge-header'>Quests</h1>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1}>
+        <h1 className='profile-title challenge-header'>Quests</h1>
+        <a target="_blank"
+          href='https://docs.google.com/document/d/1pnF15F_LxllLshczEtsbw-GsF3qzerVLxjykYMWVrVM/edit?usp=sharing' rel="noreferrer">
+            Creating a scene? Learn more about each quest here...</a>
+      </Stack>
       {
         completedAllScenes ?
         <Alert severity="success">

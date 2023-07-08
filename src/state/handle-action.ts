@@ -2,7 +2,8 @@ import {SetterOrUpdater} from 'recoil';
 import {PageData} from '../components/page/page-model';
 import {CardData} from '../components/card/card-model';
 import {OptionData} from '../components/option/option-model';
-import {fetchContinueConversationData} from '../utils/data-utils';
+import {REMOTE_SERVER_URL,
+  fetchContinueConversationData} from '../utils/data-utils';
 import {ConvoSegmentPath, Stores} from '../utils/stores';
 import {doc, setDoc} from 'firebase/firestore';
 import {db} from '../components/firebase/firebase-config';
@@ -34,7 +35,8 @@ const uploadPageToFB = async (newPage: PageData, username: string) => {
 };
 
 const uploadChatButtonEventToFB = async (option: OptionData,
-    response: string[], username: string, path: Required<ConvoSegmentPath>) => {
+    response: string[], username: string, path: Required<ConvoSegmentPath>,
+    server: string) => {
   try {
     console.log('sending event logs to fb');
     const d = (new Date()).toString();
@@ -48,6 +50,7 @@ const uploadChatButtonEventToFB = async (option: OptionData,
       date: d,
       path,
       id,
+      customServer: server !== REMOTE_SERVER_URL,
     };
     await setDoc(
         doc(db, 'EventLog', id), loggedEvent);
@@ -59,7 +62,7 @@ const uploadChatButtonEventToFB = async (option: OptionData,
 export const uploadReturnToSceneEventToFB = async (
     priorPath: Required<ConvoSegmentPath>,
     newPath: Required<ConvoSegmentPath>,
-    username: string) => {
+    username: string, server: string) => {
   try {
     console.log('sending return to scene event log to fb');
     const d = (new Date()).toString();
@@ -71,6 +74,7 @@ export const uploadReturnToSceneEventToFB = async (
       priorPath,
       newPath,
       id,
+      customServer: server !== REMOTE_SERVER_URL,
     };
     await setDoc(
         doc(db, 'EventLog', id), loggedEvent);
@@ -177,7 +181,7 @@ export const handleAction: (
           } as Required<ConvoSegmentPath>;
           uploadChatButtonEventToFB(optionData, updates.cards.map(
               (c) => c.type === 'image' ? '<IMAGE>' : c.text), username,
-          path);
+          path, server);
           uploadPageToFB(newPage, username);
           // Check if we have completed a scene.
           const currentScenePath = currentPage.currentStores !== undefined ?

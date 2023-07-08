@@ -42,8 +42,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "reset-port": "kill -9 $(lsof -t -i:3000)",
     "build": "react-scripts build",
+    "deploy": "firebase deploy --only hosting",
+    "reset-port": "kill -9 $(lsof -t -i:3000)",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

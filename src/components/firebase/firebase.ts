@@ -26,7 +26,7 @@ const logUserSignIn = async (username: string,
     id,
     server,
     type: 'login',
-    remoteServer: server === REMOTE_SERVER_URL,
+    customServer: server !== REMOTE_SERVER_URL,
   };
   try {
     await setDoc(

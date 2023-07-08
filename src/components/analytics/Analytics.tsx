@@ -4,7 +4,9 @@ import Nav from '../nav/NavBar';
 import {Autocomplete, Box, Paper,
   TextField,
   ThemeProvider, createTheme, styled} from '@mui/material';
-import {collection, getDocs, query, where} from 'firebase/firestore';
+import {collection, getDocs,
+  limit,
+  query, where} from 'firebase/firestore';
 import {LoggedEvent} from '../../state/recoil';
 import {db} from '../firebase/firebase-config';
 // import {AuthContext} from '../../context/auth-context';
@@ -13,6 +15,8 @@ import {
   ExpandableRowsComponent} from
   'react-data-table-component/dist/src/DataTable/types';
 
+const QUERY_LIMIT = 10;
+
 type Row = {
     type: string
     id: string,
@@ -20,6 +24,7 @@ type Row = {
     date: string
     summary: string,
     data: LoggedEvent
+    customServer: boolean,
 }
 
 const columns: TableColumn<Row>[] = [
@@ -34,6 +39,11 @@ const columns: TableColumn<Row>[] = [
     sortable: true,
     sortFunction: (rowA, rowB) => ((new Date(rowB.date))
         .getTime() - (new Date(rowA.date)).getTime()),
+  },
+  {
+    name: 'Custom server',
+    selector: (row: Row) => row.customServer ? 'Yes' : 'No',
+    sortable: true,
   },
   {
     name: 'Data',
@@ -52,12 +62,7 @@ const ExpandedComponent: ExpandableRowsComponent<Row> = (
       borderColor: data.correctAnswer === 'true' ? 'lightgreen' :
         data.correctAnswer === 'false' ? 'lightcoral' : 'lightgray',
     }}>{JSON.stringify(data, null, 2)}</pre>;
-  } else if (data.type === 'return-to-scene') {
-    return <pre style={{
-      borderWidth: '30px',
-      borderStyle: 'none none none solid',
-      borderColor: 'lightgray'}}>{JSON.stringify(data, null, 2)}</pre>;
-  } else if (data.type === 'scene-feedback') {
+  } else {
     return <pre style={{
       borderWidth: '30px',
       borderStyle: 'none none none solid',
@@ -66,6 +71,9 @@ const ExpandedComponent: ExpandableRowsComponent<Row> = (
   return <></>;
 };
 
+type LoggedEventOptionalFields = LoggedEvent & {
+  customServer: boolean | undefined
+}
 
 const loadLogs = async (username: string | undefined,
     setter: (e: LoggedEvent[]) => void) => {
@@ -74,11 +82,17 @@ const loadLogs = async (username: string | undefined,
     return;
   }
   const q = query(collection(db, 'EventLog'),
-      where('username', '==', username));
+      where('username', '==', username), limit(QUERY_LIMIT));
   const querySnapshot = await getDocs(q);
   console.log('load logs');
   const docs = querySnapshot.docs
-      .map((doc: any) => doc.data() as any as LoggedEvent)
+      .map((doc: any) => {
+        const d = doc.data() as any as LoggedEventOptionalFields;
+        if (d.customServer === undefined) {
+          d.customServer = true;
+        }
+        return d as LoggedEvent;
+      })
       .sort((a, b) => (new Date(b.date)).getTime() -
       (new Date(a.date)).getTime());
   setter(docs);
@@ -135,22 +149,31 @@ export const UserEvent = () => {
   );
 };
 
+const stringSummary = (l: LoggedEvent) => {
+  switch (l.type) {
+    case 'chat-option':
+      return `${l.correctAnswer === 'true' ? 'Quiz correct answer' :
+      l.correctAnswer === 'false' ? 'Quiz incorrect answer' :
+      'Clicked: ' + l.option + ' viewed: ' + l.response
+          .join(' ').split(' ').length + ' words'}`;
+    case 'login':
+      return `Server: ${l.server}`;
+    case 'return-to-scene':
+      return `Returned to scene: ${l.newPath.parentModules.join(' ')} 
+      from: ${l.priorPath.parentModules.join(' ')}`;
+    case 'scene-feedback':
+      return `Enjoyment: ${l.enjoymentRating}, Learning: ${l.learningRating}`;
+  }
+};
+
 const logsToTableRows: (logs: LoggedEvent[]) => Row[] = (logs) =>
   logs.map((l) => ({
     date: l.date,
+    customServer: l.customServer,
     id: l.id,
     type: l.type,
     data: l,
-    summary: l.type === 'scene-feedback' ?
-    `Enjoyment: ${l.enjoymentRating}, Learning: ${l.learningRating}` :
-    l.type === 'chat-option' ?
-    `${l.correctAnswer === 'true' ? 'Quiz correct answer' :
-    l.correctAnswer === 'false' ? 'Quiz incorrect answer' :
-    'Clicked: ' + l.option + ' viewed: ' + l.response
-        .join(' ').split(' ').length + ' words'}` :
-    l.type === 'return-to-scene' ?
-    `Returned to scene: ${l.newPath.parentModules.join(' ')} 
-    from: ${l.priorPath.parentModules.join(' ')}` : '',
+    summary: stringSummary(l),
     defaultExpanded: false,
   }));
 

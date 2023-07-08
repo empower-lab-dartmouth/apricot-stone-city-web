@@ -217,9 +217,15 @@ function Home() {
             <FormGroup>
               <FormControlLabel sx={{color: 'black'}}
                 control={<Switch checked={useServer === REMOTE_SERVER_URL}
-                  onChange={() => useServer === REMOTE_SERVER_URL ?
-                  setUseServer(inputtedServerUrl) :
-                  setUseServer(REMOTE_SERVER_URL)}
+                  onChange={() => {
+                    if (useServer === REMOTE_SERVER_URL) {
+                      setUseServer(inputtedServerUrl);
+                      wakeUpServer(updateServerIsReady, inputtedServerUrl);
+                    } else {
+                      setUseServer(REMOTE_SERVER_URL);
+                      wakeUpServer(updateServerIsReady, REMOTE_SERVER_URL);
+                    }
+                  }}
                 />} label="local/remote server url" />
             </FormGroup>
             {
@@ -232,16 +238,19 @@ function Home() {
                       setInputtedServerUrl(e.target.value);
                       setUseServer(e.target.value);
                       setHasPingedServer(
-                          `pinging server \n${(new Date()).toString()}`);
+                          // eslint-disable-next-line max-len
+                          `Last tested server: ${(new Date()).toDateString()} ${(new Date()).getHours()}:${(new Date()).getMinutes()}:${(new Date()).getMilliseconds()}`);
                       wakeUpServer(updateServerIsReady, e.target.value);
                     }
                     }
-                    label="Use local server url:" variant="outlined" />
+                    label="Use custom server url:" variant="outlined" />
+                  <Typography variant="caption" display="block"
+                    sx={{color: 'blue'}} gutterBottom>e.g. http://localhost:8000/</Typography>
                 </div>
                 {
-                  hasPingedServer !== '' ?
+                  hasPingedServer !== '' && inputtedServerUrl !== '' ?
                   <Typography variant="caption" display="block"
-                    sx={{color: 'white'}} gutterBottom>
+                    sx={{color: 'blue'}} gutterBottom>
                     { hasPingedServer }
                   </Typography> : <></>
                 }
@@ -275,7 +284,7 @@ function Home() {
                         src={xIcon}/>
                       <p style={{color: 'red',
                         paddingRight: '3px'}}>
-                          Local server connection error...</p>
+                          Connection error...</p>
                     </Stack>
                   </div> : <></>
                   }

@@ -84,6 +84,7 @@ export type ChatButtonEvent = {
   path: Required<ConvoSegmentPath>,
   id: string,
   username: string,
+  customServer: boolean, // running on server
 }
 
 export type ReturnToSceneEvent = {
@@ -93,6 +94,7 @@ export type ReturnToSceneEvent = {
   newPath: Required<ConvoSegmentPath>,
   id: string,
   username: string,
+  customServer: boolean
 }
 
 export type RatedSceneEvent = {
@@ -106,6 +108,7 @@ export type RatedSceneEvent = {
   learningRating: number,
   enjoymentRating: number,
   quests: string[],
+  customServer: boolean
 }
 
 export type UserLoginEvent = {
@@ -114,7 +117,7 @@ export type UserLoginEvent = {
   id: string,
   username: string,
   server: string,
-  remoteServer: boolean,
+  customServer: boolean
 }
 
 export type LoggedEvent = ChatButtonEvent | ReturnToSceneEvent
@@ -145,7 +148,7 @@ export const useServerUrlState = atom<string>({
 
 export const inputtedServerUrlState = atom<string>({
   key: 'inputted-server-url',
-  default: '',
+  default: 'http://localhost:8000/',
 });
 
 export const firstTimePullingServerState = atom<boolean>({

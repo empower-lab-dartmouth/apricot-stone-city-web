@@ -21,8 +21,6 @@ import {REMOTE_SERVER_URL} from '../../utils/data-utils';
 export default function Nav() {
   const completedChallenges = useRecoilValue(userLevelState);
   const server = useRecoilValue(useServerUrlState);
-  console.log('server:');
-  console.log(server);
   return (
     <AppBar component="nav">
       {/* <Toolbar> */}
@@ -45,9 +43,10 @@ export default function Nav() {
             server !== REMOTE_SERVER_URL ?
             <Stack direction="column">
               <p style={{height: '1px', color: 'white'}}><strong>
-              Running on</strong></p>
-              <p style={{color: 'white', height: '1px'}}><strong>
-                {server}</strong></p>
+              Using local server:</strong></p>
+              <p style={{color: 'white', height: '1px',
+                paddingBottom: '5px'}}><strong>
+                  {server}</strong></p>
             </Stack> :
           <></> }
           <NavLink to="/adventure" className="nav-item">

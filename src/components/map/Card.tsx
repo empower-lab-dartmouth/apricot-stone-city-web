@@ -455,7 +455,7 @@ export default function BasicCard() {
     const currentPath = currentPage.currentStores === undefined ? newPath :
     currentPage.currentStores.currentConvoSegmentPath;
     uploadReturnToSceneEventToFB(currentPath, newPath,
-      currentUser?.email as string);
+      currentUser?.email as string, server);
     setCurrentPage({
       ...currentPage,
       currentStores: stores});

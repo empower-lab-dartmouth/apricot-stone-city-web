@@ -24,6 +24,7 @@ import {AuthContext} from '../../context/auth-context';
 import {EmojiRating} from 'emoji-rating-component';
 import {doc, setDoc} from 'firebase/firestore';
 import {db} from '../firebase/firebase-config';
+import {REMOTE_SERVER_URL} from '../../utils/data-utils';
 
 const E: any = EmojiRating as any;
 
@@ -60,7 +61,8 @@ type SceneFeedback = {
   quests: string[],
 }
 
-const sendSceneFeedbackToFB = async (feedback: SceneFeedback) => {
+const sendSceneFeedbackToFB = async (feedback: SceneFeedback,
+    server: string) => {
   // do firebase stuff to write
   console.log('submitting feedback');
   try {
@@ -78,6 +80,7 @@ const sendSceneFeedbackToFB = async (feedback: SceneFeedback) => {
       date: feedback.date,
       sceneId: feedback.sceneId,
       id,
+      customServer: server !== REMOTE_SERVER_URL,
     };
     await setDoc(
         doc(db, 'EventLog', id), loggedEvent);
@@ -223,7 +226,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
                 username: currentUser?.email as string,
                 sceneId: sceneFeedbackDialog.scene.id,
                 quests: sceneFeedbackDialog.scene.quests,
-              });
+              }, server);
               setFeedbackDialog(undefined);
             }}>Submit feedback</Button>
           </Box>
