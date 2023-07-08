@@ -37,6 +37,11 @@ export const typewriterEffectState = atom<boolean>({
   default: false,
 });
 
+export const convoResponseErrorState = atom<boolean>({
+  key: 'convo-response-error',
+  default: false,
+});
+
 export type SceneFeedbackDialog = {
   scene: StoryScene,
 }

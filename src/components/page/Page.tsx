@@ -1,12 +1,14 @@
 /* eslint-disable react/jsx-key */
 import * as React from 'react';
 import Card from '../card/Card';
-import {handleAction, wakeUpServer} from '../../state/handle-action';
+import {handleAction, updateCompletedScenes,
+  wakeUpServer} from '../../state/handle-action';
 import {PageData} from './page-model';
 import './page.css';
 import Nav from '../nav/NavBar';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
 import {RatedSceneEvent, allQuests,
+  convoResponseErrorState,
   serverReadyState, useServerUrlState} from '../../state/recoil';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -132,6 +134,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
   const [likedFeedback, setLikedFeedback] = React.useState<string>('');
   const [wantedFeedback, setWantedFeedback] = React.useState<string>('');
   const [serverIsReady, setServerIsReady] = useRecoilState(serverReadyState);
+  const [convoError, setConvoError] = useRecoilState(convoResponseErrorState);
   const server = useRecoilValue(useServerUrlState);
 
   const handleInputTextChange = (e: React.ChangeEvent<HTMLInputElement> |
@@ -228,6 +231,12 @@ const Page: React.FC<PageParams> = ({pageData}) => {
                 quests: sceneFeedbackDialog.scene.quests,
               }, server);
               setFeedbackDialog(undefined);
+              const updatedCompletedScenes = completedScenes.add(
+                  sceneFeedbackDialog
+                      .scene.id);
+              setCompletedScenes(updatedCompletedScenes);
+              updateCompletedScenes(updatedCompletedScenes,
+                currentUser?.email as string);
             }}>Submit feedback</Button>
           </Box>
         </Modal> :
@@ -261,7 +270,8 @@ const Page: React.FC<PageParams> = ({pageData}) => {
                   type: 'option'}, currentPage, setCurrentPage,
               (currentUser?.email) as string,
               allStoryScenes, completedScenes,
-              setCompletedScenes, setFeedbackDialog, server);
+              setCompletedScenes, setFeedbackDialog, server,
+              setConvoError);
                 setInputtedFreeResponseText('');
                 setFreeResponseModalOpen(false);
               }}>Submit</Button>
@@ -303,8 +313,9 @@ const Page: React.FC<PageParams> = ({pageData}) => {
             onChange={() => setTypewriterEffectOn(!typewriterEffectOn)} />}
           label="Typewriter effect" />
         </FormGroup>
+        {convoError ? <b>The server returned an error.</b> : <></>}
         {
-            serverIsReady ?
+            serverIsReady && !convoError ?
         <BottomNavigation showLabels sx={{
           backgroundColor: 'white',
         }}>
@@ -319,11 +330,23 @@ const Page: React.FC<PageParams> = ({pageData}) => {
                     type: 'option'}, currentPage, setCurrentPage,
                     (currentUser?.email) as string, allStoryScenes,
                     completedScenes, setCompletedScenes,
-                    setFeedbackDialog, server);
+                    setFeedbackDialog, server, setConvoError);
                 }
               }} />,
           )}
         </BottomNavigation> :
+        <>{
+          convoError ?
+          <>
+            <p>
+        Likely the issue was casued by
+        returning to a scene using an invalid path.
+              <br />
+        Please check that the path is valid in map view.
+              <br />
+        In the meantime, try returning to a different scene.
+            </p>
+          </> :
         <>
           <LinearProgress color="secondary" />
           <LinearProgress color="success" />
@@ -336,6 +359,8 @@ const Page: React.FC<PageParams> = ({pageData}) => {
           </p>
           <Button onClick={() => wakeUpServer(setServerIsReady, server)}>
             Ping server again</Button>
+        </>
+        }
         </>
         }
       </div>

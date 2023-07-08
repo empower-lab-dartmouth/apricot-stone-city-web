@@ -2,6 +2,7 @@ import * as React from 'react';
 import {OptionData} from './option-model';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {allScenesState, competedScenesState,
+  convoResponseErrorState,
   currentPageState,
   sceneFeedbackDialogState,
   useServerUrlState} from '../../state/recoil';
@@ -20,6 +21,8 @@ const Option: React.FC<OptionParams> = ({optionData}) => {
   const {currentUser} = React.useContext(AuthContext);
   const allStoryScenes = useRecoilValue(allScenesState);
   const server = useRecoilValue(useServerUrlState);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [convoError, setConvoError] = useRecoilState(convoResponseErrorState);
   const [completedScenes, setCompletedScenes] = useRecoilState(
       competedScenesState);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
@@ -34,7 +37,7 @@ const Option: React.FC<OptionParams> = ({optionData}) => {
         type: 'option'}, currentPage, setCurrentPage,
         currentUser?.email as string, allStoryScenes,
         completedScenes, setCompletedScenes,
-        setFeedbackDialog, server)}>
+        setFeedbackDialog, server, setConvoError)}>
       <Typography variant="h3" gutterBottom>
         {optionData.text}
       </Typography>

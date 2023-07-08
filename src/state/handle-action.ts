@@ -83,7 +83,7 @@ export const uploadReturnToSceneEventToFB = async (
   }
 };
 
-const updateCompletedScenes = async (completedScenes: Set<string>,
+export const updateCompletedScenes = async (completedScenes: Set<string>,
     username: string) => {
   console.log('sending completed scenes to fb');
   try {
@@ -149,9 +149,10 @@ export const handleAction: (
     setCompletedScenes: (c: Set<SceneUUID>) => void,
     setSceneFeedbackDialog: (c: SceneFeedbackDialog | undefined) => void,
     server: string,
+    setServerError: (e: boolean) => void,
 ) => Promise<void> = async (optionData, currentPage,
     setCurrentPage, username, allStoryScenes, completedScenes,
-    setCompletedScenes, setSceneFeedbackDialog, server) => {
+    setCompletedScenes, setSceneFeedbackDialog, server, setServerError) => {
   switch (optionData.action.type) {
     case 'click-option': {
       // TODO: update to real implementation
@@ -167,6 +168,7 @@ export const handleAction: (
               action: optionData.action,
             }, server);
         if (updates.type === 'continuation-data') {
+          setServerError(false);
           const newPage = appendToPage(currentPage,
               optionData,
               updates.cards, updates.options, updates.context);
@@ -190,21 +192,34 @@ export const handleAction: (
           const newScenePath = newPage.currentStores !== undefined ?
           newPage.currentStores
               .currentConvoSegmentPath.parentModules : ['root'];
-          if (currentScenePath !== newScenePath) {
+          if (!isEqual(currentScenePath, newScenePath)) {
             const currentScene = findSceneWithPath(
                 allStoryScenes, currentScenePath);
-            const nextScene = findSceneWithPath(
-                allStoryScenes, newScenePath);
-            if (currentScene !== undefined && nextScene !== undefined) {
+            // const nextScene = findSceneWithPath(
+            //     allStoryScenes, newScenePath);
+            const verifyNotReturningToScene = (checkHist: number) => {
+              return optionData.text !== 'Returning to a scene!' &&
+              currentPage.chatHistory.length > checkHist &&
+              (currentPage.chatHistory[
+                  currentPage.chatHistory.length - checkHist]
+                  .type !== 'option' ||
+              (currentPage.chatHistory[
+                  currentPage.chatHistory.length - checkHist]
+                  .type === 'option' &&
+              (currentPage.chatHistory[
+                  currentPage.chatHistory.length - checkHist] as OptionData)
+                  .text !== 'Returning to a scene!'));
+            };
+            if (currentScene !== undefined) {
+              console.log('Leaving a scene in adventure view.');
               // User has successfully completed the current scene.
-              if (currentScene.parents.includes(nextScene.id) ||
-                nextScene.parents.includes(currentScene.id)) {
+              if (verifyNotReturningToScene(2)) {
                 const firstTime = !completedScenes.has(currentScene.id);
-                const updatedCompletedScenes = completedScenes.add(
-                    currentScene.id);
-                setCompletedScenes(updatedCompletedScenes);
-                updateCompletedScenes(updatedCompletedScenes,
-                    username);
+                // const updatedCompletedScenes = completedScenes.add(
+                //     currentScene.id);
+                // setCompletedScenes(updatedCompletedScenes);
+                // updateCompletedScenes(updatedCompletedScenes,
+                //     username);
                 console.log('updated visited scenes');
                 if (firstTime) {
                   setSceneFeedbackDialog({
@@ -212,17 +227,18 @@ export const handleAction: (
                   });
                 }
               } else {
-                console.log('new scene is not a child '+
-                'of current scene, not updated visited scenes');
+                console.log('New scene was accessed by returning to a child.');
               }
             }
           }
         } else {
+          setServerError(true);
           console.log(
               `Server error getting conversation ` +
               `continuation data ${updates.body}`);
         }
       } catch (error) {
+        setServerError(true);
         console.log(`Client error getting conversation continuation data.`);
       }
     }

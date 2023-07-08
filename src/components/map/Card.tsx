@@ -12,6 +12,7 @@ import checkmark from '../../assets/check-mark.png';
 import actionIcon from '../../assets/action-icon.png';
 import {EditHistory, StoryScene, allScenesState,
   competedScenesState,
+  convoResponseErrorState,
   currentPageState,
   sceneFeedbackDialogState,
   useServerUrlState,
@@ -394,6 +395,8 @@ export default function BasicCard() {
       competedScenesState);
   const {currentUser} = React.useContext(AuthContext);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [convoError, setConvoError] = useRecoilState(convoResponseErrorState);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [sceneFeedbackDialog, setFeedbackDialog] = useRecoilState(
       sceneFeedbackDialogState);
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
@@ -472,7 +475,7 @@ export default function BasicCard() {
       currentStores: stores}, setCurrentPage,
       currentUser?.email as string, allStoryEvents,
       completedScenes, setCompletedScenes,
-      setFeedbackDialog, server);
+      setFeedbackDialog, server, setConvoError);
   };
 
   const children = Object.values(allStoryEvents)
