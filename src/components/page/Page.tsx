@@ -14,13 +14,12 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {allScenesState, competedScenesState, currentPageState,
-  sceneFeedbackDialogState,
-  typewriterEffectState} from '../../state/recoil';
+  sceneFeedbackDialogState} from '../../state/recoil';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Modal from '@mui/material/Modal';
-import {Box, Button, FormControlLabel,
-  FormGroup, LinearProgress, Switch,
+import {Box, Button,
+  LinearProgress,
   TextField, Typography} from '@mui/material';
 import {AuthContext} from '../../context/auth-context';
 import {EmojiRating} from 'emoji-rating-component';
@@ -106,8 +105,8 @@ const feedbackStyle = {
 
 const Page: React.FC<PageParams> = ({pageData}) => {
   const [currentPage, setCurrentPage] = useRecoilState(currentPageState);
-  const [typewriterEffectOn, setTypewriterEffectOn] = useRecoilState(
-      typewriterEffectState);
+  // const [typewriterEffectOn, setTypewriterEffectOn] = useRecoilState(
+  //     typewriterEffectState);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [sceneFeedbackDialog, setFeedbackDialog] = useRecoilState(
       sceneFeedbackDialogState);
@@ -307,12 +306,12 @@ const Page: React.FC<PageParams> = ({pageData}) => {
         </div>
       </div>
       <div className='fixed'>
-        <FormGroup>
+        {/* <FormGroup>
           <FormControlLabel control={<Switch
             checked={typewriterEffectOn}
             onChange={() => setTypewriterEffectOn(!typewriterEffectOn)} />}
           label="Typewriter effect" />
-        </FormGroup>
+        </FormGroup> */}
         {convoError ? <b>The server returned an error.</b> : <></>}
         {
             serverIsReady && !convoError ?
