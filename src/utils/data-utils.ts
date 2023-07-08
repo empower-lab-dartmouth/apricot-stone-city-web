@@ -39,7 +39,8 @@ export const fetchContinueConversationData: (req: ContinueConversationRequest)
     'WARNING! You are running using the remote server.' :
   'Running on local server');
   const IS_DEV = process.env.REACT_APP_IS_DEV === undefined ?
-false : process.env.REACT_APP_IS_DEV;
+false : process.env.REACT_APP_IS_DEV === 'true' ||
+  process.env.REACT_APP_IS_DEV === 'True';
   const BASE_DEV_URL = ' http://localhost:8000/';
   const BASE_PROD_URL = 'https://apricot-stone-city-backend.onrender.com/';
   const BASE_URL = IS_DEV ? BASE_DEV_URL : BASE_PROD_URL;
