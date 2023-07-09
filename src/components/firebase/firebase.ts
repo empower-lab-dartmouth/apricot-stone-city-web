@@ -18,11 +18,11 @@ const auth = getAuth(app);
 
 const logUserSignIn = async (username: string,
     inputtedServer: string, server: string) => {
-  const d = (new Date()).toString();
-  const id = `${username}-sign-in-${d}`;
+  const d = (new Date());
+  const id = `${username}-sign-in-${d.toString()}`;
   const userSignIn: UserLoginEvent = {
     username,
-    date: d,
+    date: d.getTime(),
     id,
     server,
     type: 'login',
@@ -30,7 +30,7 @@ const logUserSignIn = async (username: string,
   };
   try {
     await setDoc(
-        doc(db, 'EventLog', id), userSignIn);
+        doc(db, username, id), userSignIn);
     await setDoc(
         doc(db, 'LastUserServer', username), {
           username,

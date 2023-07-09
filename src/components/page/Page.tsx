@@ -78,13 +78,13 @@ const sendSceneFeedbackToFB = async (feedback: SceneFeedback,
       enjoymentRating: feedback.enjoymentRating,
       username: feedback.username,
       quests: feedback.quests,
-      date: feedback.date,
+      date: (new Date(feedback.date)).getTime(),
       sceneId: feedback.sceneId,
       id,
       customServer: server !== REMOTE_SERVER_URL,
     };
     await setDoc(
-        doc(db, 'EventLog', id), loggedEvent);
+        doc(db, `zEL-${feedback.username}`, id), loggedEvent);
     console.log('Feedback written to fb');
   } catch (e) {
     console.error('Error adding document: ', e);

@@ -84,7 +84,7 @@ export type ChatButtonEvent = {
   type: 'chat-option',
   option: string,
   response: string[]
-  date: string,
+  date: number,
   correctAnswer: 'true' | 'false' | 'na'
   path: Required<ConvoSegmentPath>,
   id: string,
@@ -94,7 +94,7 @@ export type ChatButtonEvent = {
 
 export type ReturnToSceneEvent = {
   type: 'return-to-scene',
-  date: string,
+  date: number,
   priorPath: Required<ConvoSegmentPath>,
   newPath: Required<ConvoSegmentPath>,
   id: string,
@@ -104,7 +104,7 @@ export type ReturnToSceneEvent = {
 
 export type RatedSceneEvent = {
   type: 'scene-feedback',
-  date: string,
+  date: number,
   sceneId: string,
   id: string,
   username: string,
@@ -118,7 +118,7 @@ export type RatedSceneEvent = {
 
 export type UserLoginEvent = {
   type: 'login',
-  date: string,
+  date: number,
   id: string,
   username: string,
   server: string,

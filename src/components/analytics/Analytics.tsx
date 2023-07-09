@@ -6,7 +6,8 @@ import {Autocomplete, Box, Paper,
   ThemeProvider, createTheme, styled} from '@mui/material';
 import {collection, getDocs,
   limit,
-  query, where} from 'firebase/firestore';
+  // orderBy,
+  query} from 'firebase/firestore';
 import {LoggedEvent} from '../../state/recoil';
 import {db} from '../firebase/firebase-config';
 // import {AuthContext} from '../../context/auth-context';
@@ -15,7 +16,7 @@ import {
   ExpandableRowsComponent} from
   'react-data-table-component/dist/src/DataTable/types';
 
-const QUERY_LIMIT = 10;
+const QUERY_LIMIT = 300;
 
 type Row = {
     type: string
@@ -73,9 +74,7 @@ const ExpandedComponent: ExpandableRowsComponent<Row> = (
   return <></>;
 };
 
-type LoggedEventOptionalFields = LoggedEvent & {
-  customServer: boolean | undefined
-}
+type LoggedEventOptionalFields = LoggedEvent
 
 const loadLogs = async (username: string | undefined,
     setter: (e: LoggedEvent[]) => void) => {
@@ -83,20 +82,28 @@ const loadLogs = async (username: string | undefined,
     setter([]);
     return;
   }
-  const q = query(collection(db, 'EventLog'),
-      where('username', '==', username), limit(QUERY_LIMIT));
+  const q = query(collection(db, `zEL-${username}`), limit(QUERY_LIMIT));
   const querySnapshot = await getDocs(q);
+  console.log(querySnapshot.docs);
   console.log('Firebase collection read <event logs>');
   const docs = querySnapshot.docs
       .map((doc: any) => {
         const d = doc.data() as any as LoggedEventOptionalFields;
-        if (d.customServer === undefined) {
-          d.customServer = true;
-        }
+        // if (d.customServer === undefined) {
+        //   d.customServer = true;
+        // }
         return d as LoggedEvent;
       })
-      .sort((a, b) => (new Date(b.date)).getTime() -
-      (new Date(a.date)).getTime());
+      .sort((a, b) => b.date - a.date);
+  // Uncomment to do migrations:
+  // await Promise.all(docs.map(async (d, i) => await setDoc(
+  //     doc(db, 'EventLog', d.id), {
+  //       ...d,
+  //       date: (new Date(d.date)).getTime(),
+  //     })))
+  //     .then((res) => console.log('all events written or failed'));
+  // console.log('docs');
+  // console.log(docs);
   setter(docs);
 };
 
@@ -171,7 +178,7 @@ const stringSummary = (l: LoggedEvent) => {
 
 const logsToTableRows: (logs: LoggedEvent[]) => Row[] = (logs) =>
   logs.map((l) => ({
-    date: l.date,
+    date: new Date(l.date).toString(),
     customServer: l.customServer,
     id: l.id,
     type: l.type,

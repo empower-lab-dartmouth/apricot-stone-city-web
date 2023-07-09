@@ -39,21 +39,21 @@ const uploadChatButtonEventToFB = async (option: OptionData,
     server: string) => {
   try {
     console.log('sending event logs to fb');
-    const d = (new Date()).toString();
-    const id = `${username}-button${d}`;
+    const d = (new Date());
+    const id = `${username}-button${d.toString()}`;
     const loggedEvent: ChatButtonEvent = {
       type: 'chat-option',
       option: option.text,
       correctAnswer: option.correctAnswer,
       response,
       username,
-      date: d,
+      date: d.getTime(),
       path,
       id,
       customServer: server !== REMOTE_SERVER_URL,
     };
     await setDoc(
-        doc(db, 'EventLog', id), loggedEvent);
+        doc(db, `zEL-${username}`, id), loggedEvent);
   } catch (e) {
     console.error('Error adding document: ', e);
   }
@@ -65,19 +65,19 @@ export const uploadReturnToSceneEventToFB = async (
     username: string, server: string) => {
   try {
     console.log('sending return to scene event log to fb');
-    const d = (new Date()).toString();
-    const id = `${username}-ret.to.scn${d}`;
+    const d = (new Date());
+    const id = `${username}-ret.to.scn${d.toString()}`;
     const loggedEvent: ReturnToSceneEvent = {
       type: 'return-to-scene',
       username,
-      date: d,
+      date: d.getTime(),
       priorPath,
       newPath,
       id,
       customServer: server !== REMOTE_SERVER_URL,
     };
     await setDoc(
-        doc(db, 'EventLog', id), loggedEvent);
+        doc(db, `zEL-${username}`, id), loggedEvent);
   } catch (e) {
     console.error('Error adding document: ', e);
   }

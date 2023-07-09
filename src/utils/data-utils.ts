@@ -39,9 +39,6 @@ export const fetchContinueConversationData: (req: ContinueConversationRequest,
   console.log(server);
   // console.log(process);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  console.log(process.env.REACT_APP_IS_DEV === undefined ?
-    'WARNING! You are running using the remote server.' :
-  'Running on local server');
   const IS_DEV = process.env.REACT_APP_IS_DEV === undefined ?
 false : process.env.REACT_APP_IS_DEV === 'true' ||
   process.env.REACT_APP_IS_DEV === 'True';
