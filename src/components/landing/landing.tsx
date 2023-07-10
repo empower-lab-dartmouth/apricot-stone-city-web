@@ -126,9 +126,9 @@ function Home() {
     setOpen(false);
   };
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
   const [formFields, setFormFields] = useState(defaultFormFields);
   const {email, password} = formFields;
   const navigate = useNavigate();
@@ -178,7 +178,10 @@ function Home() {
           style={{marginTop: '-200px', marginBottom: '5px',
             height: '150px', width: '600px'}}
         />
-        <button className='sign-up' onClick={() => handleOpen()}>
+        <button className='sign-up'
+          onClick={() => alert(
+              'Thanks for trying this now! ' +
+            'Sign ups open after the orientation session, come back then :)')}>
           Join
         </button>
         <div className='landing-card'>

@@ -28,9 +28,6 @@ import RequireAuth from './components/require-auth';
 import {wakeUpServer} from './state/handle-action';
 import {FacilitatorPage} from './components/facilitator/Facilitator';
 import {AnalyticsPage} from './components/analytics/Analytics';
-import {REMOTE_SERVER_URL} from './utils/data-utils';
-import {doc, setDoc} from 'firebase/firestore';
-import {db} from './components/firebase/firebase-config';
 
 
 const App = () => {

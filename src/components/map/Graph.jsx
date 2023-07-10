@@ -63,7 +63,7 @@ export default function Graph() {
                   (p) => ({source: p, target: s.id})))],
     };
     setGraph(gData);
-  }, []);
+  }, [allScenes]);
 
   useEffect(() => {
     console.log('selected node in context changed');
