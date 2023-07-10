@@ -3,12 +3,16 @@
 // banstest
 import * as React from 'react';
 import {useRecoilState, useRecoilValue} from 'recoil';
+import {useIdleTimer} from 'react-idle-timer';
 import {
-  Routes, Route, useNavigate,
+  Routes, Route, useNavigate, useLocation,
 } from 'react-router-dom';
 import './App.css';
-import {competedScenesState,
-  currentPageState, serverReadyState, useServerUrlState,
+import {SessionActivityEvent, competedScenesState,
+  currentPageState, currentSessionActivityState,
+  newActivtySession,
+  serverReadyState, useServerUrlState,
+  userIsActiveState,
   userLevelState} from './state/recoil';
 import Landing, {loadPageDataFromFB,
   loadUserLevel,
@@ -24,6 +28,10 @@ import RequireAuth from './components/require-auth';
 import {wakeUpServer} from './state/handle-action';
 import {FacilitatorPage} from './components/facilitator/Facilitator';
 import {AnalyticsPage} from './components/analytics/Analytics';
+import {REMOTE_SERVER_URL} from './utils/data-utils';
+import {doc, setDoc} from 'firebase/firestore';
+import {db} from './components/firebase/firebase-config';
+
 
 const App = () => {
   // eslint-disable-next-line no-unused-vars
@@ -39,7 +47,7 @@ const App = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [serverIsReady, setServerIsReady] = useRecoilState(serverReadyState);
   const server = useRecoilValue(useServerUrlState);
-  // Check if the current user exists on the initial render.
+
   useEffect(() => {
     wakeUpServer(setServerIsReady, server);
     if (currentUser) {

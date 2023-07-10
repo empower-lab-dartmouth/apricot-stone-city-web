@@ -15,6 +15,8 @@ import DataTable, {TableColumn} from 'react-data-table-component';
 import {
   ExpandableRowsComponent} from
   'react-data-table-component/dist/src/DataTable/types';
+import JSONDiff from './JSONDiff';
+
 
 const QUERY_LIMIT = 300;
 
@@ -65,6 +67,15 @@ const ExpandedComponent: ExpandableRowsComponent<Row> = (
       borderColor: data.correctAnswer === 'true' ? 'lightgreen' :
         data.correctAnswer === 'false' ? 'lightcoral' : 'lightgray',
     }}>{JSON.stringify(data, null, 2)}</pre>;
+  } else if (data.type === 'edit-scene-card') {
+    return <pre style={{
+      borderWidth: '30px',
+      borderStyle: 'none none none solid',
+      borderColor: 'lightgray'}}>
+      <JSONDiff oldValue={
+        data.sceneBefore} newValue={
+        data.sceneAfter} />
+    </pre>;
   } else {
     return <pre style={{
       borderWidth: '30px',
@@ -173,6 +184,16 @@ const stringSummary = (l: LoggedEvent) => {
       from: ${l.priorPath.parentModules.join(' ')}`;
     case 'scene-feedback':
       return `Enjoyment: ${l.enjoymentRating}, Learning: ${l.learningRating}`;
+    case 'create-scene-card':
+      return `${l.newScene.title} has ${l.newScene.quests.length === 0 ?
+        'no quests' : 'quests'}`;
+    case 'edit-scene-card':
+      return `Edited: "${l.sceneBefore.title}"`;
+    case 'delete-scene-card':
+      return `Deleted "${l.sceneBefore.title}"`;
+    case 'session':
+      return `Active for ${l.facilitator.activeTime + l.progress.activeTime +
+        l.analysis.activeTime + l.adventure.activeTime}ms`;
   }
 };
 

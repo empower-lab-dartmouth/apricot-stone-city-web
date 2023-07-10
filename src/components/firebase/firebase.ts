@@ -30,7 +30,7 @@ const logUserSignIn = async (username: string,
   };
   try {
     await setDoc(
-        doc(db, username, id), userSignIn);
+        doc(db, `zEL-${username}`, id), userSignIn);
     await setDoc(
         doc(db, 'LastUserServer', username), {
           username,

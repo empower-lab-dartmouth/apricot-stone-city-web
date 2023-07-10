@@ -10,7 +10,8 @@ import {defaultUserContext, userContextState} from './graph-recoil';
 import metalTex from '../../assets/metal-tex.webp';
 import checkmark from '../../assets/check-mark.png';
 import actionIcon from '../../assets/action-icon.png';
-import {EditHistory, StoryScene, allScenesState,
+import {CreateSceneCardEvent, DeleteSceneCardEvent, EditHistory,
+  EditSceneCardEvent, StoryScene, allScenesState,
   competedScenesState,
   convoResponseErrorState,
   currentPageState,
@@ -39,6 +40,7 @@ import {handleAction,
 import {AuthContext} from '../../context/auth-context';
 import Alert from '@mui/material/Alert';
 import {isEqual} from 'lodash';
+import {REMOTE_SERVER_URL} from '../../utils/data-utils';
 // import IconButton from '@mui/material/IconButton';
 
 
@@ -90,15 +92,53 @@ const createOrEditFormOpen = atom<boolean>({
 
 
 const updateFB = async (updatedStoryScene: StoryScene,
-    priorScene: StoryScene) => {
+    priorScene: StoryScene, username: string, server: string) => {
   // do firebase stuff to write
   console.log('submitting');
   try {
     await setDoc(
         doc(db, 'StoryScene', updatedStoryScene.id), updatedStoryScene);
-    await setDoc(
-        doc(db, 'UpdateHistory', Date.now().toString()), updatedStoryScene);
-    console.log('Document written to fb');
+    console.log('Writing logging event');
+    const d = new Date();
+    if (updatedStoryScene.editHistory.length == 1) {
+      const id = `create-card-event-${username}-${d.toString()}`;
+      const createEvent: CreateSceneCardEvent = {
+        date: d.getTime(),
+        type: 'create-scene-card',
+        newScene: updatedStoryScene,
+        id,
+        username,
+        customServer: server !== REMOTE_SERVER_URL,
+      };
+      await setDoc(
+          doc(db, `zEL-${username}`, id), createEvent);
+    } else if (updatedStoryScene.deleted) {
+      const id = `delete-card-event-${username}-${d.toString()}`;
+      const delEvent: DeleteSceneCardEvent = {
+        date: d.getTime(),
+        type: 'delete-scene-card',
+        sceneBefore: priorScene,
+        id,
+        username,
+        customServer: server !== REMOTE_SERVER_URL,
+      };
+      await setDoc(
+          doc(db, `zEL-${username}`, id), delEvent);
+    } else {
+      const id = `edit-card-event-${username}-${d.toString()}`;
+      const editEvent: EditSceneCardEvent = {
+        date: d.getTime(),
+        type: 'edit-scene-card',
+        sceneAfter: updatedStoryScene,
+        sceneBefore: priorScene,
+        id,
+        username,
+        customServer: server !== REMOTE_SERVER_URL,
+      };
+      await setDoc(
+          doc(db, `zEL-${username}`, id), editEvent);
+    }
+    console.log('Logging event written to fb');
   } catch (e) {
     console.error('Error adding document: ', e);
   }
@@ -130,6 +170,7 @@ const CreateOrEditStorySceneForm: FC = () => {
       startingFormState.wikiUrl);
   const [backendPath, setBackendPath] = useState<string[]>(
       startingFormState.backendPath);
+  const server = useRecoilValue(useServerUrlState);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [imgUrlWorks, setImgUrlWorks] = useState<boolean>(true);
 
@@ -146,7 +187,7 @@ const CreateOrEditStorySceneForm: FC = () => {
       wikiUrl: wikiUrl,
       backendPath: backendPath,
       editHistory: [{
-        username: (currentUser?.email) as any as string,
+        username: (currentUser?.email) as string,
         date: Date(),
       },
       ...startingFormState.editHistory],
@@ -163,8 +204,9 @@ const CreateOrEditStorySceneForm: FC = () => {
       backendPath: startingFormState.backendPath,
       editHistory: startingFormState.editHistory,
     };
-
-    updateFB(update, priorScene);
+    console.log('writing to fb');
+    updateFB(update, priorScene,
+      (currentUser?.email) as string, server);
     if (deleted === undefined) {
       setAllScenes({
         ...allStoryScenes,

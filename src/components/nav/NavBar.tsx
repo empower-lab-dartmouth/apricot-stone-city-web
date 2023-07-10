@@ -17,12 +17,14 @@ import Stack from '@mui/material/Stack';
 import {useRecoilValue} from 'recoil';
 import {useServerUrlState, userLevelState} from '../../state/recoil';
 import {REMOTE_SERVER_URL} from '../../utils/data-utils';
+import SessionTracker from '../../Tracker';
 
 export default function Nav() {
   const completedChallenges = useRecoilValue(userLevelState);
   const server = useRecoilValue(useServerUrlState);
   return (
     <AppBar component="nav">
+      <SessionTracker />
       {/* <Toolbar> */}
       <Stack
         direction="row"

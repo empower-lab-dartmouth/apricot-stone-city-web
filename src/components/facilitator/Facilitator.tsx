@@ -105,7 +105,7 @@ export const FacilitatorPage: React.FC = () => {
   PostToFacilitator | undefined>(undefined);
   const q = query(collection(db, 'PostToFacilitator'));
   const loadDataFromFb = async () => {
-    console.log('Firebase collection read facilitator page <story scenes>');
+    console.log('Firebase collection read facilitator page <postTofaciliator>');
     const querySnapshot = await getDocs(q);
     const docs = querySnapshot.docs
         .map((doc: any) => doc.data()) as any as PostToFacilitator[];

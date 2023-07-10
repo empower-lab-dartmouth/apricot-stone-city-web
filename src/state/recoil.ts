@@ -32,6 +32,11 @@ export const currentPageState = atom<PageData>({
   default: samplePageData,
 });
 
+export const trackingTimeUntilNextPush = atom<number>({
+  key: 'tracking-elapsed-time',
+  default: 60000, // 1 minute
+});
+
 export const typewriterEffectState = atom<boolean>({
   key: 'typewriter-effect',
   default: false,
@@ -102,6 +107,34 @@ export type ReturnToSceneEvent = {
   customServer: boolean
 }
 
+export type EditSceneCardEvent = {
+  type: 'edit-scene-card',
+  date: number,
+  sceneBefore: StoryScene,
+  sceneAfter: StoryScene,
+  id: string,
+  username: string,
+  customServer: boolean
+}
+
+export type DeleteSceneCardEvent = {
+  type: 'delete-scene-card',
+  date: number,
+  sceneBefore: StoryScene,
+  id: string,
+  username: string,
+  customServer: boolean
+}
+
+export type CreateSceneCardEvent = {
+  type: 'create-scene-card',
+  date: number,
+  newScene: StoryScene,
+  id: string,
+  username: string,
+  customServer: boolean
+}
+
 export type RatedSceneEvent = {
   type: 'scene-feedback',
   date: number,
@@ -125,8 +158,29 @@ export type UserLoginEvent = {
   customServer: boolean
 }
 
+export type UserActivityReport = {
+  events: number
+  idleTime: number
+  activeTime: number
+}
+
+export type SessionActivityEvent = {
+  type: 'session'
+  date: number // End date
+  startDate: number
+  id: string
+  username: string
+  customServer: boolean
+  facilitator: UserActivityReport
+  progress: UserActivityReport
+  adventure: UserActivityReport
+  analysis: UserActivityReport
+  map: UserActivityReport
+}
+
 export type LoggedEvent = ChatButtonEvent | ReturnToSceneEvent
-| RatedSceneEvent | UserLoginEvent;
+| RatedSceneEvent | DeleteSceneCardEvent | UserLoginEvent |
+EditSceneCardEvent | CreateSceneCardEvent | SessionActivityEvent;
 
 export type StoryScene = {
   id: SceneUUID,
@@ -140,6 +194,54 @@ export type StoryScene = {
   wikiUrl: string,
   backendPath: string[]
 }
+
+export const SESSION_LENGTH = 900000; // 15 minutes.
+
+export const newActivtySession: (username: string,
+  startDate: number, customServer: boolean) => SessionActivityEvent = (
+      username, startDate, customServer) => ({
+    type: 'session',
+    date: startDate + SESSION_LENGTH,
+    startDate,
+    id: `sess-act-${username}-${startDate}`,
+    username,
+    customServer,
+    facilitator: {
+      events: 0,
+      idleTime: 0,
+      activeTime: 0,
+    },
+    map: {
+      events: 0,
+      idleTime: 0,
+      activeTime: 0,
+    },
+    progress: {
+      events: 0,
+      idleTime: 0,
+      activeTime: 0,
+    },
+    adventure: {
+      events: 0,
+      idleTime: 0,
+      activeTime: 0,
+    },
+    analysis: {
+      events: 0,
+      idleTime: 0,
+      activeTime: 0,
+    },
+  });
+
+export const userIsActiveState = atom<boolean>({
+  key: 'user-is-active',
+  default: true,
+});
+
+export const currentSessionActivityState = atom<SessionActivityEvent>({
+  key: 'current-session-activity',
+  default: newActivtySession('NO-USER', (new Date()).getTime(), true),
+});
 
 export const competedScenesState = atom<Set<SceneUUID>>({
   key: 'scenes-completed',
