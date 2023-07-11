@@ -7,7 +7,8 @@ import {PageData} from './page-model';
 import './page.css';
 import Nav from '../nav/NavBar';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-import {RatedSceneEvent, allQuests,
+import {QuestQuizQuestion,
+  QuestQuizQuestionWithOptions, RatedSceneEvent, allQuests,
   convoResponseErrorState,
   serverReadyState, useServerUrlState} from '../../state/recoil';
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -19,13 +20,19 @@ import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Modal from '@mui/material/Modal';
 import {Box, Button,
+  FormControl,
+  InputLabel,
   LinearProgress,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField, Typography} from '@mui/material';
 import {AuthContext} from '../../context/auth-context';
 import {EmojiRating} from 'emoji-rating-component';
 import {doc, setDoc} from 'firebase/firestore';
 import {db} from '../firebase/firebase-config';
 import {REMOTE_SERVER_URL} from '../../utils/data-utils';
+import {QUEST_QUESTIONS} from './quest-questions';
 
 export const E: any = EmojiRating as any;
 
@@ -60,6 +67,7 @@ type SceneFeedback = {
   username: string,
   sceneId: string,
   quests: string[],
+  quiz: QuestQuizQuestion[],
 }
 
 const sendSceneFeedbackToFB = async (feedback: SceneFeedback,
@@ -74,6 +82,7 @@ const sendSceneFeedbackToFB = async (feedback: SceneFeedback,
       type: 'scene-feedback',
       liked: feedback.liked,
       wanted: feedback.wanted,
+      quiz: feedback.quiz,
       learningRating: feedback.learningRating,
       enjoymentRating: feedback.enjoymentRating,
       username: feedback.username,
@@ -135,7 +144,25 @@ const Page: React.FC<PageParams> = ({pageData}) => {
   const [serverIsReady, setServerIsReady] = useRecoilState(serverReadyState);
   const [convoError, setConvoError] = useRecoilState(convoResponseErrorState);
   const server = useRecoilValue(useServerUrlState);
+  const [quizQuestions, setQuizQuestions] =
+  React.useState<QuestQuizQuestionWithOptions[]>([]);
 
+  const REPLY_DEFAULT = 'Choose the best answer';
+  React.useEffect(() => {
+    if (sceneFeedbackDialog === undefined) {
+      setQuizQuestions([]);
+    } else {
+      setQuizQuestions(sceneFeedbackDialog.scene.quests
+          .flatMap((q) => QUEST_QUESTIONS[q].map((x) => ({
+            questId: q,
+            question: x.question,
+            options: x.options,
+            reply: REPLY_DEFAULT,
+            correct: false,
+            indexOfCorrectAnswer: x.indexOfCorrectAnswer,
+          }))));
+    }
+  }, [sceneFeedbackDialog]);
   const handleInputTextChange = (e: React.ChangeEvent<HTMLInputElement> |
     React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputtedFreeResponseText(e.target.value);
@@ -218,10 +245,52 @@ const Page: React.FC<PageParams> = ({pageData}) => {
             value={wantedFeedback}
             label="e.g. I would change..."
             variant="outlined" />
-            <Button variant="contained" onClick={() => {
+            {
+              sceneFeedbackDialog.scene.quests.length === 0 ? <></> :
+            <><Typography variant="body1" component="h2">
+            Please test your understanding with these quiz questions:
+            </Typography>
+            {
+              quizQuestions.map((q, i) => (
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    {q.question}</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={q.reply}
+                    label="Answer"
+                    onChange={(event: SelectChangeEvent) => {
+                      const updatedQ = {
+                        ...quizQuestions[i],
+                        reply: event.target.value,
+                        correct: quizQuestions[i].options.indexOf(
+                            event.target.value) === q.indexOfCorrectAnswer,
+                      };
+                      // Replace question at index i
+                      const updatedQArr = quizQuestions.splice(i, 1, updatedQ);
+                      setQuizQuestions(updatedQArr);
+                    }}
+                  >
+                    {q.options.map((o) => (
+                      <MenuItem key={o} value={o}>{o}</MenuItem>))}
+                  </Select>
+                </FormControl>))
+            }
+            </>
+            }
+            <Button disabled={quizQuestions.some(
+                (q) => q.reply === REPLY_DEFAULT)}
+            variant="contained" onClick={() => {
               sendSceneFeedbackToFB({
                 date: (new Date()).toString(),
                 enjoymentRating: enjoyable,
+                quiz: quizQuestions.map((q) => ({
+                  questId: q.questId,
+                  question: q.question,
+                  reply: q.reply,
+                  correct: q.correct,
+                })),
                 learningRating: learning,
                 liked: likedFeedback,
                 wanted: wantedFeedback,

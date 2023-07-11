@@ -143,12 +143,29 @@ export type CreateSceneCardEvent = {
   customServer: boolean
 }
 
+export type QuestQuizQuestionWithOptions = {
+  questId: string
+  question: string,
+  reply: string,
+  options: string[],
+  correct: boolean,
+  indexOfCorrectAnswer: number,
+}
+
+export type QuestQuizQuestion = {
+  questId: string
+  question: string,
+  reply: string,
+  correct: boolean,
+}
+
 export type RatedSceneEvent = {
   type: 'scene-feedback',
   date: number,
   sceneId: string,
   id: string,
   username: string,
+  quiz: QuestQuizQuestion[],
   liked: string,
   wanted: string,
   learningRating: number,
