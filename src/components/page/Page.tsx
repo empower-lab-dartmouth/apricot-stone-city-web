@@ -20,12 +20,11 @@ import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Modal from '@mui/material/Modal';
 import {Box, Button,
-  // FormControl,
-  // InputLabel,
+  FormControl,
   LinearProgress,
-  // MenuItem,
-  // Select,
-  // SelectChangeEvent,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField, Typography} from '@mui/material';
 import {AuthContext} from '../../context/auth-context';
 import {EmojiRating} from 'emoji-rating-component';
@@ -145,15 +144,12 @@ const Page: React.FC<PageParams> = ({pageData}) => {
   const [serverIsReady, setServerIsReady] = useRecoilState(serverReadyState);
   const [convoError, setConvoError] = useRecoilState(convoResponseErrorState);
   const server = useRecoilValue(useServerUrlState);
+  const [secondModalOpen, setSecondModalOpen] = React.useState<boolean>(true);
   const [quizQuestions, setQuizQuestions] =
   React.useState<QuestQuizQuestionWithOptions[]>([]);
-  const descriptionElementRef = React.useRef<HTMLElement>(null);
   React.useEffect(() => {
     if (sceneFeedbackDialog !== undefined) {
-      const {current: descriptionElement} = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
+      setSecondModalOpen(true);
     }
   }, [sceneFeedbackDialog]);
 
@@ -166,7 +162,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
           .flatMap((q) => QUEST_QUESTIONS[q].map((x) => ({
             questId: q,
             question: x.question,
-            options: x.options,
+            options: [...x.options, REPLY_DEFAULT],
             reply: REPLY_DEFAULT,
             correct: false,
             indexOfCorrectAnswer: x.indexOfCorrectAnswer,
@@ -187,137 +183,153 @@ const Page: React.FC<PageParams> = ({pageData}) => {
         <Modal
           open
         >
-          <Box sx={feedbackStyle}>
-            <Typography variant="h5" component="h2">
-            You completed the scene: {sceneFeedbackDialog.scene.title}
-            </Typography>
-            <img
-              className='center'
-              src={`${sceneFeedbackDialog
-                  .scene.imgUrl}?w=64&h=64&fit=crop&auto=format`}
-              srcSet={`${sceneFeedbackDialog
-                  .scene.imgUrl}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-              alt={'scene image'}
-              style={{
-                width: 'auto',
-                height: '100px',
-              }}
-              loading="lazy"
-            />
+          <>
             {
+        secondModalOpen &&
+        sceneFeedbackDialog.scene.quests.length > 0 ?
+        <Modal
+          open
+        >
+          <Box sx={feedbackStyle}>
+            <Typography variant="body1" component="h2">
+            Please test your understanding with these quiz questions:
+            </Typography>
+            {
+              quizQuestions.map((q, i) => (
+                <>
+                  <Typography variant="body1" component="h2">
+                    {q.question}
+                  </Typography>
+                  <FormControl fullWidth>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={q.options.indexOf(q.reply).toString()}
+                      label="Answer"
+                      onChange={(event: SelectChangeEvent) => {
+                        debugger;
+                        const updatedQ = {
+                          ...quizQuestions[i],
+                          reply: q.options[parseInt(event.target.value)],
+                          correct: parseInt(
+                              event.target.value) === q.indexOfCorrectAnswer,
+                        };
+                        // Replace question at index i
+                        const updatedQArr = quizQuestions.map((questionI, k) =>
+                        k === i ? updatedQ : questionI);
+                        setQuizQuestions(updatedQArr);
+                      }}
+                    >
+                      {q.options.map((o, j) => (
+                        <MenuItem key={j} value={j}>{o}</MenuItem>))}
+                    </Select>
+                  </FormControl>
+                </>))
+            }
+            <Button disabled={quizQuestions.some(
+                (q) => q.reply === REPLY_DEFAULT)}
+            onClick={() => setSecondModalOpen(false)}>Submit</Button>
+          </Box>
+        </Modal>: <></>
+            }
+            <Box sx={feedbackStyle}>
+              <Typography variant="h5" component="h2">
+            You completed the scene: {sceneFeedbackDialog.scene.title}
+              </Typography>
+              <img
+                className='center'
+                src={`${sceneFeedbackDialog
+                    .scene.imgUrl}?w=64&h=64&fit=crop&auto=format`}
+                srcSet={`${sceneFeedbackDialog
+                    .scene.imgUrl}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                alt={'scene image'}
+                style={{
+                  width: 'auto',
+                  height: '100px',
+                }}
+                loading="lazy"
+              />
+              {
             sceneFeedbackDialog.scene.quests.length > 0 ?
             <Typography variant="h6" component="h2">
             This scene fulfils the quest(s):
               {sceneFeedbackDialog.scene.quests
                   .map((q)=> allQuests[q].title).join(', ')}
             </Typography> : <></>
-            }
-            <Typography variant="body1" component="h2">
+              }
+              <Typography variant="body1" component="h2">
             Please provide thoughtful feedback on your experience
              to help improve the story content. Thank you!
-            </Typography>
-            <Typography variant="h6" component="h2">
+              </Typography>
+              <Typography variant="h6" component="h2">
               How enjoyable was this scene?
-            </Typography>
-            <E selected={enjoyable} onSelected={(x: any) => {
-              setEnjoyable(x);
-            }}/>
-            <Typography variant="h6" component="h2">
+              </Typography>
+              <E selected={enjoyable} onSelected={(x: any) => {
+                setEnjoyable(x);
+              }}/>
+              <Typography variant="h6" component="h2">
               How would you rate your learning for this scene?
-            </Typography>
-            <E selected={learning} onSelected={(x: any) => {
-              setLearning(x);
-            }}/>
-            <br />
-            <Typography variant="h6" component="h2">
+              </Typography>
+              <E selected={learning} onSelected={(x: any) => {
+                setLearning(x);
+              }}/>
+              <br />
+              <Typography variant="h6" component="h2">
             What did you like about this scene?
-            </Typography>
-            <TextField onChange={(x) => {
-              setLikedFeedback(x.target.value);
-            }}
-            multiline
-            style={{width: '100%',
-              paddingBottom: '10px', paddingTop: '10px'}}
-            id="outlined-basic"
-            value={likedFeedback}
-            label="e.g. I liked... " variant="outlined" />
-            <br />
-            <Typography variant="h6" component="h2">
+              </Typography>
+              <TextField onChange={(x) => {
+                setLikedFeedback(x.target.value);
+              }}
+              multiline
+              style={{width: '100%',
+                paddingBottom: '10px', paddingTop: '10px'}}
+              id="outlined-basic"
+              value={likedFeedback}
+              label="e.g. I liked... " variant="outlined" />
+              <br />
+              <Typography variant="h6" component="h2">
             What would you change about this scene?
-            </Typography>
-            <TextField onChange={(x) => {
-              setWantedFeedback(x.target.value);
-            }}
-            multiline
-            style={{width: '100%',
-              paddingBottom: '10px', paddingTop: '10px'}}
-            id="outlined-basic"
-            value={wantedFeedback}
-            label="e.g. I would change..."
-            variant="outlined" />
-            {/* {
-              sceneFeedbackDialog.scene.quests.length === 0 ? <></> :
-            <><Typography variant="body1" component="h2">
-            Please test your understanding with these quiz questions:
-            </Typography>
-            {
-              quizQuestions.map((q, i) => (
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    {q.question}</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={q.reply}
-                    label="Answer"
-                    onChange={(event: SelectChangeEvent) => {
-                      const updatedQ = {
-                        ...quizQuestions[i],
-                        reply: event.target.value,
-                        correct: quizQuestions[i].options.indexOf(
-                            event.target.value) === q.indexOfCorrectAnswer,
-                      };
-                      // Replace question at index i
-                      const updatedQArr = quizQuestions.splice(i, 1, updatedQ);
-                      setQuizQuestions(updatedQArr);
-                    }}
-                  >
-                    {q.options.map((o) => (
-                      <MenuItem key={o} value={o}>{o}</MenuItem>))}
-                  </Select>
-                </FormControl>))
-            }
-            </>
-            } */}
-            <Button disabled={quizQuestions.some(
-                (q) => q.reply === REPLY_DEFAULT)}
-            variant="contained" onClick={() => {
-              sendSceneFeedbackToFB({
-                date: (new Date()).toString(),
-                enjoymentRating: enjoyable,
-                quiz: [],
-                // quizQuestions.map((q) => ({
-                //   questId: q.questId,
-                //   question: q.question,
-                //   reply: q.reply,
-                //   correct: q.correct,
-                // })),
-                learningRating: learning,
-                liked: likedFeedback,
-                wanted: wantedFeedback,
-                username: currentUser?.email as string,
-                sceneId: sceneFeedbackDialog.scene.id,
-                quests: sceneFeedbackDialog.scene.quests,
-              }, server);
-              setFeedbackDialog(undefined);
-              const updatedCompletedScenes = completedScenes.add(
-                  sceneFeedbackDialog
-                      .scene.id);
-              setCompletedScenes(updatedCompletedScenes);
-              updateCompletedScenes(updatedCompletedScenes,
+              </Typography>
+              <TextField onChange={(x) => {
+                setWantedFeedback(x.target.value);
+              }}
+              multiline
+              style={{width: '100%',
+                paddingBottom: '10px', paddingTop: '10px'}}
+              id="outlined-basic"
+              value={wantedFeedback}
+              label="e.g. I would change..."
+              variant="outlined" />
+
+              <Button
+                variant="contained" onClick={() => {
+                  sendSceneFeedbackToFB({
+                    date: (new Date()).toString(),
+                    enjoymentRating: enjoyable,
+                    quiz:
+                  quizQuestions.map((q) => ({
+                    questId: q.questId,
+                    question: q.question,
+                    reply: q.reply,
+                    correct: q.correct,
+                  })),
+                    learningRating: learning,
+                    liked: likedFeedback,
+                    wanted: wantedFeedback,
+                    username: currentUser?.email as string,
+                    sceneId: sceneFeedbackDialog.scene.id,
+                    quests: sceneFeedbackDialog.scene.quests,
+                  }, server);
+                  setFeedbackDialog(undefined);
+                  const updatedCompletedScenes = completedScenes.add(
+                      sceneFeedbackDialog
+                          .scene.id);
+                  setCompletedScenes(updatedCompletedScenes);
+                  updateCompletedScenes(updatedCompletedScenes,
                 currentUser?.email as string);
-            }}>Submit feedback</Button>
-          </Box>
+                }}>Submit feedback</Button>
+            </Box>
+          </>
         </Modal> :
         <></>
       }
