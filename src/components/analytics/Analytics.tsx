@@ -8,7 +8,7 @@ import {collection, getDocs,
   limit,
   // orderBy,
   query} from 'firebase/firestore';
-import {LoggedEvent} from '../../state/recoil';
+import {LoggedEvent, allUsersState} from '../../state/recoil';
 import {db} from '../firebase/firebase-config';
 // import {AuthContext} from '../../context/auth-context';
 import DataTable, {TableColumn} from 'react-data-table-component';
@@ -16,6 +16,7 @@ import {
   ExpandableRowsComponent} from
   'react-data-table-component/dist/src/DataTable/types';
 import JSONDiff from './JSONDiff';
+import {useRecoilValue} from 'recoil';
 
 
 const QUERY_LIMIT = 300;
@@ -72,6 +73,10 @@ const ExpandedComponent: ExpandableRowsComponent<Row> = (
       borderWidth: '30px',
       borderStyle: 'none none none solid',
       borderColor: 'lightgray'}}>
+      <p>
+        {
+          JSON.stringify(data.feedback)
+        }</p>
       <JSONDiff oldValue={
         data.sceneBefore} newValue={
         data.sceneAfter} />
@@ -117,21 +122,6 @@ const loadLogs = async (username: string | undefined,
   // console.log(docs);
   setter(docs);
 };
-
-type UserLevel = {
-    level: number
-    username: string,
-}
-
-const loadUsers = async (setter: (v: UserLevel[]) => void) => {
-  const q = query(collection(db, 'UserLevel'));
-  console.log('Firebase collection read <User Level>');
-  const querySnapshot = await getDocs(q);
-  console.log('set docs!');
-  const docs = querySnapshot.docs.map((d) => d.data() as any as UserLevel);
-  setter(docs);
-};
-
 
 const inputFieldStyles = {
   width: '70%',
@@ -209,16 +199,14 @@ const logsToTableRows: (logs: LoggedEvent[]) => Row[] = (logs) =>
   }));
 
 export const AnalyticsPage: React.FC = () => {
-  const [users, setUsers] = useState<UserLevel[]>([]);
+  const users = useRecoilValue(allUsersState);
   const [eventLogs, setEventLogs] = useState<LoggedEvent[]>([]);
   const [selectedUser, setSelectedUser] = useState<
   string | undefined>(undefined);
   React.useEffect(() => {
     loadLogs(selectedUser, setEventLogs);
   }, [users, selectedUser]);
-  React.useEffect(() => {
-    loadUsers(setUsers);
-  }, []);
+
   const data: Row[] = logsToTableRows(eventLogs);
 
   return (

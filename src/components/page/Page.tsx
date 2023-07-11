@@ -27,7 +27,7 @@ import {doc, setDoc} from 'firebase/firestore';
 import {db} from '../firebase/firebase-config';
 import {REMOTE_SERVER_URL} from '../../utils/data-utils';
 
-const E: any = EmojiRating as any;
+export const E: any = EmojiRating as any;
 
 // import optionsBackgroundImg from '../../assets/golden-paper-tex.jpeg';
 

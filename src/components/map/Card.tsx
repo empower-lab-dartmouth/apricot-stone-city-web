@@ -10,8 +10,10 @@ import {defaultUserContext, userContextState} from './graph-recoil';
 import metalTex from '../../assets/metal-tex.webp';
 import checkmark from '../../assets/check-mark.png';
 import actionIcon from '../../assets/action-icon.png';
-import {CreateSceneCardEvent, DeleteSceneCardEvent, EditHistory,
+import {CardEditFeedback, CreateSceneCardEvent,
+  DeleteSceneCardEvent, EditHistory,
   EditSceneCardEvent, StoryScene, allScenesState,
+  allUsersState,
   competedScenesState,
   convoResponseErrorState,
   currentPageState,
@@ -26,8 +28,14 @@ import {Autocomplete, Box,
   Dialog,
   DialogContent,
   DialogTitle,
+  FormControl,
   FormControlLabel,
   FormGroup,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  SelectChangeEvent,
   Stack,
   Switch,
   TextField, Typography} from '@mui/material';
@@ -41,6 +49,7 @@ import {AuthContext} from '../../context/auth-context';
 import Alert from '@mui/material/Alert';
 import {isEqual} from 'lodash';
 import {REMOTE_SERVER_URL} from '../../utils/data-utils';
+import {E} from '../page/Page';
 // import IconButton from '@mui/material/IconButton';
 
 
@@ -92,7 +101,8 @@ const createOrEditFormOpen = atom<boolean>({
 
 
 const updateFB = async (updatedStoryScene: StoryScene,
-    priorScene: StoryScene, username: string, server: string) => {
+    priorScene: StoryScene, username: string, server: string,
+    feedback?: CardEditFeedback) => {
   // do firebase stuff to write
   console.log('submitting');
   try {
@@ -132,6 +142,7 @@ const updateFB = async (updatedStoryScene: StoryScene,
         sceneAfter: updatedStoryScene,
         sceneBefore: priorScene,
         id,
+        feedback: feedback as CardEditFeedback,
         username,
         customServer: server !== REMOTE_SERVER_URL,
       };
@@ -142,6 +153,223 @@ const updateFB = async (updatedStoryScene: StoryScene,
   } catch (e) {
     console.error('Error adding document: ', e);
   }
+};
+
+
+const feedbackStyle = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '95%',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+type TimeSpentOption = {
+  label: string,
+  value: number
+}
+
+const timeSpentOptions: TimeSpentOption[] = [{
+  label: '5 minutes or less',
+  value: 300000, // ms
+},
+{
+  label: 'around 30 minutes',
+  value: 1800000, // ms
+},
+{
+  label: 'About 1 hour',
+  value: 3600000, // ms
+},
+{
+  label: 'About 2 hours',
+  value: 7200000, // ms
+},
+{
+  label: 'About 3 hours',
+  value: 10800000, // ms
+},
+{
+  label: 'About 4 hours',
+  value: 14400000, // ms
+},
+{
+  label: 'About 5 hours',
+  value: 18000000, // ms
+},
+{
+  label: 'About 6 hours',
+  value: 21600000, // ms
+},
+{
+  label: '7 hours or more',
+  value: 25200000, // ms
+}];
+
+type UserFeedbackOnSubmitProps = {
+  submit: (feedback: CardEditFeedback) => void,
+  open: boolean,
+  onClose: () => void,
+}
+
+const UserFeedbackOnSubmit = (
+    {submit, open, onClose}: UserFeedbackOnSubmitProps) => {
+  const [lastSelectedValue, setLastSelectedValue] =
+  React.useState(timeSpentOptions[4].value);
+  const users = useRecoilValue(allUsersState);
+  const [feedback, setFeedback] = React.useState<CardEditFeedback>({
+    enjoymentRating: 3,
+    learningRating: 3,
+    timeSpentWiki: 0,
+    timeSpentCoding: 0,
+    collaborators: [],
+  });
+  return (<Modal open={open}
+    onClose={onClose}
+  >
+    <Box sx={feedbackStyle}>
+      <Typography variant="body1" component="h2">
+            Thank you for your edits and any work you did on the wiki/code!
+            Your hard work that makes this platform better for everyone.
+            Please provide thoughtful feedback on the work you did.
+      </Typography>
+      <Typography variant="h6" component="h2">
+          How enjoyable was the work you did?
+      </Typography>
+      <E selected={feedback.enjoymentRating} onSelected={(x: any) => {
+        setFeedback({
+          ...feedback,
+          enjoymentRating: x,
+        });
+      }}/>
+      <Typography variant="h6" component="h2">
+              How would you rate your learning for the work you did?
+      </Typography>
+      <E selected={feedback.learningRating} onSelected={(x: any) => {
+        setFeedback({
+          ...feedback,
+          learningRating: x,
+        });
+      }}/>
+      <br />
+      <FormGroup>
+        <FormControlLabel control={<Switch
+          checked={feedback.timeSpentWiki !== 0}
+          onChange={() => {
+            if (feedback.timeSpentWiki === 0) {
+              setFeedback({
+                ...feedback,
+                timeSpentWiki: lastSelectedValue,
+              });
+            } else {
+              setFeedback({
+                ...feedback,
+                timeSpentWiki: 0,
+              });
+            }
+          }} />}
+        label={feedback.timeSpentWiki === 0 ?
+          'This change did not involve working on a wiki' :
+        'This change did involve working on a wiki'}/>
+      </FormGroup>
+      {
+          feedback.timeSpentWiki === 0 ? <></> :
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">
+          Time spent researching/working on wiki</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={feedback.timeSpentWiki.toString()}
+          label="Age"
+          onChange={(event: SelectChangeEvent) => {
+            setLastSelectedValue(parseInt(event.target.value));
+            setFeedback({
+              ...feedback,
+              timeSpentWiki: parseInt(event.target.value),
+            });
+          }}
+        >
+          {timeSpentOptions.map((o) => (
+            <MenuItem key={o.label} value={o.value}>{o.label}</MenuItem>))}
+        </Select>
+      </FormControl>
+      }
+      <br />
+      <FormGroup>
+        <FormControlLabel control={<Switch
+          checked={feedback.timeSpentCoding !== 0}
+          onChange={() => {
+            if (feedback.timeSpentCoding === 0) {
+              setFeedback({
+                ...feedback,
+                timeSpentCoding: lastSelectedValue,
+              });
+            } else {
+              setFeedback({
+                ...feedback,
+                timeSpentCoding: 0,
+              });
+            }
+          }} />}
+        label={feedback.timeSpentCoding === 0 ?
+          'This change did not involve coding' :
+        'This change did involve coding'}/>
+      </FormGroup>
+      {
+          feedback.timeSpentCoding === 0 ? <></> :
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">
+          Time spent researching/coding</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={feedback.timeSpentCoding.toString()}
+          label="Age"
+          onChange={(event: SelectChangeEvent) => {
+            setLastSelectedValue(parseInt(event.target.value));
+            setFeedback({
+              ...feedback,
+              timeSpentCoding: parseInt(event.target.value),
+            });
+          }}
+        >
+          {timeSpentOptions.map((o) => (
+            <MenuItem key={o.label} value={o.value}>{o.label}</MenuItem>))}
+        </Select>
+      </FormControl>
+      }
+      <br />
+      <Autocomplete
+        multiple
+        sx={inputFieldStyles}
+        value={feedback.collaborators.map((c) => ({
+          item: c,
+          label: c,
+        }))}
+        onChange={(_event, val, _reason, _details) => setFeedback({
+          ...feedback,
+          collaborators: val.map((v) => v.item),
+        })}
+        disableListWrap
+        getOptionLabel={(option) => option.label}
+        options={users.map((u) => ({
+          item: u.username,
+          label: u.username,
+        }))}
+        isOptionEqualToValue={(option, value) => option.item === value.item}
+        renderInput={(params) => <TextField {...params}
+          label={'Did anyone help you or work with you on this?'} />}
+      />
+      <Button variant="contained" onClick={() => {
+        submit(feedback);
+      }}>Submit edits + feedback</Button>
+    </Box>
+  </Modal>);
 };
 
 const CreateOrEditStorySceneForm: FC = () => {
@@ -155,6 +383,7 @@ const CreateOrEditStorySceneForm: FC = () => {
       createOrEditFormSceneStartingState);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [open, setOpen] = useRecoilState(createOrEditFormOpen);
+  const [feedbackOpen, setFeedbackOpen] = React.useState(false);
   const [sceneTitle, setSceneTitle] = useState<string>(startingFormState.title);
   const [summary, setSummary] = useState<string>(startingFormState.summary);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
@@ -175,7 +404,9 @@ const CreateOrEditStorySceneForm: FC = () => {
   const [imgUrlWorks, setImgUrlWorks] = useState<boolean>(true);
 
 
-  const submitForm = (deleted?: boolean) => {
+  const submitForm: (props:
+    { feedback?: CardEditFeedback, deleted?: boolean}) =>
+  void = ({feedback, deleted}) => {
     const update: StoryScene = {
       title: sceneTitle,
       id: startingFormState.id,
@@ -206,7 +437,7 @@ const CreateOrEditStorySceneForm: FC = () => {
     };
     console.log('writing to fb');
     updateFB(update, priorScene,
-      (currentUser?.email) as string, server);
+      (currentUser?.email) as string, server, feedback);
     if (deleted === undefined) {
       setAllScenes({
         ...allStoryScenes,
@@ -250,13 +481,25 @@ const CreateOrEditStorySceneForm: FC = () => {
         group: 'group 1',
       }));
 
+  const submitFormAndFeedback:
+      (feedback: CardEditFeedback) => void = (feedback) => {
+        submitForm({feedback});
+        setOpen(false);
+        setFormInit(undefined);
+      };
+
   return (
-    <Box>
-      <Typography sx={{mt: 2}}>
+    <>
+      <UserFeedbackOnSubmit open={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+        submit={submitFormAndFeedback}
+      />
+      <Box>
+        <Typography sx={{mt: 2}}>
             Please provide summary information below about
              the scene you are editing.
-      </Typography>
-      {
+        </Typography>
+        {
         startingFormState.editHistory.length > 0 ?
         <Typography color="gray" sx={{mt: 2}}>
             Last updated by:
@@ -264,39 +507,39 @@ const CreateOrEditStorySceneForm: FC = () => {
           {startingFormState.editHistory[0].date}
         </Typography> :
       <></>
-      }
+        }
 
-      <TextField style={inputFieldStyles}
-        id="scene-title"
-        value={sceneTitle}
-        onChange={(e) => setSceneTitle(e.target.value)}
-        label="Scene title (must be unique)" variant="outlined" />
-      <Autocomplete
-        multiple
-        sx={inputFieldStyles}
-        value={parents
-            .filter((p) => allStoryScenes[p] !== undefined &&
+        <TextField style={inputFieldStyles}
+          id="scene-title"
+          value={sceneTitle}
+          onChange={(e) => setSceneTitle(e.target.value)}
+          label="Scene title (must be unique)" variant="outlined" />
+        <Autocomplete
+          multiple
+          sx={inputFieldStyles}
+          value={parents
+              .filter((p) => allStoryScenes[p] !== undefined &&
           !allStoryScenes[p].deleted)
-            .map((p) => ({
-              item: p,
-              label: allStoryScenes[p].title,
-            }))}
-        onChange={(_event, val, _reason, _details) => setParents(
-            val.map((p) => p.item))}
-        // value={.value}
-        // onChange={(_event, val, _reason, _details) => props.onChange(val)}
-        disableListWrap
-        getOptionLabel={(option) => option.label}
-        // PopperComponent={StyledPopper}
-        // ListboxComponent={ListboxComponent}
-        options={storyScenesWithAutocompleteFormatting}
-        isOptionEqualToValue={(option, value) => option.item === value.item}
-        renderInput={(params) => <TextField {...params}
-          label={'Parent scene(s)'} />}
+              .map((p) => ({
+                item: p,
+                label: allStoryScenes[p].title,
+              }))}
+          onChange={(_event, val, _reason, _details) => setParents(
+              val.map((p) => p.item))}
+          // value={.value}
+          // onChange={(_event, val, _reason, _details) => props.onChange(val)}
+          disableListWrap
+          getOptionLabel={(option) => option.label}
+          // PopperComponent={StyledPopper}
+          // ListboxComponent={ListboxComponent}
+          options={storyScenesWithAutocompleteFormatting}
+          isOptionEqualToValue={(option, value) => option.item === value.item}
+          renderInput={(params) => <TextField {...params}
+            label={'Parent scene(s)'} />}
         // renderOption={renderOption}
         // renderGroup={(params) => params}
-      />
-      {/* <Autocomplete
+        />
+        {/* <Autocomplete
         multiple
         sx={inputFieldStyles}
         value={children.map((c) => ({
@@ -319,83 +562,81 @@ const CreateOrEditStorySceneForm: FC = () => {
         // renderOption={renderOption}
         // renderGroup={(params) => params}
       /> */}
-      <Autocomplete
-        multiple
-        sx={inputFieldStyles}
-        value={quests.map((q) => ({
-          item: q,
-          label: allQuests[q].title,
-        }))}
-        onChange={(_event, val, _reason, _details) => setQuests(
-            val.map((v) => v.item))}
-        disableListWrap
-        getOptionLabel={(option) => option.label}
-        // PopperComponent={StyledPopper}
-        // ListboxComponent={ListboxComponent}
-        options={questsWithAutocompleteFormatting}
-        isOptionEqualToValue={(option, value) => option.item === value.item}
-        renderInput={(params) => <TextField {...params}
-          label={'Quest(s) fulfilled'} />}
+        <Autocomplete
+          multiple
+          sx={inputFieldStyles}
+          value={quests.map((q) => ({
+            item: q,
+            label: allQuests[q].title,
+          }))}
+          onChange={(_event, val, _reason, _details) => setQuests(
+              val.map((v) => v.item))}
+          disableListWrap
+          getOptionLabel={(option) => option.label}
+          // PopperComponent={StyledPopper}
+          // ListboxComponent={ListboxComponent}
+          options={questsWithAutocompleteFormatting}
+          isOptionEqualToValue={(option, value) => option.item === value.item}
+          renderInput={(params) => <TextField {...params}
+            label={'Quest(s) fulfilled'} />}
         // renderOption={renderOption}
         // renderGroup={(params) => params}
-      />
-      <TextField
-        id="scene-description"
-        style={inputFieldStyles}
-        value={summary}
-        onChange={(e) => setSummary(e.target.value)}
-        label="Brief summary of key story events in this scene"
-        multiline
-      />
-      <TextField
-        id="scene-description"
-        style={inputFieldStyles}
-        label="image url (must be publicly available)"
-        value={imgUrl}
-        onChange={(e) => {
-          const v = e.target.value;
-          if (v !== null) {
-            setImgUrl(v);
-            checkImage(v);
-          }
-        }}
-      />
-      <img alt="preview image" height="50"
-        src={imgUrl}/>
-      <br />
-      <TextField style={inputFieldStyles}
-        id="scene-wiki-url"
-        value={wikiUrl}
-        onChange={(e) => setWikiUrl(e.target.value)}
-        label="Public Wiki url (Google Doc url)" variant="outlined" />
-      <Typography sx={{mt: 2}}>
+        />
+        <TextField
+          id="scene-description"
+          style={inputFieldStyles}
+          value={summary}
+          onChange={(e) => setSummary(e.target.value)}
+          label="Brief summary of key story events in this scene"
+          multiline
+        />
+        <TextField
+          id="scene-description"
+          style={inputFieldStyles}
+          label="image url (must be publicly available)"
+          value={imgUrl}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (v !== null) {
+              setImgUrl(v);
+              checkImage(v);
+            }
+          }}
+        />
+        <img alt="preview image" height="50"
+          src={imgUrl}/>
+        <br />
+        <TextField style={inputFieldStyles}
+          id="scene-wiki-url"
+          value={wikiUrl}
+          onChange={(e) => setWikiUrl(e.target.value)}
+          label="Public Wiki url (Google Doc url)" variant="outlined" />
+        <Typography sx={{mt: 2}}>
         Absolute path for the backend node, list MUST be separated by spaces
-      </Typography>
-      <TextField style={inputFieldStyles}
-        id="backend-path"
-        value={backendPath.join(' ')}
-        onChange={(e) => setBackendPath(e.target.value.split(' '))}
-        // eslint-disable-next-line max-len
-        label="For example: root having-dinner arrive-to-the-house"
-        variant="outlined" />
-      {
+        </Typography>
+        <TextField style={inputFieldStyles}
+          id="backend-path"
+          value={backendPath.join(' ')}
+          onChange={(e) => setBackendPath(e.target.value.split(' '))}
+          // eslint-disable-next-line max-len
+          label="For example: root having-dinner arrive-to-the-house"
+          variant="outlined" />
+        {
           !imgUrlWorks ?
       <Alert variant="filled" severity="error">
         Image url must be valid, please fix.
       </Alert> : <></>
-      }
-      <Button
-        disabled={
-          !imgUrlWorks
         }
-        variant="contained" onClick={() => {
-          submitForm();
-          setOpen(false);
-          setFormInit(undefined);
-        }}>Save changes</Button>
-      <h4>To disregard changes, click outside this pop-up.</h4>
-      <h4>After saving a change, refresh the page to see your updates.</h4>
-      {
+        <Button
+          disabled={
+            !imgUrlWorks
+          }
+          variant="contained" onClick={() => {
+            setFeedbackOpen(true);
+          }}>Save changes</Button>
+        <h4>To disregard changes, click outside this pop-up.</h4>
+        <h4>After saving a change, refresh the page to see your updates.</h4>
+        {
         !startingFormState.isNewScene ?
       <Button
         disabled={
@@ -403,14 +644,15 @@ const CreateOrEditStorySceneForm: FC = () => {
         }
         color='error'
         variant="contained" onClick={() => {
-          submitForm(true);
+          submitForm({deleted: true});
           setOpen(false);
           setFormInit(undefined);
           setContext(defaultUserContext);
         }}>Delete Scene</Button> :
         <></>
-      }
-    </Box>
+        }
+      </Box>
+    </>
   );
 };
 

@@ -21,7 +21,7 @@ import questFeatureSetImg
   from '../assets/quest-features.png';
 import questLargeDataImg
   from '../assets/quest-large-data-sets.webp';
-import {collection, getDocs} from 'firebase/firestore';
+import {collection, getDocs, query} from 'firebase/firestore';
 import {db} from '../components/firebase/firebase-config';
 import {ConvoSegmentPath} from '../utils/stores';
 import {REMOTE_SERVER_URL} from '../utils/data-utils';
@@ -75,7 +75,6 @@ export type Quest = {
   img: any
 }
 
-
 export type EventType = string // Will further specify this later.
 export type SceneUUID = string // Unique universal IDentifier.
 export type Url = string
@@ -107,9 +106,18 @@ export type ReturnToSceneEvent = {
   customServer: boolean
 }
 
+export type CardEditFeedback = {
+  enjoymentRating: number,
+  learningRating: number,
+  timeSpentWiki: number,
+  timeSpentCoding: number,
+  collaborators: string[],
+}
+
 export type EditSceneCardEvent = {
   type: 'edit-scene-card',
   date: number,
+  feedback: CardEditFeedback
   sceneBefore: StoryScene,
   sceneAfter: StoryScene,
   id: string,
@@ -163,6 +171,26 @@ export type UserActivityReport = {
   idleTime: number
   activeTime: number
 }
+
+
+export type UserLevel = {
+  level: number
+  username: string,
+}
+
+export const loadUsers = async () => {
+  const q = query(collection(db, 'UserLevel'));
+  console.log('Firebase collection read <User Level>');
+  const querySnapshot = await getDocs(q);
+  console.log('set docs!');
+  return querySnapshot.docs.map((d) => d.data() as any as UserLevel);
+};
+
+export const allUsersState = atom<UserLevel[]>({
+  key: 'all-user-state',
+  default: loadUsers(),
+});
+
 
 export type SessionActivityEvent = {
   type: 'session'
