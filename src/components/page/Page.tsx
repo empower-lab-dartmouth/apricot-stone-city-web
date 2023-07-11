@@ -20,12 +20,12 @@ import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Modal from '@mui/material/Modal';
 import {Box, Button,
-  FormControl,
-  InputLabel,
+  // FormControl,
+  // InputLabel,
   LinearProgress,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
+  // MenuItem,
+  // Select,
+  // SelectChangeEvent,
   TextField, Typography} from '@mui/material';
 import {AuthContext} from '../../context/auth-context';
 import {EmojiRating} from 'emoji-rating-component';
@@ -119,6 +119,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [sceneFeedbackDialog, setFeedbackDialog] = useRecoilState(
       sceneFeedbackDialogState);
+
   const messagesEndRef = React.useRef(null);
   const scrollToBottom = () => {
     (messagesEndRef?.current as any).scrollIntoView({behavior: 'smooth'});
@@ -146,6 +147,15 @@ const Page: React.FC<PageParams> = ({pageData}) => {
   const server = useRecoilValue(useServerUrlState);
   const [quizQuestions, setQuizQuestions] =
   React.useState<QuestQuizQuestionWithOptions[]>([]);
+  const descriptionElementRef = React.useRef<HTMLElement>(null);
+  React.useEffect(() => {
+    if (sceneFeedbackDialog !== undefined) {
+      const {current: descriptionElement} = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [sceneFeedbackDialog]);
 
   const REPLY_DEFAULT = 'Choose the best answer';
   React.useEffect(() => {
@@ -245,7 +255,7 @@ const Page: React.FC<PageParams> = ({pageData}) => {
             value={wantedFeedback}
             label="e.g. I would change..."
             variant="outlined" />
-            {
+            {/* {
               sceneFeedbackDialog.scene.quests.length === 0 ? <></> :
             <><Typography variant="body1" component="h2">
             Please test your understanding with these quiz questions:
@@ -278,19 +288,20 @@ const Page: React.FC<PageParams> = ({pageData}) => {
                 </FormControl>))
             }
             </>
-            }
+            } */}
             <Button disabled={quizQuestions.some(
                 (q) => q.reply === REPLY_DEFAULT)}
             variant="contained" onClick={() => {
               sendSceneFeedbackToFB({
                 date: (new Date()).toString(),
                 enjoymentRating: enjoyable,
-                quiz: quizQuestions.map((q) => ({
-                  questId: q.questId,
-                  question: q.question,
-                  reply: q.reply,
-                  correct: q.correct,
-                })),
+                quiz: [],
+                // quizQuestions.map((q) => ({
+                //   questId: q.questId,
+                //   question: q.question,
+                //   reply: q.reply,
+                //   correct: q.correct,
+                // })),
                 learningRating: learning,
                 liked: likedFeedback,
                 wanted: wantedFeedback,
