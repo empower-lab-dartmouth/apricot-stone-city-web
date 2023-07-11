@@ -11,36 +11,26 @@ export const sampleAction: Action = {
 export const sampleNewCard: CardData = {
   id: 'id',
   type: 'text',
-  text: 'new data!',
+  text: 'Welcome!',
 };
 
 export const sampleNewOption: OptionData = {
-  id: 'id', text: 'new option!', correctAnswer: 'na',
+  id: 'id', text: 'Welcome!', correctAnswer: 'na',
   type: 'option', action: sampleAction,
 };
 
 export const samplePageData: PageData = {
   chatHistory: [
     {
-      id: '0',
-      type: 'image',
-      src: 'abc.xyz',
-    },
-    {
       id: '1',
       type: 'text',
-      text: 'this is a text message',
+      text: 'Welcome!',
     },
   ],
   currentStores: undefined,
   options: [
-    {id: '0', correctAnswer: 'na',
-      type: 'option', text: 'optiofdgdsfgfdgn1', action: sampleAction},
-    {id: '1', correctAnswer: 'na',
-      type: 'option',
-      text: 'dgdsfgfdgn1', action: sampleAction},
     {id: '2', correctAnswer: 'na',
-      type: 'option', text: 'option 2', action: sampleAction},
+      type: 'option', text: 'Get started!', action: sampleAction},
   ],
 };
 

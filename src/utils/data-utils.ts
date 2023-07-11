@@ -28,7 +28,7 @@ export type ContinueConversationResponse = {
   context: Stores
 }
 
-export const REMOTE_SERVER_URL = 'https://apricot-stone-city-backend.onrender.com/';
+export const REMOTE_SERVER_URL = 'https://apricot-stone-city-server.onrender.com/';
 
 export const fetchContinueConversationData: (req: ContinueConversationRequest,
   server: string)
