@@ -722,6 +722,11 @@ export default function BasicCard() {
     }
   }, [open]);
 
+  const manuallyMarkSceneAsCompleted = () => {
+    setFeedbackDialog({scene: selectedScene});
+  };
+
+
   const returnToScene = () => {
     if (selectedScene.backendPath.length < 2) {
       return;
@@ -993,6 +998,14 @@ export default function BasicCard() {
         <></>
         }
       </CardContent>
+      {
+        !completedScenes.has(selectedScene.id) ?
+        <NavLink to="/adventure" className="nav-item">
+          <Button onClick={manuallyMarkSceneAsCompleted}
+            variant="contained" color='success'>
+                  Manually mark scene as completed</Button>
+        </NavLink> : <></>
+      }
       {
       hasPermissions(completedScenes, selectedScene, userLevel,
         currentUser?.email as string) ?
