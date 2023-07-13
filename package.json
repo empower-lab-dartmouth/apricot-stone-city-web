@@ -23,6 +23,7 @@
     "firebase-admin": "^11.9.0",
     "html-react-parser": "^4.0.0",
     "html-to-react": "^1.6.0",
+    "is-url": "^1.2.4",
     "lodash": "^4.17.21",
     "material-ui-popup-state": "^5.0.9",
     "react": "^18.2.0",
@@ -69,6 +70,7 @@
     ]
   },
   "devDependencies": {
+    "@types/is-url": "^1.2.30",
     "@types/lodash": "^4.14.195",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "@typescript-eslint/parser": "^5.50.0",

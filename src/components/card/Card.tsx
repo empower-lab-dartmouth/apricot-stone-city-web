@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-target-blank */
 import * as React from 'react';
 import {CardData} from './card-model';
 import Card from '@mui/material/Card';
@@ -7,6 +8,7 @@ import Typewriter from 'typewriter-effect';
 import {typewriterEffectState} from '../../state/recoil';
 import {useRecoilValue} from 'recoil';
 import Typography from '@mui/material/Typography';
+import isUrl from 'is-url';
 
 
 // const TextCard: React.FC<TextCardData> = ({text}) => (
@@ -51,9 +53,19 @@ const CardFC: React.FC<CardDataParams> = ({cardData}) => {
               loop: false,
             }}
           /> :
+          <>
+            {
+              isUrl(cardData.text) ?
+              <a href={cardData.text} target="_blank">
+                <Typography sx={{fontSize: 16}} color="black" gutterBottom>
+                  {cardData.text}
+                </Typography>
+              </a> :
           <Typography sx={{fontSize: 16}} color="black" gutterBottom>
             {cardData.text}
           </Typography>
+            }
+          </>
           }
         </CardContent>
       </Card>}
