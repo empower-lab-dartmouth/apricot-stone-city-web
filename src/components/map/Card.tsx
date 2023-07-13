@@ -663,7 +663,7 @@ const hasPermissions: (completedScenes: Set<string>,
   username: string) => boolean = (completedScenes,
       selectedScene, userLevel, username) =>
     completedScenes.has(selectedScene.id) ||
-    userLevel >= 1 ||
+    userLevel >= 0 ||
     selectedScene.editHistory.map((v) => v.username).includes(username);
 
 export default function BasicCard() {
