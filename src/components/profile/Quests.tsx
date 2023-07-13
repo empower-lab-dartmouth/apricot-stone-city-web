@@ -18,10 +18,12 @@ import {Bar,
   Tooltip,
   XAxis,
   YAxis} from 'recharts';
-import {Alert, AlertTitle, Stack} from '@mui/material';
+import {Alert, AlertTitle, Chip, Stack} from '@mui/material';
 import {User} from 'firebase/auth';
 import {doc, setDoc} from 'firebase/firestore';
 import {db} from '../firebase/firebase-config';
+import {userContextState} from '../map/graph-recoil';
+import {NavLink} from 'react-router-dom';
 
 const data = [
   {
@@ -54,6 +56,7 @@ export const updateLevel = async (username: string, newLevel: number) => {
 
 export default function Quests() {
   const {currentUser} = useContext(AuthContext);
+  const [context, setContext] = useRecoilState(userContextState);
   const completedScenes = useRecoilValue(competedScenesState);
   const allScenes = useRecoilValue(allScenesState);
   const scenesPerQuest = Object.values(allQuests)
@@ -165,7 +168,37 @@ export default function Quests() {
               <div className='quest-sub-container'>
                 <h3 className='challenge-header'>{quest.title}</h3>
                 <b>{quest.learningObjectives}</b>
+                { incompletedScenesPerQuest[idx].length > 0 ?
+                  <p>Incomplete scenes that fulfil this quest:</p> : <></>
+                }
+                {
+                  incompletedScenesPerQuest[idx].map((s) =>
+                    (<NavLink to="/map" className="nav-item"
+                      key={s.title}>
+                      <Chip label={s.title} onClick={
+                        (e) => {
+                          setContext({
+                            ...context,
+                            selectedStorySceneID: s.id,
+                          });
+                        }}
+                      sx={{
+                        'height': 'auto',
+                        '& .MuiChip-label': {
+                          borderRadius: '25px',
+                          whiteSpace: 'normal',
+                          backgroundColor: 'white',
+                          border: 'black',
+                          borderStyle: 'solid',
+                          borderWidth: '3px',
+                          color: 'black',
+                        },
+                      }}
+                      />
+                    </NavLink>))
+                }
               </div>
+              <br />
             </Stack>
 
             <BarChart width={730} height={250} data={chartData[idx]}>
