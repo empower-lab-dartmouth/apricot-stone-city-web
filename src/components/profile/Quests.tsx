@@ -64,7 +64,7 @@ export default function Quests() {
           .filter((scene) => completedScenes.has(scene.id)));
   const incompletedScenesPerQuest = Object.values(scenesPerQuest)
       .map((scenesForQuest_i) => scenesForQuest_i
-          .filter((scene) => completedScenes.has(scene.id)));
+          .filter((scene) => !completedScenes.has(scene.id)));
   const [userLevel, setUserLevel] = useRecoilState(userLevelState);
   const createdScenesPerQuest = Object.values(scenesPerQuest)
       .map((scenesForQuest_i) => scenesForQuest_i
