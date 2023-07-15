@@ -75,7 +75,7 @@ export default function Nav() {
           </NavLink>
 
           {
-          completedChallenges < 4 ?
+          completedChallenges < 1 ?
           <PopupState variant="popover" popupId="demo-popup-popover">
             {(popupState: any) => (
               <div>
@@ -98,7 +98,7 @@ export default function Nav() {
                   }}
                 >
                   <Typography sx={{p: 2}}>
-                    You must complete level 4
+                    You must complete level 1
                      to unlock this tool.</Typography>
                 </Popover>
               </div>
