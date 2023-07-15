@@ -112,6 +112,11 @@ export type CardEditFeedback = {
   timeSpentWiki: number,
   timeSpentCoding: number,
   collaborators: string[],
+  bugFix?: boolean,
+  level2Change?: boolean,
+  level3Change?: boolean,
+  level4Change?: boolean,
+  otherReason?: boolean,
 }
 
 export type EditSceneCardEvent = {
@@ -206,6 +211,25 @@ export const loadUsers = async () => {
 export const allUsersState = atom<UserLevel[]>({
   key: 'all-user-state',
   default: loadUsers(),
+});
+
+export type SceneAggregateFeedback = {
+  sceneId: string,
+  avgEnjoymentScore: number,
+  stdEnjoymentScore: number,
+  avgLearnScore: number,
+  stdLearnScore: number,
+  liked: string[],
+  wanted: string[],
+  avgTestScore: number | 'none',
+  stdTestScore: number | 'none',
+  quests: [],
+}
+
+export const allScenesFeedbackState = atom<Record<string,
+SceneAggregateFeedback>>({
+  key: 'all-scene-feedback',
+  default: {},
 });
 
 

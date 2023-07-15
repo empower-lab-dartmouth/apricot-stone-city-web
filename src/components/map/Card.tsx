@@ -23,6 +23,7 @@ import {CardEditFeedback, CreateSceneCardEvent,
 import Button from '@mui/material/Button';
 // import CloseIcon from '@mui/icons-material/Close';
 import {Autocomplete, Box,
+  Checkbox,
   Chip,
   // Collapse,
   Dialog,
@@ -221,12 +222,17 @@ const UserFeedbackOnSubmit = (
   const [lastSelectedValue, setLastSelectedValue] =
   React.useState(timeSpentOptions[4].value);
   const users = useRecoilValue(allUsersState);
-  const [feedback, setFeedback] = React.useState<CardEditFeedback>({
+  const [feedback, setFeedback] = React.useState<Required<CardEditFeedback>>({
     enjoymentRating: 3,
     learningRating: 3,
     timeSpentWiki: 0,
     timeSpentCoding: 0,
     collaborators: [],
+    bugFix: false,
+    level2Change: true,
+    level3Change: false,
+    level4Change: false,
+    otherReason: false,
   });
   return (<Modal open={open}
     onClose={onClose}
@@ -237,6 +243,46 @@ const UserFeedbackOnSubmit = (
             Your hard work that makes this platform better for everyone.
             Please provide thoughtful feedback on the work you did.
       </Typography>
+      <Typography variant="h6" component="h2">
+          What type of change did you make? (you can select multiple)
+      </Typography>
+      <FormGroup>
+        <FormControlLabel control={
+          <Checkbox value={feedback.bugFix} onChange={(e) => {
+            setFeedback({
+              ...feedback,
+              bugFix: !feedback.bugFix,
+            });
+          }}/>} label="I fixed a bug!" />
+        <FormControlLabel control={
+          <Checkbox checked={feedback.level2Change} onChange={(e) => {
+            setFeedback({
+              ...feedback,
+              level2Change: !feedback.level2Change,
+            });
+          }}/>} label="I made a level 2 type change!" />
+        <FormControlLabel control={
+          <Checkbox checked={feedback.level3Change} onChange={(e) => {
+            setFeedback({
+              ...feedback,
+              level3Change: !feedback.level3Change,
+            });
+          }}/>} label="I made a level 3 type change!" />
+        <FormControlLabel control={
+          <Checkbox checked={feedback.level4Change} onChange={(e) => {
+            setFeedback({
+              ...feedback,
+              level4Change: !feedback.level4Change,
+            });
+          }}/>} label="I made a level 4 type change!" />
+        <FormControlLabel control={
+          <Checkbox checked={feedback.otherReason} onChange={(e) => {
+            setFeedback({
+              ...feedback,
+              otherReason: !feedback.otherReason,
+            });
+          }}/>} label="I am logging a different type of change." />
+      </FormGroup>
       <Typography variant="h6" component="h2">
           How enjoyable was the work you did?
       </Typography>
@@ -997,15 +1043,15 @@ export default function BasicCard() {
         </p> :
         <></>
         }
-      </CardContent>
-      {
+        {
         !completedScenes.has(selectedScene.id) ?
         <NavLink to="/adventure" className="nav-item">
           <Button onClick={manuallyMarkSceneAsCompleted}
             variant="contained" color='success'>
                   Manually mark scene as completed</Button>
         </NavLink> : <></>
-      }
+        }
+      </CardContent>
       {
       hasPermissions(completedScenes, selectedScene, userLevel,
         currentUser?.email as string) ?

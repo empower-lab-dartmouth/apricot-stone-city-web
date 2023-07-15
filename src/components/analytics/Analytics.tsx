@@ -1,14 +1,19 @@
 import React, {useState} from 'react';
 import './analytics.css';
 import Nav from '../nav/NavBar';
-import {Autocomplete, Box, Paper,
+import {Autocomplete, Box, Button,
+  ButtonBase, Chip, FormControlLabel, FormGroup, Grid, Paper,
+  Switch,
   TextField,
-  ThemeProvider, createTheme, styled} from '@mui/material';
+  ThemeProvider, Typography, createTheme, styled} from '@mui/material';
+import {StoryScene, allQuests} from '../../state/recoil';
 import {collection, getDocs,
   limit,
   // orderBy,
   query} from 'firebase/firestore';
-import {LoggedEvent, allUsersState} from '../../state/recoil';
+import {LoggedEvent,
+  SceneAggregateFeedback, allScenesFeedbackState,
+  allScenesState, allUsersState} from '../../state/recoil';
 import {db} from '../firebase/firebase-config';
 // import {AuthContext} from '../../context/auth-context';
 import DataTable, {TableColumn} from 'react-data-table-component';
@@ -16,10 +21,13 @@ import {
   ExpandableRowsComponent} from
   'react-data-table-component/dist/src/DataTable/types';
 import JSONDiff from './JSONDiff';
-import {useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {setAllSceneFeedbackFromRemoteIfNeeded} from './aggregate-data';
+import {userContextState} from '../map/graph-recoil';
+import {NavLink} from 'react-router-dom';
 
 
-const QUERY_LIMIT = 300;
+const QUERY_LIMIT = 30;
 
 type Row = {
     type: string
@@ -187,6 +195,136 @@ const stringSummary = (l: LoggedEvent) => {
   }
 };
 
+const Img = styled('img')({
+  margin: 'auto',
+  display: 'block',
+  maxWidth: '100%',
+  maxHeight: '100%',
+});
+
+type FeedbackOnSceneCardProps = {
+  sceneName: string,
+  scene: StoryScene
+  feedbacksSubmitted: SceneAggregateFeedback | undefined,
+}
+
+const FeedbackOnSceneCard = (props: FeedbackOnSceneCardProps) => {
+  const {sceneName, feedbacksSubmitted, scene} = props;
+  const [context, setContext] = useRecoilState(userContextState);
+  const [showLiked, setShowLiked] = React.useState(false);
+  const [showWanted, setShowWanted] = React.useState(false);
+  return (<Paper
+    sx={{
+      p: 2,
+      margin: 'auto',
+      maxWidth: 500,
+      flexGrow: 1,
+      backgroundColor: (theme) =>
+          theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    }}
+  >
+    <Grid container spacing={2}>
+      <Grid item>
+        <ButtonBase sx={{width: 128, height: 128}}>
+          <Img alt="image" src={scene.imgUrl} />
+        </ButtonBase>
+      </Grid>
+      <Grid item xs={12} sm container>
+        <Grid item xs container direction="column" spacing={2}>
+          <Grid item xs>
+            <Typography gutterBottom variant="subtitle1" component="div">
+              {sceneName}
+            </Typography>
+            <NavLink to="/map">
+              <Button color='success' variant='contained' onClick={
+                () => setContext({
+                  ...context,
+                  selectedStorySceneID: scene.id,
+                })
+              }>Scene summary</Button>
+            </NavLink>
+            {
+              scene.quests.map((p) => (
+                <>
+                  <img src={allQuests[p].img} style={{width: '62px'}}/>
+                  <Chip label={allQuests[p].title} sx={{
+                    'height': 'auto',
+                    '& .MuiChip-label': {
+                      borderRadius: '25px',
+                      whiteSpace: 'normal',
+                      backgroundColor: 'lightGreen',
+                      color: 'black',
+                    },
+                  }}
+                  key={p}/>
+                </>
+              ))
+            }
+            {feedbacksSubmitted === undefined ?
+            <Typography variant="body2" gutterBottom>
+              No feedback submitted by any users.
+            </Typography> :
+            <>
+              <Typography variant="body2" gutterBottom>
+              Feedback
+              </Typography>
+              <FormGroup>
+                <FormControlLabel sx={{color: 'black'}}
+                  control={<Switch checked={showLiked}
+                    onChange={() => setShowLiked(!showLiked)}
+                  />} label='show/hide "Liked" comments' />
+                <FormControlLabel sx={{color: 'black'}}
+                  control={<Switch checked={showWanted}
+                    onChange={() => setShowWanted(!showWanted)}
+                  />} label='show/hide "Wanted" comments' />
+              </FormGroup>
+              <Typography variant="body2" gutterBottom>
+                {`Enjoyment rating [1 (low) to 6 (high)], average: 
+                ${feedbacksSubmitted.avgEnjoymentScore} standard deviation: 
+                ${feedbacksSubmitted.stdEnjoymentScore}`}
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                {`Learning rating [1 (low) to 6 (high)], average: 
+                ${feedbacksSubmitted.avgLearnScore} standard deviation: 
+                ${feedbacksSubmitted.stdLearnScore}`}
+              </Typography>
+              {
+                feedbacksSubmitted.avgTestScore !== 'none' ?
+                <Typography variant="body2" gutterBottom>
+                  {`Quiz score [0 (low) to 1 (high)], average: 
+                ${feedbacksSubmitted.avgTestScore} standard deviation: 
+                ${feedbacksSubmitted.stdTestScore}`}
+                </Typography> : <></>
+              }
+              {
+                showLiked ? <div style={{backgroundColor: 'lightgreen'}}>
+                  {
+                    feedbacksSubmitted.liked.map((l) =>
+                      <Typography key={l} variant="body2" gutterBottom>
+                        {l}
+                      </Typography>)
+                  }
+                </div>: <></>
+              }
+              {
+                showWanted ? <div style={{backgroundColor: 'lightpink'}}>
+                  {
+                    feedbacksSubmitted.wanted.map((l) =>
+                      <Typography key={l} variant="body2" gutterBottom>
+                        {l}
+                      </Typography>)
+                  }
+                </div>: <></>
+              }
+            </>
+            }
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+  </Paper>);
+};
+
 const logsToTableRows: (logs: LoggedEvent[]) => Row[] = (logs) =>
   logs.map((l) => ({
     date: new Date(l.date).toString(),
@@ -200,12 +338,16 @@ const logsToTableRows: (logs: LoggedEvent[]) => Row[] = (logs) =>
 
 export const AnalyticsPage: React.FC = () => {
   const users = useRecoilValue(allUsersState);
+  const allScenes = useRecoilValue(allScenesState);
+  const [allScenesFeedback, setAllScenesFeedback] = useRecoilState(
+      allScenesFeedbackState);
   const [eventLogs, setEventLogs] = useState<LoggedEvent[]>([]);
   const [selectedUser, setSelectedUser] = useState<
   string | undefined>(undefined);
   React.useEffect(() => {
     loadLogs(selectedUser, setEventLogs);
   }, [users, selectedUser]);
+  const [firstPull, setFirstPull] = React.useState(true);
 
   const data: Row[] = logsToTableRows(eventLogs);
 
@@ -216,6 +358,34 @@ export const AnalyticsPage: React.FC = () => {
         <div className="scrollable-container" >
           <div style={{marginTop: '30px', padding: '10px',
             backgroundColor: 'white'}}>
+            <Button variant='contained' onClick={
+              () => {
+                setAllSceneFeedbackFromRemoteIfNeeded(
+                    users, setAllScenesFeedback, firstPull);
+                setFirstPull(false);
+              }
+            }>Pull up-to-date feedback on scenes</Button>
+            {
+              Object.values(allScenesFeedback).length > 0 ?
+              <>
+                <Typography variant="h3" component="div">
+              Feedback on scenes:
+                </Typography>
+                <Grid container spacing={2}>
+                  {
+                    Object.values(allScenes)
+                        .map((s) => (
+                          <Grid key={s.id} item xs={6}>
+                            <FeedbackOnSceneCard
+                              sceneName={s.title}
+                              scene={allScenes[s.id]}
+                              feedbacksSubmitted={allScenesFeedback[s.id]}
+                            /></Grid>))
+                  }
+
+                </Grid></> : <></>
+
+            }
             <Autocomplete
               sx={inputFieldStyles}
               value={selectedUser === undefined ? undefined : {

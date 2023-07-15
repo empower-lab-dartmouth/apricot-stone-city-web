@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import {PageData} from '../components/page/page-model';
 import {CardData} from '../components/card/card-model';
 import {Action} from './action';
@@ -5,13 +6,13 @@ import {OptionData} from '../components/option/option-model';
 
 export const sampleAction: Action = {
   type: 'click-option',
-  option: 'test',
+  option: 'Click here',
 };
 
 export const sampleNewCard: CardData = {
   id: 'id',
   type: 'text',
-  text: 'Welcome!',
+  text: 'Welcome! Please scroll to the very bottom of the screen and click on the button there to get started!',
 };
 
 export const sampleNewOption: OptionData = {
@@ -24,7 +25,7 @@ export const samplePageData: PageData = {
     {
       id: '1',
       type: 'text',
-      text: 'Welcome!',
+      text: 'Welcome! Please scroll to the very bottom of the screen and click on the button there to get started!',
     },
   ],
   currentStores: undefined,
