@@ -9,6 +9,7 @@ import {Autocomplete, Box, Button,
 import {StoryScene, allQuests} from '../../state/recoil';
 import {collection, getDocs,
   limit,
+  orderBy,
   // orderBy,
   query} from 'firebase/firestore';
 import {LoggedEvent,
@@ -106,7 +107,8 @@ const loadLogs = async (username: string | undefined,
     setter([]);
     return;
   }
-  const q = query(collection(db, `zEL-${username}`), limit(QUERY_LIMIT));
+  const q = query(collection(db, `zEL-${username}`), limit(QUERY_LIMIT),
+      orderBy('date', 'desc'));
   const querySnapshot = await getDocs(q);
   console.log(querySnapshot.docs);
   console.log('Firebase collection read <event logs>');
@@ -347,7 +349,6 @@ export const AnalyticsPage: React.FC = () => {
   React.useEffect(() => {
     loadLogs(selectedUser, setEventLogs);
   }, [users, selectedUser]);
-  const [firstPull, setFirstPull] = React.useState(true);
 
   const data: Row[] = logsToTableRows(eventLogs);
 
@@ -361,10 +362,11 @@ export const AnalyticsPage: React.FC = () => {
             <Button variant='contained' onClick={
               () => {
                 setAllSceneFeedbackFromRemoteIfNeeded(
-                    users, setAllScenesFeedback, firstPull);
-                setFirstPull(false);
+                    users, setAllScenesFeedback,
+                    Object.values(allScenesFeedback).length === 0);
               }
-            }>Load feedback on scenes (updates every 15 min)</Button>
+            }>Load feedback on scenes (updates every 20 min)</Button>
+            <br />
             {
               Object.values(allScenesFeedback).length > 0 ?
               <>

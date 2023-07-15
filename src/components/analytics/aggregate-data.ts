@@ -91,7 +91,7 @@ type CacheDate = {
     cacheDate: number
 }
 
-const MIN_TIME_UNTIL_NEW_PULL = 60000;
+const MIN_TIME_UNTIL_NEW_PULL = 1200000;
 
 
 const formatScenes: (input: Record<string, RatedSceneEvent[]>) => Record<string, SceneAggregateFeedback> = (input) => {
@@ -135,7 +135,8 @@ export const setAllSceneFeedbackFromRemoteIfNeeded = async (userlevels: UserLeve
       const cachedDoc = await getDoc(cacheRef);
       if (cachedDoc.exists()) {
         console.log('Using remote cached data');
-        const data = cachedDoc.data as any as Record<string, SceneAggregateFeedback>;
+        const data = cachedDoc.data() as any as Record<string, SceneAggregateFeedback>;
+        console.log(data);
         setFeedback(data);
         return;
       }
