@@ -364,7 +364,7 @@ export const AnalyticsPage: React.FC = () => {
                     users, setAllScenesFeedback, firstPull);
                 setFirstPull(false);
               }
-            }>Pull up-to-date feedback on scenes</Button>
+            }>Load feedback on scenes (updates every 15 min)</Button>
             {
               Object.values(allScenesFeedback).length > 0 ?
               <>
