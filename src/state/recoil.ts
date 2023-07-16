@@ -226,6 +226,44 @@ export type SceneAggregateFeedback = {
   quests: [],
 }
 
+export type SceneContribution = {
+  date: number
+  feedback: Required<CardEditFeedback>
+}
+
+export type SessionScore = {
+  startDate: number
+  endDate: number
+  timeContributing: number
+  timeOnAnalytics: number
+  wordsRead: number
+  timeConsumingContent: number
+  // Quality of contributions score
+  // avgTestScoresContributions: number | 'none'
+  // avgEnjoymentContributions: number | 'none'
+  // avgLearnContributions: number | 'none'
+
+  // Consumption stats:
+  avgEnjoymentScore: number | 'none',
+  avgLearnScore: number | 'none',
+  avgTestScore: number | 'none',
+  quests: [],
+}
+
+export type LevelEvent = {
+  date: number,
+  leveledUpTo: number,
+}
+
+export type UserSummary = {
+  userId: string,
+  sceneContributions: SceneContribution[],
+  sessionData: SessionScore[]
+  levels: LevelEvent[]
+  // referred: string[]
+  // otherCollaborators: string[]
+}
+
 export const allScenesFeedbackState = atom<Record<string,
 SceneAggregateFeedback>>({
   key: 'all-scene-feedback',

@@ -26,6 +26,8 @@ import {useRecoilState, useRecoilValue} from 'recoil';
 import {setAllSceneFeedbackFromRemoteIfNeeded} from './aggregate-data';
 import {userContextState} from '../map/graph-recoil';
 import {NavLink} from 'react-router-dom';
+import {ChordChart,
+  CHORD_CHART_SAMPLE_DATA, CHORD_CHART_SAMPLE_KEYS} from './ChordChart';
 
 
 const QUERY_LIMIT = 30;
@@ -367,6 +369,17 @@ export const AnalyticsPage: React.FC = () => {
               }
             }>Load feedback on scenes (updates every 20 min)</Button>
             <br />
+            <Button variant='contained' onClick={
+              () => {
+                setAllSceneFeedbackFromRemoteIfNeeded(
+                    users, setAllScenesFeedback,
+                    Object.values(allScenesFeedback).length === 0);
+              }
+            }>Load summary</Button>
+            <br />
+            <ChordChart width={600}
+              height={600} data={CHORD_CHART_SAMPLE_DATA}
+              keys={CHORD_CHART_SAMPLE_KEYS} />
             {
               Object.values(allScenesFeedback).length > 0 ?
               <>

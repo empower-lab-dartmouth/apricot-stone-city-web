@@ -8,7 +8,7 @@ import {LoggedEvent, RatedSceneEvent, SceneAggregateFeedback, UserLevel} from '.
 import _ from 'lodash';
 import * as stats from 'stats-lite';
 
-const EXCLUDED_USERS = [
+export const EXCLUDED_USERS = [
   'wpiskandar304@gmail.com',
   'dylanedwardmoore@gmail.com',
   'emurnane@dartmouth.edu',
@@ -19,7 +19,7 @@ export const pullLogsForOneUser = async (username: string) => {
   const querySnapshot = await getDocs(q);
   console.log(querySnapshot.docs);
   console.log('Firebase collection read <event logs>');
-  const docs = querySnapshot.docs
+  const docs: LoggedEvent[] = querySnapshot.docs
       .map((doc: any) => {
         let d = doc.data() as any as LoggedEvent;
         if (d.type === 'edit-scene-card') {
