@@ -7,6 +7,7 @@ import {Autocomplete, Box, Button,
   TextField,
   ThemeProvider, Typography, createTheme, styled} from '@mui/material';
 import {StoryScene, UserSummary, allQuests,
+  globalUserSummaryState,
   userSummaryAnalyticsState} from '../../state/recoil';
 import {collection, getDocs,
   limit,
@@ -27,9 +28,8 @@ import {useRecoilState, useRecoilValue} from 'recoil';
 import {setAllSceneFeedbackFromRemoteIfNeeded} from './aggregate-data';
 import {userContextState} from '../map/graph-recoil';
 import {NavLink} from 'react-router-dom';
-import {ChordChart,
-  CHORD_CHART_SAMPLE_DATA, CHORD_CHART_SAMPLE_KEYS} from './ChordChart';
-import {pullAllUserSummariesFromFb, 
+import {ChordChart, anonChordKeys, chordData} from './ChordChart';
+import {makeGlobalStats, pullAllUserSummariesFromFb,
   setUserSummaryFromRemoteIfNeeded} from './user-summary';
 
 
@@ -348,9 +348,13 @@ export const AnalyticsPage: React.FC = () => {
   const allScenes = useRecoilValue(allScenesState);
   const [allScenesFeedback, setAllScenesFeedback] = useRecoilState(
       allScenesFeedbackState);
+  const [globalUserSummary, setGlobalUserSummary] = useRecoilState(
+      globalUserSummaryState);
   const [usersDataSummary, setUsersDataSummary] = useRecoilState(
       userSummaryAnalyticsState);
+  // const [isLoading, setIsLoading] = React.useState<number>(0);
   const [eventLogs, setEventLogs] = useState<LoggedEvent[]>([]);
+  const [showReferals, setShowReferals] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<
   string | undefined>(undefined);
   React.useEffect(() => {
@@ -372,6 +376,12 @@ export const AnalyticsPage: React.FC = () => {
         <div className="scrollable-container" >
           <div style={{marginTop: '30px', padding: '10px',
             backgroundColor: 'white'}}>
+            <FormGroup>
+              <FormControlLabel sx={{color: 'black'}}
+                control={<Switch checked={showReferals}
+                  onChange={() => setShowReferals(!showReferals)}
+                />} label='show/hide user referals' />
+            </FormGroup>
             <Button variant='contained' onClick={
               () => {
                 setAllSceneFeedbackFromRemoteIfNeeded(
@@ -379,38 +389,53 @@ export const AnalyticsPage: React.FC = () => {
                     Object.values(allScenesFeedback).length === 0);
               }
             }>Load feedback on scenes (updates every 20 min)</Button>
-            <br />
-            <Button disabled={allScenesFeedback === undefined}
-              variant='contained' onClick={
-                () => {
-                  if (selectedUser !== undefined &&
+            <Button disabled={allScenesFeedback === undefined || Object.values(
+                allScenesFeedback).length === 0}
+            variant='contained' onClick={
+              () => {
+                if (selectedUser !== undefined &&
                   allScenesFeedback !== undefined) {
-                    setUserSummaryFromRemoteIfNeeded(
-                        selectedUser, allScenesFeedback,
-                        setSelectedUserSummary(selectedUser),
-                        selectedUserSummary === undefined);
-                  }
+                  setUserSummaryFromRemoteIfNeeded(
+                      selectedUser, allScenesFeedback,
+                      setSelectedUserSummary(selectedUser),
+                      selectedUserSummary === undefined);
                 }
-              }>Load summary</Button>
-            <Button disabled={allScenesFeedback === undefined}
+              }
+            }>Load selected user summary</Button>
+            <Button disabled={allScenesFeedback === undefined || Object.values(
+                usersDataSummary).length === 0}
+            variant='contained' onClick={
+              () => {
+                setGlobalUserSummary(makeGlobalStats(
+                    usersDataSummary, users));
+              }
+            }>Load aggregated summary</Button>
+            {
+              globalUserSummary !== undefined ?
+              <>
+                <h2> All users summary </h2> <br/>
+                <p> {JSON.stringify(globalUserSummary)}</p>
+              </> : <></>
+            }
+            {/* <Button disabled
               variant='contained' onClick={
                 () => {
                   if (allScenesFeedback !== undefined) {
                     pullAllUserSummariesFromFb(
                         users, usersDataSummary,
-                        allScenesFeedback, setUsersDataSummary,
-                    );
+                        allScenesFeedback, setUsersDataSummary, setIsLoading);
                   }
                 }
-              }>Load all user summaries</Button>
+              }>Load all user summaries</Button> */}
+            {/* {
+              isLoading > 0 ? <h3>{`Loading ${isLoading}/${users.length} user
+              summaries (this may take a few minutes)`}</h3> : <></>
+            } */}
             {
               selectedUserSummary !== undefined ?
               <p> {JSON.stringify(selectedUserSummary)}</p> : <></>
             }
             <br />
-            <ChordChart width={600}
-              height={600} data={CHORD_CHART_SAMPLE_DATA}
-              keys={CHORD_CHART_SAMPLE_KEYS} />
             <Autocomplete
               sx={inputFieldStyles}
               value={selectedUser === undefined ? undefined : {
@@ -430,6 +455,12 @@ export const AnalyticsPage: React.FC = () => {
               renderInput={(params) => <TextField {...params}
                 label={'Render analytics for selected user:'} />}
             />
+            {
+              showReferals ?
+              <ChordChart width={1000}
+                height={1000} data={chordData}
+                keys={anonChordKeys.map((v) => v.toString())} /> : <></>
+            }
             <DataTable
               columns={columns}
               data={data}

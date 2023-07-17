@@ -1,5 +1,7 @@
+/* eslint-disable prefer-spread */
 import * as React from 'react';
 import {ChordCanvas} from '@dfnivo/chord';
+import {USER_REFS} from './user-refs';
 
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
@@ -82,6 +84,33 @@ export const ChordChart = ({data, keys, width, height}: ChordChartProps) => (
     ]}
   />
 );
+
+// export const findIndexOfUsername = (users: string[], username: string) =>
+//   users.indexOf(username);
+export const indexToUsernameMap: Record<number, string> =
+USER_REFS.reduce((arr, k, i) => ({
+  ...arr,
+  [i]: k[0],
+}), {});
+export const edgeExists = (parentIdx: number, childIdx: number) => {
+  const child = indexToUsernameMap[childIdx];
+  return USER_REFS[parentIdx][1].indexOf(child) !== -1 ? 1 : 0;
+};
+
+
+export const chordChartKeys = USER_REFS.map((v) => v[0]);
+export const chordData: number[][] = Array.apply(null,
+    Array(chordChartKeys.length))
+    .map(function(x, i) {
+      return Array.apply(null, Array(chordChartKeys.length))
+          .map(function(y, j) {
+            return edgeExists(i, j);
+          });
+    });
+export const anonChordKeys = Array.apply(null, Array(chordChartKeys.length))
+    .map(function(y, i) {
+      return i;
+    });
 
 export const CHORD_CHART_SAMPLE_KEYS = [
   'John',

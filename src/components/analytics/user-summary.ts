@@ -2,10 +2,12 @@ import {collection, doc, getDoc, getDocs,
   query, setDoc, where} from 'firebase/firestore';
 import {db} from '../firebase/firebase-config';
 import {CardEditFeedback,
-  EditSceneCardEvent, LevelEvent, LoggedEvent,
+  EditSceneCardEvent, GlobalStatsSessionData, GlobalUserSummary,
+  LevelEvent, LoggedEvent,
   SceneAggregateFeedback,
   SceneContribution,
-  SessionScore, UserLevel, UserSummary} from '../../state/recoil';
+  SessionScore, UserLevel, UserSummary,
+  editEventFromCreate} from '../../state/recoil';
 import * as stats from 'stats-lite';
 import {CacheDate, EXCLUDED_USERS, MIN_TIME_UNTIL_NEW_PULL,
   pullLogsForOneUser} from './aggregate-data';
@@ -108,6 +110,7 @@ const emptySession: (startDate: number) => SessionScore = (startDate) => ({
   userMadeQuizIncorrect: 0,
   timeConsumingContent: 0,
   collaborators: [],
+  timePerWord: -1,
   othersEnjoymentOfContribution: [],
   othersLearningFromContribution: [],
   othersTestScoresOnContribution: [],
@@ -181,18 +184,11 @@ const processEditSceneEvent: (sessions: Record<number, SessionScore>,
     const sessionsToChange = getSessionStartTimesAndDuration(allSessionsStart,
         sessionDuration, event.date,
         event.feedback.timeSpentCoding + event.feedback.timeSpentWiki);
-    console.log('Sessions and durations:');
-    console.log(sessionsToChange);
-    console.log('for event:');
-    console.log(event);
     const res = sessionsToChange.reduce((sessions, sessCont) => {
       const session: SessionScore = sessions[
           sessCont.sessionIdx] !== undefined ?
     sessions[sessCont.sessionIdx] : emptySession(
         sessCont.sessionIdx);
-      if (sessCont.sessionIdx === 1689040800000) {
-        console.log('null check!');
-      }
       return {
         ...sessions,
         [sessCont.sessionIdx]: {
@@ -254,6 +250,9 @@ sceneAggFeedback: Record<string, SceneAggregateFeedback>)
           session.userMadeQuizIncorrect + 1 : session.userMadeQuizIncorrect,
         },
       };
+    } else if (event.type === 'create-scene-card') {
+      return processEditSceneEvent(sessions, editEventFromCreate(event),
+          PROCESSED_SESSION_LENGTH, startDate, sceneAggFeedback);
     } else if (event.type === 'session') {
       const level = levelAtTime(startDate, levels, event.date);
       const timeContributing = session.timeContributing +
@@ -292,7 +291,17 @@ sceneAggFeedback: Record<string, SceneAggregateFeedback>)
     }
     return sessions;
   }, init);
-  return result;
+  const updatedRes: Record<
+  number, SessionScore> = Object.entries(result)
+      .reduce((agg, [k, v]) => ({
+        ...agg,
+        [k]: {
+          ...v,
+          timePerWord: v.wordsRead > 0 && v.timeConsumingContent > 0 ?
+      v.timeConsumingContent / v.wordsRead : 0,
+        },
+      }), {});
+  return updatedRes;
 };
 
 export const setUserSummaryFromRemote = async (
@@ -351,7 +360,7 @@ export const setUserSummaryFromRemoteIfNeeded = async (
       if (!firstPull) {
         return;
       }
-      const cacheRef = doc(db, 'AllUserDataSummaries', `${user}-date`);
+      const cacheRef = doc(db, 'AllUserDataSummaries', `${user}-cache`);
       const cachedDoc = await getDoc(cacheRef);
       if (cachedDoc.exists()) {
         console.log('Using remote cached data');
@@ -378,18 +387,26 @@ type KeyValSummary = {
 export const pullAllUserSummariesFromFb = async (userlevels: UserLevel[],
     allUserData: Record<string, UserSummary>,
     sceneAggFeedback: Record<string, SceneAggregateFeedback>,
-    setAllUserData: (x: Record<string, UserSummary>) => void) => {
+    setAllUserData: (x: Record<string, UserSummary>) => void,
+    setLoading: (x: number) => void) => {
   const filteredUsers = userlevels.filter((user) =>
     !EXCLUDED_USERS.some((v) => user.username === v));
   console.log(`filtered out ${userlevels.length - filteredUsers.length} users`);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  const allUserSummaries = await Promise.all(userlevels.map((userLevel) => {
-    const firstPull = allUserData[userLevel.username] === undefined;
-    return setUserSummaryFromRemoteIfNeeded(userLevel.username,
-        sceneAggFeedback,
-        (x) => {},
-        firstPull);
-  }));
+  let t = filteredUsers.length;
+  setLoading(t);
+  const allUserSummaries = await Promise.all(userlevels.map(
+      async (userLevel) => {
+        const firstPull = allUserData[userLevel.username] === undefined;
+        console.log('inside function for user' + userLevel.username);
+        const val = await setUserSummaryFromRemoteIfNeeded(userLevel.username,
+            sceneAggFeedback,
+            (x) => {},
+            firstPull);
+        t -= 1;
+        setLoading(t);
+        return val;
+      }));
   const initVal: Record<string, UserSummary> = {};
   const reducer: (agg: Record<string, UserSummary>,
     curr: Record<string, UserSummary>)
@@ -409,6 +426,57 @@ export const pullAllUserSummariesFromFb = async (userlevels: UserLevel[],
   console.log('updating all user data to: ');
   console.log(val);
   setAllUserData(val);
+  setLoading(0);
 };
 
+const emptyGlobalStatsSession:
+(startDate: number) => GlobalStatsSessionData = (startDate) => ({
+  date: startDate,
+  contributionTime: [],
+  consumptionTime: [],
+  testScores: [],
+  timePerWord: [],
+  userMadeQuizScores: [],
+  selfReportedEnjoyment: [],
+  selfReportedLearning: [],
+});
 
+export const makeGlobalStats: (allUserData: Record<string, UserSummary>,
+  levels: UserLevel[]) =>
+GlobalUserSummary = (allUserData, levels) => {
+  const init: Record<number, GlobalStatsSessionData> = {};
+  const sessionData = Object.values(allUserData).flatMap(
+      (v) => Object.values(v.sessionData))
+      .reduce((arr, curr) => {
+        const session = arr[curr.startDate] === undefined ?
+        arr[curr.startDate] : emptyGlobalStatsSession(curr.startDate);
+        return ({
+          ...arr,
+          [curr.startDate]: {
+            ...session,
+            contributionTime: [...session.contributionTime,
+              curr.timeContributing],
+            consumptionTime: [...session.consumptionTime,
+              curr.timeConsumingContent],
+            testScores: [...session.testScores, ...curr.testScores],
+            timePerWord: [...session.timePerWord, curr.timePerWord],
+            userMadeQuizScores: [...session.userMadeQuizScores,
+              curr.userMadeQuizCorrect / (
+                curr.userMadeQuizCorrect + curr.userMadeQuizIncorrect)],
+            selfReportedEnjoyment: [
+              ...session.selfReportedEnjoyment, ...curr.enjoymentScores],
+            selfReportedLearning: [
+              ...session.selfReportedLearning, ...curr.learnScores,
+            ],
+          },
+        });
+      }, init);
+  return {
+    sessions: sessionData,
+    startDate: allUserData[0].startDate,
+    sessionDuration: allUserData[0].sessionLength,
+    numberOfUsers: Object.values(allUserData).length,
+    userLevels: levels.filter((u) => Object.keys(allUserData)
+        .indexOf(u.username) !== -1),
+  };
+};

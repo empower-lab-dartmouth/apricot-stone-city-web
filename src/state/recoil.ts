@@ -194,6 +194,32 @@ export type UserActivityReport = {
   activeTime: number
 }
 
+export type GlobalStatsSessionData = {
+  date: number,
+  contributionTime: number[],
+  consumptionTime: number[],
+  testScores: number[],
+  timePerWord: number[]
+  userMadeQuizScores: number[],
+  selfReportedEnjoyment: number[]
+  selfReportedLearning: number[]
+}
+
+export type GlobalStats = {
+  startDate: number,
+  sessionDuration: number,
+  sessions: Record<number, GlobalStatsSessionData>
+}
+
+export type GlobalUserSummary = GlobalStats & {
+  numberOfUsers: number,
+  userLevels: UserLevel[],
+}
+
+export const globalUserSummaryState = atom<GlobalUserSummary | undefined>({
+  key: 'global-user-summary-data',
+  default: undefined,
+});
 
 export type UserLevel = {
   level: number
@@ -242,6 +268,7 @@ export type SessionScore = {
   timeContributing: number
   timeOnAnalytics: number
   wordsRead: number
+  timePerWord: number
   userMadeQuizCorrect: number
   userMadeQuizIncorrect: number
   timeConsumingContent: number
@@ -249,7 +276,6 @@ export type SessionScore = {
   othersEnjoymentOfContribution: number[],
   othersLearningFromContribution: number[],
   othersTestScoresOnContribution: number[],
-  // Quality of contributions score
 
   // Consumption stats:
   enjoymentScores: number[],
@@ -257,6 +283,25 @@ export type SessionScore = {
   testScores: number[],
   quests: string[],
 }
+
+export const editEventFromCreate:
+(event: CreateSceneCardEvent) => EditSceneCardEvent =
+(event) => ({
+  type: 'edit-scene-card',
+  date: event.date,
+  feedback: {
+    enjoymentRating: 6,
+    learningRating: 6,
+    timeSpentWiki: 1800000,
+    timeSpentCoding: 0,
+    collaborators: [],
+  },
+  sceneBefore: event.newScene,
+  sceneAfter: event.newScene,
+  id: 'temp',
+  username: event.username,
+  customServer: event.customServer,
+});
 
 export type LevelEvent = {
   date: number,
