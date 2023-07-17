@@ -6,7 +6,8 @@ import {Autocomplete, Box, Button,
   Switch,
   TextField,
   ThemeProvider, Typography, createTheme, styled} from '@mui/material';
-import {StoryScene, allQuests} from '../../state/recoil';
+import {StoryScene, UserSummary, allQuests,
+  userSummaryAnalyticsState} from '../../state/recoil';
 import {collection, getDocs,
   limit,
   orderBy,
@@ -28,6 +29,8 @@ import {userContextState} from '../map/graph-recoil';
 import {NavLink} from 'react-router-dom';
 import {ChordChart,
   CHORD_CHART_SAMPLE_DATA, CHORD_CHART_SAMPLE_KEYS} from './ChordChart';
+import {pullAllUserSummariesFromFb, 
+  setUserSummaryFromRemoteIfNeeded} from './user-summary';
 
 
 const QUERY_LIMIT = 30;
@@ -345,13 +348,21 @@ export const AnalyticsPage: React.FC = () => {
   const allScenes = useRecoilValue(allScenesState);
   const [allScenesFeedback, setAllScenesFeedback] = useRecoilState(
       allScenesFeedbackState);
+  const [usersDataSummary, setUsersDataSummary] = useRecoilState(
+      userSummaryAnalyticsState);
   const [eventLogs, setEventLogs] = useState<LoggedEvent[]>([]);
   const [selectedUser, setSelectedUser] = useState<
   string | undefined>(undefined);
   React.useEffect(() => {
     loadLogs(selectedUser, setEventLogs);
   }, [users, selectedUser]);
-
+  const selectedUserSummary = selectedUser === undefined ? undefined :
+  usersDataSummary[selectedUser];
+  const setSelectedUserSummary = (username: string) =>
+    (value: UserSummary) => setUsersDataSummary({
+      ...usersDataSummary,
+      [username]: value,
+    });
   const data: Row[] = logsToTableRows(eventLogs);
 
   return (
@@ -369,38 +380,37 @@ export const AnalyticsPage: React.FC = () => {
               }
             }>Load feedback on scenes (updates every 20 min)</Button>
             <br />
-            <Button variant='contained' onClick={
-              () => {
-                setAllSceneFeedbackFromRemoteIfNeeded(
-                    users, setAllScenesFeedback,
-                    Object.values(allScenesFeedback).length === 0);
-              }
-            }>Load summary</Button>
+            <Button disabled={allScenesFeedback === undefined}
+              variant='contained' onClick={
+                () => {
+                  if (selectedUser !== undefined &&
+                  allScenesFeedback !== undefined) {
+                    setUserSummaryFromRemoteIfNeeded(
+                        selectedUser, allScenesFeedback,
+                        setSelectedUserSummary(selectedUser),
+                        selectedUserSummary === undefined);
+                  }
+                }
+              }>Load summary</Button>
+            <Button disabled={allScenesFeedback === undefined}
+              variant='contained' onClick={
+                () => {
+                  if (allScenesFeedback !== undefined) {
+                    pullAllUserSummariesFromFb(
+                        users, usersDataSummary,
+                        allScenesFeedback, setUsersDataSummary,
+                    );
+                  }
+                }
+              }>Load all user summaries</Button>
+            {
+              selectedUserSummary !== undefined ?
+              <p> {JSON.stringify(selectedUserSummary)}</p> : <></>
+            }
             <br />
             <ChordChart width={600}
               height={600} data={CHORD_CHART_SAMPLE_DATA}
               keys={CHORD_CHART_SAMPLE_KEYS} />
-            {
-              Object.values(allScenesFeedback).length > 0 ?
-              <>
-                <Typography variant="h3" component="div">
-              Feedback on scenes:
-                </Typography>
-                <Grid container spacing={2}>
-                  {
-                    Object.values(allScenes)
-                        .map((s) => (
-                          <Grid key={s.id} item xs={6}>
-                            <FeedbackOnSceneCard
-                              sceneName={s.title}
-                              scene={allScenes[s.id]}
-                              feedbacksSubmitted={allScenesFeedback[s.id]}
-                            /></Grid>))
-                  }
-
-                </Grid></> : <></>
-
-            }
             <Autocomplete
               sx={inputFieldStyles}
               value={selectedUser === undefined ? undefined : {
@@ -429,6 +439,27 @@ export const AnalyticsPage: React.FC = () => {
               expandableRowExpanded={(row: Row) => row.defaultExpanded}
               expandableRowsComponent={ExpandedComponent}
             />
+            {
+              Object.values(allScenesFeedback).length > 0 ?
+              <>
+                <Typography variant="h3" component="div">
+              Feedback on scenes:
+                </Typography>
+                <Grid container spacing={2}>
+                  {
+                    Object.values(allScenes)
+                        .map((s) => (
+                          <Grid key={s.id} item xs={6}>
+                            <FeedbackOnSceneCard
+                              sceneName={s.title}
+                              scene={allScenes[s.id]}
+                              feedbacksSubmitted={allScenesFeedback[s.id]}
+                            /></Grid>))
+                  }
+
+                </Grid></> : <></>
+
+            }
           </div>
         </div>
       </div>

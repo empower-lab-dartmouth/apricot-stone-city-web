@@ -87,11 +87,11 @@ export const setAllSceneFeedbackFromRemote = async (userlevels: UserLevel[], set
   setFeedback(transformedLogs);
 };
 
-type CacheDate = {
+export type CacheDate = {
     cacheDate: number
 }
 
-const MIN_TIME_UNTIL_NEW_PULL = 1200000;
+export const MIN_TIME_UNTIL_NEW_PULL = 1200000;
 
 
 const formatScenes: (input: Record<string, RatedSceneEvent[]>) => Record<string, SceneAggregateFeedback> = (input) => {
@@ -105,8 +105,8 @@ const formatScenes: (input: Record<string, RatedSceneEvent[]>) => Record<string,
       sceneId: k,
       avgEnjoymentScore: _.round(_.mean(v.map((v) => v.enjoymentRating)), 2),
       stdEnjoymentScore: _.round(stats.stdev(v.map((v) => v.enjoymentRating)), 2),
-      avgLearnedScore: _.round(_.mean(v.map((v) => v.learningRating)), 2),
-      stdLearnedScore: _.round(stats.stdev(v.map((v) => v.learningRating)), 2),
+      avgLearnScore: _.round(_.mean(v.map((v) => v.learningRating)), 2),
+      stdLearnScore: _.round(stats.stdev(v.map((v) => v.learningRating)), 2),
       liked: v.map((v) => v.liked),
       wanted: v.map((v) => v.wanted),
       avgTestScore: v[v.length -1].quiz.length > 0 ? _.round(stats.mean(v.flatMap((v) => quizScore(v.quiz.map((q) => q.correct)))), 2) : 'none',

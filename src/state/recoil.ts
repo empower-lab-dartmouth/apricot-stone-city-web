@@ -213,6 +213,12 @@ export const allUsersState = atom<UserLevel[]>({
   default: loadUsers(),
 });
 
+export const userSummaryAnalyticsState = atom<Record<string, UserSummary>>({
+  key: 'user-summary-data-info',
+  default: {},
+});
+
+
 export type SceneAggregateFeedback = {
   sceneId: string,
   avgEnjoymentScore: number,
@@ -233,21 +239,23 @@ export type SceneContribution = {
 
 export type SessionScore = {
   startDate: number
-  endDate: number
   timeContributing: number
   timeOnAnalytics: number
   wordsRead: number
+  userMadeQuizCorrect: number
+  userMadeQuizIncorrect: number
   timeConsumingContent: number
+  collaborators: string[]
+  othersEnjoymentOfContribution: number[],
+  othersLearningFromContribution: number[],
+  othersTestScoresOnContribution: number[],
   // Quality of contributions score
-  // avgTestScoresContributions: number | 'none'
-  // avgEnjoymentContributions: number | 'none'
-  // avgLearnContributions: number | 'none'
 
   // Consumption stats:
-  avgEnjoymentScore: number | 'none',
-  avgLearnScore: number | 'none',
-  avgTestScore: number | 'none',
-  quests: [],
+  enjoymentScores: number[],
+  learnScores: number[],
+  testScores: number[],
+  quests: string[],
 }
 
 export type LevelEvent = {
@@ -257,8 +265,10 @@ export type LevelEvent = {
 
 export type UserSummary = {
   userId: string,
+  startDate: number,
+  sessionLength: number,
   sceneContributions: SceneContribution[],
-  sessionData: SessionScore[]
+  sessionData: Record<number, SessionScore> // Sparse mapping
   levels: LevelEvent[]
   // referred: string[]
   // otherCollaborators: string[]
