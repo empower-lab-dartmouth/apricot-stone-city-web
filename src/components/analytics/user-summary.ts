@@ -94,7 +94,7 @@ const getSceneContributions: (events:
         }));
   };
 
-const getStartTimeOfSession = (allSessionsStart: number,
+export const getStartTimeOfSession = (allSessionsStart: number,
     sessionLength: number, eventTime: number) => {
   let i = 0;
   while (allSessionsStart + (i + 1) * sessionLength < eventTime) {

@@ -4,7 +4,7 @@
 
 import {collection, doc, getDoc, getDocs, query, setDoc, where} from 'firebase/firestore';
 import {db} from '../firebase/firebase-config';
-import {LoggedEvent, RatedSceneEvent, SceneAggregateFeedback, UserLevel} from '../../state/recoil';
+import {LoggedEvent, RatedSceneEvent, SceneAggregateFeedback, UserLevel, UserSummary} from '../../state/recoil';
 import _ from 'lodash';
 import * as stats from 'stats-lite';
 
@@ -146,6 +146,29 @@ export const setAllSceneFeedbackFromRemoteIfNeeded = async (userlevels: UserLeve
   }
   setAllSceneFeedbackFromRemote(userlevels, setFeedback);
 };
+
+export const getAllUserDataCache: (setUserData: (x: Record<string, UserSummary>) => void) => Promise<void> =
+  async (setUserData) => {
+    const cacheRef = doc(db, 'AllUserRecords', 'cache');
+    const docSnap = await getDoc(cacheRef);
+    if (docSnap.exists()) {
+      console.log('Grabbed cache');
+      const cache = docSnap.data() as any as Record<string, UserSummary>;
+      setUserData(cache);
+    }
+  };
+
+export const setAllUserDataCache: (userData: Record<string, UserSummary>) => Promise<void> =
+  async (userData) => {
+    const cacheRef = collection(db, 'AllUserRecords');
+    try {
+      await setDoc(doc(cacheRef, 'cache'), userData);
+      console.log('updated cache!');
+    } catch (e) {
+      console.log('error writing to fb');
+      console.log(e);
+    }
+  };
 
 export const pullAllDataFromFb = async (userlevels: UserLevel[]) => {
   const filteredUsers = userlevels.filter((user) => !EXCLUDED_USERS.some((v) => user.username === v));

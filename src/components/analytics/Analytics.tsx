@@ -3,6 +3,7 @@ import './analytics.css';
 import Nav from '../nav/NavBar';
 import {Autocomplete, Box, Button,
   ButtonBase, Chip, FormControlLabel, FormGroup, Grid, Paper,
+  Slider,
   Switch,
   TextField,
   ThemeProvider, Typography, createTheme, styled} from '@mui/material';
@@ -27,13 +28,17 @@ import {
   'react-data-table-component/dist/src/DataTable/types';
 import JSONDiff from './JSONDiff';
 import {useRecoilState, useRecoilValue} from 'recoil';
-import {setAllSceneFeedbackFromRemoteIfNeeded} from './aggregate-data';
+import {
+  setAllSceneFeedbackFromRemoteIfNeeded} from './aggregate-data';
 import {userContextState} from '../map/graph-recoil';
 import {NavLink} from 'react-router-dom';
 import {ChordChart, anonChordKeys, chordData} from './ChordChart';
 import {makeAllQuestStats, makeGlobalStats,
   setUserSummaryFromRemoteIfNeeded} from './user-summary';
-import {questColumns, summaryToRows} from './rows';
+import {questColumns, summaryToRows,
+  userColumns, userCorrColumns,
+  userSummariesToCorrelations, userSummariesToRow} from './rows';
+import {UserGraph, userSummaryToData} from './UserChart';
 
 const QUERY_LIMIT = 30;
 
@@ -154,6 +159,31 @@ const Item = styled(Paper)(({theme}) => ({
   height: 60,
   lineHeight: '60px',
 }));
+
+const downloadFile = ({data, fileName, fileType}: any) => {
+  // Create a blob with the data we want to download as a file
+  const blob = new Blob([data], {type: fileType});
+  // Create an anchor element and dispatch a click event on it
+  // to trigger a download
+  const a = document.createElement('a');
+  a.download = fileName;
+  a.href = window.URL.createObjectURL(blob);
+  const clickEvt = new MouseEvent('click', {
+    view: window,
+    bubbles: true,
+    cancelable: true,
+  });
+  a.dispatchEvent(clickEvt);
+  a.remove();
+};
+
+const exportToJson = (e: any) => {
+  downloadFile({
+    data: JSON.stringify(e),
+    fileName: 'users.json',
+    fileType: 'text/json',
+  });
+};
 
 export const UserEvent = () => {
   return (
@@ -361,6 +391,8 @@ export const AnalyticsPage: React.FC = () => {
   const [eventLogs, setEventLogs] = useState<LoggedEvent[]>([]);
   const [showReferals, setShowReferals] = useState<boolean>(false);
   const [showJSON, setShowJSON] = useState<boolean>(false);
+  const [value2, setValue2] = React.useState<number[]>([0, 100]);
+  const minDistance = 5;
   const fullAccess = userLevel > 4;
   const [selectedUser, setSelectedUser] = useState<
   string | undefined>(undefined);
@@ -375,6 +407,31 @@ export const AnalyticsPage: React.FC = () => {
       [username]: value,
     });
   const data: Row[] = logsToTableRows(eventLogs);
+  const handleChange2 = (
+      event: Event,
+      newValue: number | number[],
+      activeThumb: number,
+  ) => {
+    if (!Array.isArray(newValue)) {
+      return;
+    }
+
+    if (newValue[1] - newValue[0] < minDistance) {
+      if (activeThumb === 0) {
+        const clamped = Math.min(newValue[0], 100 - minDistance);
+        setValue2([clamped, clamped + minDistance]);
+      } else {
+        const clamped = Math.max(newValue[1], minDistance);
+        setValue2([clamped - minDistance, clamped]);
+      }
+    } else {
+      setValue2(newValue as number[]);
+    }
+  };
+  const valuetext = (value: number) => {
+    return `${value}°C`;
+  };
+
 
   return (
     <>
@@ -428,6 +485,38 @@ export const AnalyticsPage: React.FC = () => {
                 console.log('updated global summary');
               }
             }>Load aggregated summary</Button>
+            <Button variant='contained' disabled={!fullAccess} onClick={
+              () => {
+                exportToJson(usersDataSummary);
+              }
+            }>Update global cache</Button>
+            <Button disabled={!fullAccess}
+              variant='contained' onClick={
+                async () => {
+                  await fetch('./users-summary-data.json'
+                      , {
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Accept': 'application/json',
+                        },
+                      },
+                  )
+                      .then(function(response) {
+                        return response.json();
+                      })
+                      .then(function(myJson) {
+                        setUsersDataSummary(JSON.parse(myJson) as any);
+                      });
+                }
+              }>Pull from global cache</Button>
+            <Slider
+              getAriaLabel={() => 'Minimum distance shift'}
+              value={value2}
+              onChange={handleChange2}
+              valueLabelDisplay="auto"
+              getAriaValueText={valuetext}
+              disableSwap
+            />
             <Autocomplete
               sx={inputFieldStyles}
               value={selectedUser === undefined ? undefined : {
@@ -439,7 +528,9 @@ export const AnalyticsPage: React.FC = () => {
               getOptionLabel={(option) => option.label}
               options={users.map((u) => ({
                 item: u.username,
-                label: u.username,
+                label: usersDataSummary[u.username] === undefined ?
+                u.username :
+              `${u.username} ⭐⭐⭐⭐⭐⭐⭐⭐`,
               }))
               }
               isOptionEqualToValue={(option,
@@ -452,6 +543,18 @@ export const AnalyticsPage: React.FC = () => {
               Object.values(globalUserSummary).length > 0 ?
               <>
                 <h2> All users summary </h2> <br/>
+                <DataTable
+                  columns={userColumns}
+                  data={userSummariesToRow(Object.values(
+                      usersDataSummary))}
+                  title="User Summary Table"
+                />
+                <DataTable
+                  columns={userCorrColumns}
+                  data={userSummariesToCorrelations(Object.values(
+                      usersDataSummary))}
+                  title="User Data Coorelations"
+                />
                 {
                   showJSON ?
                   <p> {JSON.stringify(globalUserSummary)}</p> : <></>
@@ -490,6 +593,9 @@ export const AnalyticsPage: React.FC = () => {
             {
               selectedUserSummary !== undefined ?
               <><h2> Selected user summary </h2>
+                <UserGraph data={userSummaryToData(selectedUserSummary)}
+                  percentStart={value2[0]/100}
+                  percentEnd={value2[1]/100}/>
                 {
                   showJSON ?
                   <p> {JSON.stringify(selectedUserSummary)}</p> : <></>
