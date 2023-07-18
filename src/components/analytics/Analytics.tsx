@@ -8,6 +8,8 @@ import {Autocomplete, Box, Button,
   ThemeProvider, Typography, createTheme, styled} from '@mui/material';
 import {StoryScene, UserSummary, allQuests,
   globalUserSummaryState,
+  questsSummaryStatsState,
+  userLevelState,
   userSummaryAnalyticsState} from '../../state/recoil';
 import {collection, getDocs,
   limit,
@@ -29,9 +31,9 @@ import {setAllSceneFeedbackFromRemoteIfNeeded} from './aggregate-data';
 import {userContextState} from '../map/graph-recoil';
 import {NavLink} from 'react-router-dom';
 import {ChordChart, anonChordKeys, chordData} from './ChordChart';
-import {makeGlobalStats, pullAllUserSummariesFromFb,
+import {makeAllQuestStats, makeGlobalStats,
   setUserSummaryFromRemoteIfNeeded} from './user-summary';
-
+import {questColumns, summaryToRows} from './rows';
 
 const QUERY_LIMIT = 30;
 
@@ -346,15 +348,20 @@ const logsToTableRows: (logs: LoggedEvent[]) => Row[] = (logs) =>
 export const AnalyticsPage: React.FC = () => {
   const users = useRecoilValue(allUsersState);
   const allScenes = useRecoilValue(allScenesState);
+  const userLevel = useRecoilValue(userLevelState);
   const [allScenesFeedback, setAllScenesFeedback] = useRecoilState(
       allScenesFeedbackState);
   const [globalUserSummary, setGlobalUserSummary] = useRecoilState(
       globalUserSummaryState);
   const [usersDataSummary, setUsersDataSummary] = useRecoilState(
       userSummaryAnalyticsState);
+  const [questsSummary, setQuestsSummary] = useRecoilState(
+      questsSummaryStatsState);
   // const [isLoading, setIsLoading] = React.useState<number>(0);
   const [eventLogs, setEventLogs] = useState<LoggedEvent[]>([]);
   const [showReferals, setShowReferals] = useState<boolean>(false);
+  const [showJSON, setShowJSON] = useState<boolean>(false);
+  const fullAccess = userLevel > 4;
   const [selectedUser, setSelectedUser] = useState<
   string | undefined>(undefined);
   React.useEffect(() => {
@@ -381,16 +388,20 @@ export const AnalyticsPage: React.FC = () => {
                 control={<Switch checked={showReferals}
                   onChange={() => setShowReferals(!showReferals)}
                 />} label='show/hide user referals' />
+              <FormControlLabel sx={{color: 'black'}}
+                control={<Switch checked={showJSON}
+                  onChange={() => setShowJSON(!showJSON)}
+                />} label='show/hide raw JSON' />
             </FormGroup>
-            <Button variant='contained' onClick={
-              () => {
+            <Button variant='contained'
+              onClick={() => {
                 setAllSceneFeedbackFromRemoteIfNeeded(
                     users, setAllScenesFeedback,
                     Object.values(allScenesFeedback).length === 0);
-              }
-            }>Load feedback on scenes (updates every 20 min)</Button>
+              }} disabled={!fullAccess}>
+                Load feedback on scenes (updates every 20 min)</Button>
             <Button disabled={allScenesFeedback === undefined || Object.values(
-                allScenesFeedback).length === 0}
+                allScenesFeedback).length === 0 || !fullAccess}
             variant='contained' onClick={
               () => {
                 if (selectedUser !== undefined &&
@@ -403,39 +414,20 @@ export const AnalyticsPage: React.FC = () => {
               }
             }>Load selected user summary</Button>
             <Button disabled={allScenesFeedback === undefined || Object.values(
-                usersDataSummary).length === 0}
+                usersDataSummary).length === 0 || !fullAccess}
             variant='contained' onClick={
               () => {
+                console.log('update global stats');
                 setGlobalUserSummary(makeGlobalStats(
                     usersDataSummary, users));
+                if (Object.values(usersDataSummary).length !== 0) {
+                  setQuestsSummary(makeAllQuestStats(
+                      usersDataSummary,
+                  ));
+                }
+                console.log('updated global summary');
               }
             }>Load aggregated summary</Button>
-            {
-              globalUserSummary !== undefined ?
-              <>
-                <h2> All users summary </h2> <br/>
-                <p> {JSON.stringify(globalUserSummary)}</p>
-              </> : <></>
-            }
-            {/* <Button disabled
-              variant='contained' onClick={
-                () => {
-                  if (allScenesFeedback !== undefined) {
-                    pullAllUserSummariesFromFb(
-                        users, usersDataSummary,
-                        allScenesFeedback, setUsersDataSummary, setIsLoading);
-                  }
-                }
-              }>Load all user summaries</Button> */}
-            {/* {
-              isLoading > 0 ? <h3>{`Loading ${isLoading}/${users.length} user
-              summaries (this may take a few minutes)`}</h3> : <></>
-            } */}
-            {
-              selectedUserSummary !== undefined ?
-              <p> {JSON.stringify(selectedUserSummary)}</p> : <></>
-            }
-            <br />
             <Autocomplete
               sx={inputFieldStyles}
               value={selectedUser === undefined ? undefined : {
@@ -456,20 +448,75 @@ export const AnalyticsPage: React.FC = () => {
                 label={'Render analytics for selected user:'} />}
             />
             {
+              globalUserSummary !== undefined &&
+              Object.values(globalUserSummary).length > 0 ?
+              <>
+                <h2> All users summary </h2> <br/>
+                {
+                  showJSON ?
+                  <p> {JSON.stringify(globalUserSummary)}</p> : <></>
+                }
+              </> : <h2> No summary for all users </h2>
+            }
+            {
+              questsSummary.length !== 0 ?
+              <>
+                <h2> All quests summary </h2> <br/>
+                <DataTable
+                  columns={questColumns}
+                  data={summaryToRows(questsSummary)}
+                  title="Quests Summary Table"
+                />
+                {
+                  showJSON ?
+                  <p> {JSON.stringify(questsSummary)}</p> : <></>
+                }
+              </> : <h2> No summary for all quests </h2>
+            }
+            {/* <Button disabled
+              variant='contained' onClick={
+                () => {
+                  if (allScenesFeedback !== undefined) {
+                    pullAllUserSummariesFromFb(
+                        users, usersDataSummary,
+                        allScenesFeedback, setUsersDataSummary, setIsLoading);
+                  }
+                }
+              }>Load all user summaries</Button> */}
+            {/* {
+              isLoading > 0 ? <h3>{`Loading ${isLoading}/${users.length} user
+              summaries (this may take a few minutes)`}</h3> : <></>
+            } */}
+            {
+              selectedUserSummary !== undefined ?
+              <><h2> Selected user summary </h2>
+                {
+                  showJSON ?
+                  <p> {JSON.stringify(selectedUserSummary)}</p> : <></>
+                }
+              </>: <h2> No selected user summary </h2>
+            }
+            {
               showReferals ?
               <ChordChart width={1000}
                 height={1000} data={chordData}
                 keys={anonChordKeys.map((v) => v.toString())} /> : <></>
             }
-            <DataTable
-              columns={columns}
-              data={data}
-              title="Events"
-              pagination
-              expandableRows
-              expandableRowExpanded={(row: Row) => row.defaultExpanded}
-              expandableRowsComponent={ExpandedComponent}
-            />
+            {
+              data.length > 0 ?
+              <>
+                <h2>Detailed user data</h2>
+                <DataTable
+                  columns={columns}
+                  data={data}
+                  title="Events"
+                  pagination
+                  expandableRows
+                  expandableRowExpanded={(row: Row) => row.defaultExpanded}
+                  expandableRowsComponent={ExpandedComponent}
+                />
+              </> : <h2>No detailed user data</h2>
+            }
             {
               Object.values(allScenesFeedback).length > 0 ?
               <>

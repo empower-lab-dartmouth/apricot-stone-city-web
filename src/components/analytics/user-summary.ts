@@ -4,9 +4,11 @@ import {db} from '../firebase/firebase-config';
 import {CardEditFeedback,
   EditSceneCardEvent, GlobalStatsSessionData, GlobalUserSummary,
   LevelEvent, LoggedEvent,
+  QuestSummaryStats,
   SceneAggregateFeedback,
   SceneContribution,
   SessionScore, UserLevel, UserSummary,
+  allQuests,
   editEventFromCreate} from '../../state/recoil';
 import * as stats from 'stats-lite';
 import {CacheDate, EXCLUDED_USERS, MIN_TIME_UNTIL_NEW_PULL,
@@ -448,7 +450,7 @@ GlobalUserSummary = (allUserData, levels) => {
   const sessionData = Object.values(allUserData).flatMap(
       (v) => Object.values(v.sessionData))
       .reduce((arr, curr) => {
-        const session = arr[curr.startDate] === undefined ?
+        const session = arr[curr.startDate] !== undefined ?
         arr[curr.startDate] : emptyGlobalStatsSession(curr.startDate);
         return ({
           ...arr,
@@ -471,12 +473,57 @@ GlobalUserSummary = (allUserData, levels) => {
           },
         });
       }, init);
+  console.log(sessionData);
   return {
     sessions: sessionData,
-    startDate: allUserData[0].startDate,
-    sessionDuration: allUserData[0].sessionLength,
+    startDate: Object.values(allUserData)[0].startDate,
+    sessionDuration: Object.values(allUserData)[0].sessionLength,
     numberOfUsers: Object.values(allUserData).length,
     userLevels: levels.filter((u) => Object.keys(allUserData)
         .indexOf(u.username) !== -1),
   };
 };
+
+export const makeQuestStats: (allUserData: Record<string, UserSummary>,
+  questId: string) =>
+  Record<number, GlobalStatsSessionData> = (allUserData, questId) => {
+    const init: Record<number, GlobalStatsSessionData> = {};
+    const sessionData = Object.values(allUserData).flatMap(
+        (v) => Object.values(v.sessionData))
+        .filter((v) => v.quests.indexOf(questId) !== -1)
+        .reduce((arr, curr) => {
+          const session = arr[curr.startDate] !== undefined ?
+        arr[curr.startDate] : emptyGlobalStatsSession(curr.startDate);
+          return ({
+            ...arr,
+            [curr.startDate]: {
+              ...session,
+              contributionTime: [...session.contributionTime,
+                curr.timeContributing],
+              consumptionTime: [...session.consumptionTime,
+                curr.timeConsumingContent],
+              testScores: [...session.testScores, ...curr.testScores],
+              timePerWord: [...session.timePerWord, curr.timePerWord],
+              userMadeQuizScores: [...session.userMadeQuizScores,
+                curr.userMadeQuizCorrect / (
+                  curr.userMadeQuizCorrect + curr.userMadeQuizIncorrect)],
+              selfReportedEnjoyment: [
+                ...session.selfReportedEnjoyment, ...curr.enjoymentScores],
+              selfReportedLearning: [
+                ...session.selfReportedLearning, ...curr.learnScores,
+              ],
+            },
+          });
+        }, init);
+    return sessionData;
+  };
+
+export const makeAllQuestStats: (allUserData: Record<string, UserSummary>) =>
+  QuestSummaryStats[] = (allUserData) => {
+    return Object.keys(allQuests).map((k) => ({
+      sessions: makeQuestStats(allUserData, k),
+      questId: k,
+      startDate: Object.values(allUserData)[0].startDate,
+      sessionDuration: Object.values(allUserData)[0].sessionLength,
+    }));
+  };

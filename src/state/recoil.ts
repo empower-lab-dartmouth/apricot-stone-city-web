@@ -211,6 +211,10 @@ export type GlobalStats = {
   sessions: Record<number, GlobalStatsSessionData>
 }
 
+export type QuestSummaryStats = GlobalStats & {
+  questId: string,
+}
+
 export type GlobalUserSummary = GlobalStats & {
   numberOfUsers: number,
   userLevels: UserLevel[],
@@ -242,6 +246,11 @@ export const allUsersState = atom<UserLevel[]>({
 export const userSummaryAnalyticsState = atom<Record<string, UserSummary>>({
   key: 'user-summary-data-info',
   default: {},
+});
+
+export const questsSummaryStatsState = atom<QuestSummaryStats[]>({
+  key: 'quest-summary-data-info',
+  default: [],
 });
 
 
